@@ -2,36 +2,29 @@
 pragma solidity 0.8.16;
 
 import "./ERC20Initial.sol";
-import "@openzeppelin/contracts-upgradeable/access/IAccessControlUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/IAccessControlEnumerableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
+import "../interfaces/IRegistry.sol";
+import "./ITokenFactory.sol";
 
-contract TokenFactoryRequestable is Initializable {
-    struct DeploymentRequest {
-        address requester;
-        uint64 deadline;
-        bool status;
-    }
-
-    IAccessControlUpgradeable masterRoles;
-    address registry;
-    bytes32 constant TOKEN_DEPLOYER_ROLE =
-        0xcea374d80206351afc882fb26f681b164f73bc498895c514e00ad07da11f8d89;
+contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFactory {
+    IAccessControlEnumerableUpgradeable masterRoles;
 
     uint256 currentId;
     mapping(uint256 => DeploymentRequest) requests;
 
-    function __initTokenFactoryRequestable(address registry_, address masterRoles_)
-        external
-        initializer
-    {
-        registry = registry_;
-        masterRoles = IAccessControlUpgradeable(masterRoles_);
+    function __initTokenFactoryRequestable() external initializer {}
+
+    function setDependencies(address contractsRegistry_) external virtual override dependant {
+        IRegistry registry_ = IRegistry(contractsRegistry_);
+        masterRoles = IAccessControlEnumerableUpgradeable(registry_.getMasterRoleManagement());
     }
 
     modifier onlyDeployer() {
         require(
-            masterRoles.hasRole(TOKEN_DEPLOYER_ROLE, msg.sender),
-            "TokenFactoryRequestable: not a deployer"
+            masterRoles.hasRole(keccak256("TOKEN_FACTORY_ADMIN"), msg.sender),
+            "TokenFactoryRequestable: not a TOKEN_FACTORY_ADMIN"
         );
         _;
     }
@@ -45,11 +38,14 @@ contract TokenFactoryRequestable is Initializable {
     ) external returns (address) {
         if (id_ == 0) {
             require(
-                masterRoles.hasRole(TOKEN_DEPLOYER_ROLE, msg.sender),
-                "TokenFactoryRequestable: not a deployer"
+                masterRoles.hasRole(keccak256("TOKEN_FACTORY_ADMIN"), msg.sender),
+                "TokenFactoryRequestable: not a TOKEN_FACTORY_ADMIN"
             );
         } else {
-            require(requests[id_].status, "TokenFactoryRequestable: not approved");
+            require(
+                requests[id_].status == RequestStatus.APPROVED,
+                "TokenFactoryRequestable: not approved"
+            );
             require(
                 requests[id_].deadline > block.timestamp,
                 "TokenFactoryRequestable: dedline has passed"
@@ -58,7 +54,10 @@ contract TokenFactoryRequestable is Initializable {
                 requests[id_].requester == msg.sender,
                 "TokenFactoryRequestable: invalid approve requester"
             );
+
+            requests[id_].status = RequestStatus.EXECUTED;
         }
+
         address erc20_ = address(new ERC20Initial(initHolder_, initSupply_, name_, symbol_));
 
         return erc20_;
@@ -72,6 +71,6 @@ contract TokenFactoryRequestable is Initializable {
     function approveRequest(uint256 id_, uint64 deadline_) external onlyDeployer {
         require(deadline_ > block.timestamp, "TokenFactoryRequestable: invalid deadline");
         requests[id_].deadline = deadline_;
-        requests[id_].status = true;
+        requests[id_].status = RequestStatus.APPROVED;
     }
 }

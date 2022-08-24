@@ -1,0 +1,2 @@
+MASTER_REGISTRY_ADMIN -  Master admin role for managing contratcs in central system registry.
+TOKEN_FACTORY_ADMIN - Role for deploying and approving requests for token deployment on TokenFactory.
