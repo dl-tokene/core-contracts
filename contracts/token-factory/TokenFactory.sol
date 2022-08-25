@@ -12,7 +12,9 @@ contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFact
     IMasterRoleManagement masterRoles;
 
     uint256 public currentId;
-    mapping(uint256 => DeploymentRequest) requests;
+    mapping(uint256 => DeploymentRequestERC20) erc20Requests;
+
+    // todo 2 more mappings for erc721 and erc115 but with same id
 
     function __TokenFactoryRequestable_init() external initializer {}
 
@@ -29,48 +31,66 @@ contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFact
         _;
     }
 
-    function deployERC20(
-        uint256 id_,
-        address initHolder_,
-        uint256 initSupply_,
-        string memory name_,
-        string memory symbol_
-    ) external returns (address) {
-        if (id_ == 0) {
-            require(
-                masterRoles.hasTokenFactoryAdminRole(msg.sender),
-                "TokenFactoryRequestable: not a TOKEN_FACTORY_ADMIN"
+    function deployERC20AsAdmin(ERC20InitialParameters calldata params_)
+        external
+        onlyDeployer
+        returns (address)
+    {
+        return
+            address(
+                new ERC20Initial(
+                    params_.initHolder,
+                    params_.initSupply,
+                    params_.name,
+                    params_.symbol
+                )
             );
-        } else {
-            require(
-                requests[id_].status == RequestStatus.APPROVED,
-                "TokenFactoryRequestable: not approved"
-            );
-            require(
-                requests[id_].deadline > block.timestamp,
-                "TokenFactoryRequestable: dedline has passed"
-            );
-            require(
-                requests[id_].requester == msg.sender,
-                "TokenFactoryRequestable: invalid approve requester"
-            );
-
-            requests[id_].status = RequestStatus.EXECUTED;
-        }
-
-        address erc20_ = address(new ERC20Initial(initHolder_, initSupply_, name_, symbol_));
-
-        return erc20_;
     }
 
-    function requestDeployment() external {
+    function deployERC20(uint256 id_) external returns (address) {
+        BaseDeploymentParams storage deploymentParams = erc20Requests[id_].deploymentParams;
+
+        require(
+            deploymentParams.requester == msg.sender,
+            "TokenFactory: Invalid sender for the request"
+        );
+        require(deploymentParams.deadline >= block.timestamp, "TokenFactory: Request has expired");
+        require(
+            deploymentParams.status == RequestStatus.APPROVED,
+            "TokenFactory: Request has expired"
+        );
+
+        deploymentParams.status = RequestStatus.EXECUTED;
+
+        ERC20InitialParameters storage tokenParams = erc20Requests[id_].tokenParams;
+
+        address token_ = address(
+            new ERC20Initial(
+                tokenParams.initHolder,
+                tokenParams.initSupply,
+                tokenParams.name,
+                tokenParams.symbol
+            )
+        );
+
+        return token_;
+    }
+
+    function requestDeployment(ERC20InitialParameters calldata params_) external {
         currentId++;
-        requests[currentId].requester = msg.sender;
+
+        DeploymentRequestERC20 storage currentRequest = erc20Requests[currentId];
+
+        currentRequest.deploymentParams.requester = msg.sender;
+        currentRequest.tokenParams = params_;
     }
 
     function approveRequest(uint256 id_, uint64 deadline_) external onlyDeployer {
         require(deadline_ > block.timestamp, "TokenFactoryRequestable: invalid deadline");
-        requests[id_].deadline = deadline_;
-        requests[id_].status = RequestStatus.APPROVED;
+
+        BaseDeploymentParams storage currentRequestParams = erc20Requests[id_].deploymentParams;
+
+        currentRequestParams.deadline = deadline_;
+        currentRequestParams.status = RequestStatus.APPROVED;
     }
 }

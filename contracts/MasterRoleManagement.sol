@@ -10,6 +10,7 @@ contract MasterRoleManagement is AccessControlEnumerableUpgradeable {
 
     function __initMasterRoleManagement() external initializer {
         __AccessControlEnumerable_init();
+        _grantRole(0x0000000000000000000000000000000000000000000000000000000000000000, msg.sender);
     }
 
     function hasMasterRegistryAdminRole(address account_) external view returns (bool) {
