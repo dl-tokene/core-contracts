@@ -2,28 +2,28 @@
 pragma solidity 0.8.16;
 
 import "./ERC20Initial.sol";
-import "@openzeppelin/contracts-upgradeable/access/IAccessControlEnumerableUpgradeable.sol";
+import "../interfaces/IMasterRoleManagement.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 import "../interfaces/IRegistry.sol";
 import "./ITokenFactory.sol";
 
 contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFactory {
-    IAccessControlEnumerableUpgradeable masterRoles;
+    IMasterRoleManagement masterRoles;
 
-    uint256 currentId;
+    uint256 public currentId;
     mapping(uint256 => DeploymentRequest) requests;
 
-    function __initTokenFactoryRequestable() external initializer {}
+    function __TokenFactoryRequestable_init() external initializer {}
 
     function setDependencies(address contractsRegistry_) external virtual override dependant {
         IRegistry registry_ = IRegistry(contractsRegistry_);
-        masterRoles = IAccessControlEnumerableUpgradeable(registry_.getMasterRoleManagement());
+        masterRoles = IMasterRoleManagement(registry_.getMasterRoleManagement());
     }
 
     modifier onlyDeployer() {
         require(
-            masterRoles.hasRole(keccak256("TOKEN_FACTORY_ADMIN"), msg.sender),
+            masterRoles.hasTokenFactoryAdminRole(msg.sender),
             "TokenFactoryRequestable: not a TOKEN_FACTORY_ADMIN"
         );
         _;
@@ -38,7 +38,7 @@ contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFact
     ) external returns (address) {
         if (id_ == 0) {
             require(
-                masterRoles.hasRole(keccak256("TOKEN_FACTORY_ADMIN"), msg.sender),
+                masterRoles.hasTokenFactoryAdminRole(msg.sender),
                 "TokenFactoryRequestable: not a TOKEN_FACTORY_ADMIN"
             );
         } else {

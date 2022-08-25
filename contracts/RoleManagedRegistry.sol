@@ -1,21 +1,20 @@
 pragma solidity 0.8.16;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
-import "@openzeppelin/contracts-upgradeable/access/IAccessControlEnumerableUpgradeable.sol";
+import "./interfaces/IMasterRoleManagement.sol";
 
 abstract contract RoleManagedRegistry is AbstractContractsRegistry {
     string public constant MASTER_ROLE_MANAGEMENT_NAME = "MASTER_ROLE_MANAGEMENT";
 
+    IMasterRoleManagement masterRoles;
+
     function __RoleManagedRegistry_init() public onlyInitializing {
         __ContractsRegistry_init();
+        masterRoles = IMasterRoleManagement(getContract(MASTER_ROLE_MANAGEMENT_NAME));
     }
 
     modifier onlyMasterRole() {
-        require(
-            IAccessControlEnumerableUpgradeable(getContract("MASTER_ROLE_MANAGEMENT_NAME"))
-                .hasRole(keccak256("MASTER_REGISTRY_ADMIN"), msg.sender),
-            "RoleManagedRegistry: Not a MASTER_REGISTRY_ADMIN"
-        );
+        require(masterRoles.hasMasterRegistryAdminRole(msg.sender));
         _;
     }
 
