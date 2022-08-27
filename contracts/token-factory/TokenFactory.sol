@@ -8,15 +8,13 @@ import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 import "../interfaces/IRegistry.sol";
 import "./ITokenFactory.sol";
 
-contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFactory {
-    IMasterRoleManagement masterRoles;
+contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
+    IMasterRoleManagement public masterRoles;
 
     uint256 public currentId;
-    mapping(uint256 => DeploymentRequestERC20) erc20Requests;
+    mapping(uint256 => DeploymentRequestERC20) public erc20Requests;
 
     // todo 2 more mappings for erc721 and erc115 but with same id
-
-    function __TokenFactoryRequestable_init() external initializer {}
 
     function setDependencies(address contractsRegistry_) external virtual override dependant {
         IRegistry registry_ = IRegistry(contractsRegistry_);
@@ -76,7 +74,7 @@ contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFact
         return token_;
     }
 
-    function requestDeployment(ERC20InitialParameters calldata params_) external {
+    function requestERC20Deployment(ERC20InitialParameters calldata params_) external {
         currentId++;
 
         DeploymentRequestERC20 storage currentRequest = erc20Requests[currentId];
@@ -87,6 +85,14 @@ contract TokenFactoryRequestable is Initializable, AbstractDependant, ITokenFact
 
     function approveRequest(uint256 id_, uint64 deadline_) external onlyDeployer {
         require(deadline_ > block.timestamp, "TokenFactoryRequestable: invalid deadline");
+        require(
+            erc20Requests[id_].deploymentParams.requester != address(0),
+            "TokenFactoryRequestable: request does not exist"
+        );
+        require(
+            erc20Requests[id_].deploymentParams.status == RequestStatus.NONE,
+            "TokenFactoryRequestable: invalid request status"
+        );
 
         BaseDeploymentParams storage currentRequestParams = erc20Requests[id_].deploymentParams;
 

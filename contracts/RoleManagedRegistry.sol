@@ -8,8 +8,9 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry {
 
     IMasterRoleManagement masterRoles;
 
-    function __RoleManagedRegistry_init() public onlyInitializing {
+    function __RoleManagedRegistry_init(address masterRoles_) public onlyInitializing {
         __ContractsRegistry_init();
+        _addProxyContract(MASTER_ROLE_MANAGEMENT_NAME, address(masterRoles_));
         masterRoles = IMasterRoleManagement(getContract(MASTER_ROLE_MANAGEMENT_NAME));
     }
 

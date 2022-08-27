@@ -6,7 +6,7 @@ const { assert } = require("chai");
 
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 
-describe("DefiCore", async () => {
+describe("MasterRoleManagement", async () => {
   const reverter = new Reverter();
 
   const SUPER_ADMIN_ROLE = "0x0000000000000000000000000000000000000000000000000000000000000000";
