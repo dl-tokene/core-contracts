@@ -13,8 +13,9 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
 
     uint256 public currentId;
     mapping(uint256 => DeploymentRequestERC20) public erc20Requests;
-
     // todo 2 more mappings for erc721 and erc115 but with same id
+
+    event ERC20Deployed(address token_);
 
     function setDependencies(address contractsRegistry_) external virtual override dependant {
         IRegistry registry_ = IRegistry(contractsRegistry_);
@@ -34,15 +35,12 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
         onlyDeployer
         returns (address)
     {
-        return
-            address(
-                new ERC20Initial(
-                    params_.initHolder,
-                    params_.initSupply,
-                    params_.name,
-                    params_.symbol
-                )
-            );
+        address token_ = address(
+            new ERC20Initial(params_.initHolder, params_.initSupply, params_.name, params_.symbol)
+        );
+
+        emit ERC20Deployed(token_);
+        return token_;
     }
 
     function deployERC20(uint256 id_) external returns (address) {
@@ -52,11 +50,11 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
             deploymentParams.requester == msg.sender,
             "TokenFactory: Invalid sender for the request"
         );
-        require(deploymentParams.deadline >= block.timestamp, "TokenFactory: Request has expired");
         require(
             deploymentParams.status == RequestStatus.APPROVED,
-            "TokenFactory: Request has expired"
+            "TokenFactory: Invalid request status"
         );
+        require(deploymentParams.deadline >= block.timestamp, "TokenFactory: Request has expired");
 
         deploymentParams.status = RequestStatus.EXECUTED;
 
@@ -71,6 +69,7 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
             )
         );
 
+        emit ERC20Deployed(token_);
         return token_;
     }
 
