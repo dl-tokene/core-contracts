@@ -1,5 +1,5 @@
-const { setNextBlockTime, setTime, mine, getCurrentBlockTime } = require("../helpers/hardhatTimeTraveller");
-const { toBN, accounts, getOnePercent, getDecimal, wei } = require("../../scripts/helpers/utils");
+const { setTime, setNextBlockTime } = require("../helpers/hardhatTimeTraveller");
+const { accounts } = require("../../scripts/helpers/utils");
 
 const Reverter = require("../helpers/reverter");
 const { artifacts } = require("hardhat");
@@ -17,10 +17,6 @@ const RequestStatus = {
   EXECUTED: 2,
 };
 
-// const toBaseDeploymentParams = (requester_, deadline_, status_) => {
-//     return {requester: requester_, deadline: deadline_, status: status_};
-// }
-
 const toERC20InitialParameters = (initHolder_, initSupply_, name_, symbol_) => {
   return { initHolder: initHolder_, initSupply: initSupply_, name: name_, symbol: symbol_ };
 };
@@ -28,7 +24,6 @@ const toERC20InitialParameters = (initHolder_, initSupply_, name_, symbol_) => {
 describe("TokenFactory", async () => {
   const reverter = new Reverter();
 
-  const SUPER_ADMIN_ROLE = "0x0000000000000000000000000000000000000000000000000000000000000000";
   const MASTER_REGISTRY_ADMIN_ROLE = "0xbe3b6931ad58d884ac8399c59bbbed7c5fe116d99ea3833c92a2d6987cefec5d";
   const TOKEN_FACTORY_ADMIN_ROLE = "0xd20e79ee7ab22313b1e35bc08d0608b5faca9822ef8dfa3ee1154eb6d6d13df4";
 
@@ -395,6 +390,21 @@ describe("TokenFactory", async () => {
       assert.equal(request.tokenParams.initSupply, _initSupply);
       assert.equal(request.tokenParams.name, "Test");
       assert.equal(request.tokenParams.symbol, "TST");
+    });
+
+    it("should not be possible to approve request with passed deadline", async () => {
+      const _initSupply = 100;
+
+      await tokenFactory.requestERC20Deployment(toERC20InitialParameters(USER3, _initSupply, "Test", "TST"), {
+        from: USER3,
+      });
+
+      await setNextBlockTime(1000);
+
+      await truffleAssert.reverts(
+        tokenFactory.approveRequest(1, 999, { from: USER1 }),
+        "TokenFactoryRequestable: invalid deadline"
+      );
     });
   });
 

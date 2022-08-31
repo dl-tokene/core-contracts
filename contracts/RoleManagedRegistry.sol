@@ -15,7 +15,10 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry {
     }
 
     modifier onlyMasterRole() {
-        require(masterRoles.hasMasterRegistryAdminRole(msg.sender));
+        require(
+            masterRoles.hasMasterRegistryAdminRole(msg.sender),
+            "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        );
         _;
     }
 
