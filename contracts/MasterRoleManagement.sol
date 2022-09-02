@@ -8,12 +8,16 @@ contract MasterRoleManagement is AccessControlEnumerableUpgradeable {
     bytes32 public constant MASTER_REGISTRY_ADMIN_ROLE = keccak256("MASTER_REGISTRY_ADMIN");
     bytes32 public constant TOKEN_FACTORY_ADMIN_ROLE = keccak256("TOKEN_FACTORY_ADMIN");
 
-    function __initMasterRoleManagement() external initializer {
+    function __MasterRoleManagement_init() external initializer {
         __AccessControlEnumerable_init();
-        _grantRole(0x0000000000000000000000000000000000000000000000000000000000000000, msg.sender);
+        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function hasMasterRegistryAdminRole(address account_) external view returns (bool) {
+    function hasMasterMasterContractsRegistryAdminRole(address account_)
+        external
+        view
+        returns (bool)
+    {
         return hasRole(MASTER_REGISTRY_ADMIN_ROLE, account_);
     }
 

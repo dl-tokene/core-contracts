@@ -8,7 +8,7 @@ const truffleAssert = require("truffle-assertions");
 
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 const TokenFactory = artifacts.require("TokenFactoryRequestable");
-const Registry = artifacts.require("Registry");
+const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
 const ERC20 = artifacts.require("ERC20");
 
 const RequestStatus = {
@@ -46,13 +46,13 @@ describe("TokenFactory", async () => {
 
     const _masterRoles = await MasterRoleManagement.new();
 
-    registry = await Registry.new();
-    await registry.__Registry_init(_masterRoles.address);
+    registry = await MasterContractsRegistry.new();
+    await registry.__MasterContractsRegistry_init(_masterRoles.address);
 
     masterRoles = await MasterRoleManagement.at(
       await registry.getContract(await registry.MASTER_ROLE_MANAGEMENT_NAME())
     );
-    await masterRoles.__initMasterRoleManagement();
+    await masterRoles.__MasterRoleManagement_init();
     await masterRoles.grantRole(MASTER_REGISTRY_ADMIN_ROLE, OWNER);
 
     const _tokenFactory = await TokenFactory.new();
@@ -539,7 +539,7 @@ describe("TokenFactory", async () => {
 
       await setTime(1001);
 
-      await truffleAssert.reverts(tokenFactory.deployERC20(1, { from: USER3 }), "TokenFactory: Request has expired");
+      await truffleAssert.reverts(tokenFactory.deployERC20(1, { from: USER3 }), "TokenFactory: Invalid request status");
       const request = await tokenFactory.erc20Requests(1);
 
       assert.equal(request.deploymentParams.requester, USER3);

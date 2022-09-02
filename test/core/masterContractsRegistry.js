@@ -7,9 +7,9 @@ const { assert } = require("chai");
 
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 const TokenFactory = artifacts.require("TokenFactoryRequestable");
-const Registry = artifacts.require("Registry");
+const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
 
-describe("MasterRoleManagement", async () => {
+describe("MasterContractsRegistry", async () => {
   const reverter = new Reverter();
 
   const MASTER_REGISTRY_ADMIN_ROLE = "0xbe3b6931ad58d884ac8399c59bbbed7c5fe116d99ea3833c92a2d6987cefec5d";
@@ -26,13 +26,13 @@ describe("MasterRoleManagement", async () => {
 
     const _masterRoles = await MasterRoleManagement.new();
 
-    registry = await Registry.new();
-    await registry.__Registry_init(_masterRoles.address);
+    registry = await MasterContractsRegistry.new();
+    await registry.__MasterContractsRegistry_init(_masterRoles.address);
 
     masterRoles = await MasterRoleManagement.at(
       await registry.getContract(await registry.MASTER_ROLE_MANAGEMENT_NAME())
     );
-    await masterRoles.__initMasterRoleManagement();
+    await masterRoles.__MasterRoleManagement_init();
     await masterRoles.grantRole(MASTER_REGISTRY_ADMIN_ROLE, OWNER);
 
     const _tokenFactory = await TokenFactory.new();

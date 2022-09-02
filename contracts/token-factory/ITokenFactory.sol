@@ -1,10 +1,12 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
 interface ITokenFactory {
     enum RequestStatus {
         NONE,
         APPROVED,
-        EXECUTED
+        EXECUTED,
+        EXPIRED
     }
 
     struct BaseDeploymentParams {

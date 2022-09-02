@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
@@ -6,17 +7,15 @@ import "./interfaces/IMasterRoleManagement.sol";
 abstract contract RoleManagedRegistry is AbstractContractsRegistry {
     string public constant MASTER_ROLE_MANAGEMENT_NAME = "MASTER_ROLE_MANAGEMENT";
 
-    IMasterRoleManagement masterRoles;
-
     function __RoleManagedRegistry_init(address masterRoles_) public onlyInitializing {
         __ContractsRegistry_init();
         _addProxyContract(MASTER_ROLE_MANAGEMENT_NAME, address(masterRoles_));
-        masterRoles = IMasterRoleManagement(getContract(MASTER_ROLE_MANAGEMENT_NAME));
     }
 
     modifier onlyMasterRole() {
         require(
-            masterRoles.hasMasterRegistryAdminRole(msg.sender),
+            IMasterRoleManagement(getContract(MASTER_ROLE_MANAGEMENT_NAME))
+                .hasMasterMasterContractsRegistryAdminRole(msg.sender),
             "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
         );
         _;

@@ -25,7 +25,7 @@ describe("MasterRoleManagement", async () => {
     USER2 = await accounts(2);
 
     masterRoles = await MasterRoleManagement.new();
-    await masterRoles.__initMasterRoleManagement();
+    await masterRoles.__MasterRoleManagement_init();
 
     await masterRoles.grantRole(MASTER_REGISTRY_ADMIN_ROLE, USER1);
     await masterRoles.grantRole(TOKEN_FACTORY_ADMIN_ROLE, USER2);
@@ -40,10 +40,10 @@ describe("MasterRoleManagement", async () => {
       assert.isTrue(await masterRoles.hasRole(SUPER_ADMIN_ROLE, OWNER));
     });
 
-    it("should correctly check the role with hasMasterRegistryAdminRole", async () => {
-      assert.isTrue(await masterRoles.hasMasterRegistryAdminRole(USER1));
+    it("should correctly check the role with hasMasterMasterContractsRegistryAdminRole", async () => {
+      assert.isTrue(await masterRoles.hasMasterMasterContractsRegistryAdminRole(USER1));
       await masterRoles.revokeRole(MASTER_REGISTRY_ADMIN_ROLE, USER1);
-      assert.isFalse(await masterRoles.hasMasterRegistryAdminRole(USER1));
+      assert.isFalse(await masterRoles.hasMasterMasterContractsRegistryAdminRole(USER1));
     });
     it("should correctly check the role for hasTokenFactoryAdminRole", async () => {
       assert.isTrue(await masterRoles.hasTokenFactoryAdminRole(USER2));

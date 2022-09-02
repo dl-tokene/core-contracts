@@ -1,12 +1,13 @@
+// SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
 import "./RoleManagedRegistry.sol";
-import "./interfaces/IRegistry.sol";
+import "./interfaces/IMasterContractsRegistry.sol";
 
-contract Registry is RoleManagedRegistry, IRegistry {
+contract MasterContractsRegistry is RoleManagedRegistry, IMasterContractsRegistry {
     string public constant TOKEN_FACTORY_NAME = "TOKEN_FACTORY";
 
-    function __Registry_init(address masterRoles_) external initializer {
+    function __MasterContractsRegistry_init(address masterRoles_) external initializer {
         __RoleManagedRegistry_init(masterRoles_);
     }
 

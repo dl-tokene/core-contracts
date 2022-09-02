@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
-import "./ERC20Initial.sol";
-import "../interfaces/IMasterRoleManagement.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
-import "../interfaces/IRegistry.sol";
+import "../interfaces/IMasterRoleManagement.sol";
+import "../interfaces/IMasterContractsRegistry.sol";
 import "./ITokenFactory.sol";
+import "./ERC20Initial.sol";
 
 contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
     IMasterRoleManagement public masterRoles;
@@ -17,9 +17,16 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
 
     event ERC20Deployed(address token_);
 
-    function setDependencies(address contractsRegistry_) external virtual override dependant {
-        IRegistry registry_ = IRegistry(contractsRegistry_);
-        masterRoles = IMasterRoleManagement(registry_.getMasterRoleManagement());
+    function setDependencies(address contractsMasterContractsRegistry_)
+        external
+        virtual
+        override
+        dependant
+    {
+        IMasterContractsRegistry MasterContractsRegistry_ = IMasterContractsRegistry(
+            contractsMasterContractsRegistry_
+        );
+        masterRoles = IMasterRoleManagement(MasterContractsRegistry_.getMasterRoleManagement());
     }
 
     modifier onlyDeployer() {
@@ -50,11 +57,7 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
             deploymentParams.requester == msg.sender,
             "TokenFactory: Invalid sender for the request"
         );
-        require(
-            deploymentParams.status == RequestStatus.APPROVED,
-            "TokenFactory: Invalid request status"
-        );
-        require(deploymentParams.deadline >= block.timestamp, "TokenFactory: Request has expired");
+        require(getStatus(id_) == RequestStatus.APPROVED, "TokenFactory: Invalid request status");
 
         deploymentParams.status = RequestStatus.EXECUTED;
 
@@ -83,19 +86,28 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
     }
 
     function approveRequest(uint256 id_, uint64 deadline_) external onlyDeployer {
+        BaseDeploymentParams storage currentRequestParams = erc20Requests[id_].deploymentParams;
+
         require(deadline_ > block.timestamp, "TokenFactoryRequestable: invalid deadline");
         require(
-            erc20Requests[id_].deploymentParams.requester != address(0),
+            currentRequestParams.requester != address(0),
             "TokenFactoryRequestable: request does not exist"
         );
         require(
-            erc20Requests[id_].deploymentParams.status == RequestStatus.NONE,
+            getStatus(id_) == RequestStatus.NONE,
             "TokenFactoryRequestable: invalid request status"
         );
 
-        BaseDeploymentParams storage currentRequestParams = erc20Requests[id_].deploymentParams;
-
         currentRequestParams.deadline = deadline_;
         currentRequestParams.status = RequestStatus.APPROVED;
+    }
+
+    function getStatus(uint256 id_) public view returns (RequestStatus) {
+        RequestStatus status_ = erc20Requests[id_].deploymentParams.status;
+        uint256 deadline_ = erc20Requests[id_].deploymentParams.deadline;
+
+        if (status_ == RequestStatus.APPROVED && block.timestamp > deadline_)
+            return RequestStatus.EXPIRED;
+        return status_;
     }
 }
