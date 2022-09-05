@@ -41,9 +41,9 @@ describe("MasterRoleManagement", async () => {
     });
 
     it("should correctly check the role with hasMasterMasterContractsRegistryAdminRole", async () => {
-      assert.isTrue(await masterRoles.hasMasterMasterContractsRegistryAdminRole(USER1));
+      assert.isTrue(await masterRoles.hasMasterContractsRegistryAdminRole(USER1));
       await masterRoles.revokeRole(MASTER_REGISTRY_ADMIN_ROLE, USER1);
-      assert.isFalse(await masterRoles.hasMasterMasterContractsRegistryAdminRole(USER1));
+      assert.isFalse(await masterRoles.hasMasterContractsRegistryAdminRole(USER1));
     });
     it("should correctly check the role for hasTokenFactoryAdminRole", async () => {
       assert.isTrue(await masterRoles.hasTokenFactoryAdminRole(USER2));

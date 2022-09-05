@@ -103,11 +103,14 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
     }
 
     function getStatus(uint256 id_) public view returns (RequestStatus) {
-        RequestStatus status_ = erc20Requests[id_].deploymentParams.status;
-        uint256 deadline_ = erc20Requests[id_].deploymentParams.deadline;
+        BaseDeploymentParams storage deploymentParams_ = erc20Requests[id_].deploymentParams;
 
-        if (status_ == RequestStatus.APPROVED && block.timestamp > deadline_)
+        RequestStatus status_ = deploymentParams_.status;
+
+        if (status_ == RequestStatus.APPROVED && block.timestamp > deploymentParams_.deadline) {
             return RequestStatus.EXPIRED;
+        }
+
         return status_;
     }
 }

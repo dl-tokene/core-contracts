@@ -13,11 +13,7 @@ contract MasterRoleManagement is AccessControlEnumerableUpgradeable {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function hasMasterMasterContractsRegistryAdminRole(address account_)
-        external
-        view
-        returns (bool)
-    {
+    function hasMasterContractsRegistryAdminRole(address account_) external view returns (bool) {
         return hasRole(MASTER_REGISTRY_ADMIN_ROLE, account_);
     }
 

@@ -15,6 +15,7 @@ const RequestStatus = {
   NONE: 0,
   APPROVED: 1,
   EXECUTED: 2,
+  EXPIRED: 3,
 };
 
 const toERC20InitialParameters = (initHolder_, initSupply_, name_, symbol_) => {
@@ -549,6 +550,7 @@ describe("TokenFactory", async () => {
       assert.equal(request.tokenParams.initSupply, _initSupply);
       assert.equal(request.tokenParams.name, "Test");
       assert.equal(request.tokenParams.symbol, "TST");
+      assert.equal(await tokenFactory.getStatus(1), RequestStatus.EXPIRED);
     });
   });
 });
