@@ -9,7 +9,7 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry {
 
     function __RoleManagedRegistry_init(address masterRoles_) public onlyInitializing {
         __ContractsRegistry_init();
-        _addProxyContract(MASTER_ROLE_MANAGEMENT_NAME, address(masterRoles_));
+        _addProxyContract(MASTER_ROLE_MANAGEMENT_NAME, masterRoles_);
     }
 
     modifier onlyMasterRole() {
