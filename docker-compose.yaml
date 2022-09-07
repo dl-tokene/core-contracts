@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  tokene-contracts:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    image: tokene-contracts
+    env_file:
+      - ./docker/.env
