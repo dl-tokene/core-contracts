@@ -11,7 +11,7 @@ build:
   stage: build
   script:
     - docker login -u "${USER_DOCKER}" -p "${PASSWORD_DOCKER}"
-    - docker build --pull -t "$CONTAINER_RELEASE_IMAGE" ./docker/
+    - docker build --pull -t "$CONTAINER_RELEASE_IMAGE" -f docker/Dockerfile .
     - docker push "$CONTAINER_RELEASE_IMAGE"
   only:
     - docker-setup
