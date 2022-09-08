@@ -1,0 +1,17 @@
+stages:
+  - build
+variables:
+  CONTAINER_RELEASE_IMAGE: $IMAGE_DOCKER:$CI_COMMIT_TAG
+
+
+build:
+  image: docker:20.10.16
+  services:
+    - docker:20.10.16-dind
+  stage: build
+  script:
+    - docker login -u "${USER_DOCKER}" -p "${PASSWORD_DOCKER}"
+    - docker build --pull -t "$CONTAINER_RELEASE_IMAGE" .
+    - docker push "$CONTAINER_RELEASE_IMAGE"
+  only:
+    - docker-setup
