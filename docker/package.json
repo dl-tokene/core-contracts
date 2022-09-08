@@ -7,10 +7,10 @@
   "scripts": {
     "compile": "npx hardhat compile --force",
     "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
-    "deploy-rinkeby": "VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network rinkeby",
-    "deploy-chapel": "VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
-    "deploy-eth-mainnet": "VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
-    "deploy-bsc-mainnet": "VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet"
+    "deploy-rinkeby": "npx hardhat run deploy/runners/deployer/migrations.js --network rinkeby",
+    "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
+    "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
+    "deploy-bsc-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet"
   },
   "dependencies": {
     "@dlsl/dev-modules": "^1.5.0",
