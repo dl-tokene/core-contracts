@@ -7,4 +7,6 @@ interface IMasterRoleManagement is IAccessControlEnumerableUpgradeable {
     function hasMasterContractsRegistryAdminRole(address account_) external view returns (bool);
 
     function hasTokenFactoryAdminRole(address account_) external view returns (bool);
+
+    function hasConstantsRegistryAdminRole(address account_) external view returns (bool);
 }

@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.16;
 
-import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 import "../interfaces/IMasterRoleManagement.sol";
 import "../interfaces/IMasterContractsRegistry.sol";
@@ -17,16 +16,9 @@ contract TokenFactoryRequestable is AbstractDependant, ITokenFactory {
 
     event ERC20Deployed(address token_);
 
-    function setDependencies(address contractsMasterContractsRegistry_)
-        external
-        virtual
-        override
-        dependant
-    {
-        IMasterContractsRegistry MasterContractsRegistry_ = IMasterContractsRegistry(
-            contractsMasterContractsRegistry_
-        );
-        masterRoles = IMasterRoleManagement(MasterContractsRegistry_.getMasterRoleManagement());
+    function setDependencies(address registryAddress_) external virtual override dependant {
+        IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
+        masterRoles = IMasterRoleManagement(registry_.getMasterRoleManagement());
     }
 
     modifier onlyDeployer() {

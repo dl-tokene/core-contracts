@@ -6,6 +6,7 @@ const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 
+// keccak256("MASTER_REGISTRY_ADMIN")
 const MASTER_REGISTRY_ADMIN_ROLE = "0xbe3b6931ad58d884ac8399c59bbbed7c5fe116d99ea3833c92a2d6987cefec5d";
 
 module.exports = async (deployer) => {
