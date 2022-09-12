@@ -4,7 +4,7 @@ pragma solidity 0.8.16;
 import "./interfaces/IMasterContractsRegistry.sol";
 import "./RoleManagedRegistry.sol";
 
-contract MasterContractsRegistry is RoleManagedRegistry, IMasterContractsRegistry {
+contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistry {
     string public constant TOKEN_FACTORY_NAME = "TOKEN_FACTORY";
 
     function __MasterContractsRegistry_init(address masterRoles_) external initializer {

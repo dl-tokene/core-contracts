@@ -1,16 +1,13 @@
 const { artifacts } = require("hardhat");
-const { accounts } = require("../../scripts/helpers/utils");
 const { logTransaction } = require("../runners/logger/logger");
 
 const Registry = artifacts.require("MasterContractsRegistry");
-const TransparentUpgradeableProxy = artifacts.require("TransparentUpgradeableProxy");
+const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 
 module.exports = async (deployer) => {
-  const REGISTRY_ADMIN = await accounts(1);
-
   const registry = await deployer.deploy(Registry);
-  const proxy = await deployer.deploy(TransparentUpgradeableProxy, registry.address, REGISTRY_ADMIN, []);
+  const proxy = await deployer.deploy(ERC1967Proxy, registry.address, []);
 
   const masterRolesAddress = (await MasterRoleManagement.deployed()).address;
 

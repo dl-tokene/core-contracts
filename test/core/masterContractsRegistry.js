@@ -8,6 +8,7 @@ const { assert } = require("chai");
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 const TokenFactory = artifacts.require("TokenFactoryRequestable");
 const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
+const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 
 describe("MasterContractsRegistry", async () => {
   const reverter = new Reverter();
@@ -27,6 +28,8 @@ describe("MasterContractsRegistry", async () => {
     const _masterRoles = await MasterRoleManagement.new();
 
     registry = await MasterContractsRegistry.new();
+    const registryProxy = await ERC1967Proxy.new(registry.address, []);
+    registry = await MasterContractsRegistry.at(registryProxy.address);
     await registry.__MasterContractsRegistry_init(_masterRoles.address);
 
     masterRoles = await MasterRoleManagement.at(
@@ -132,6 +135,16 @@ describe("MasterContractsRegistry", async () => {
         registry.removeContract("TEST", { from: USER1 }),
         "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
       );
+    });
+
+    it("should be possible to upgrade UUPS proxy by MASTER_REGISTRY_ADMIN_ROLE", async () => {
+      const _registry = await MasterContractsRegistry.new();
+      await registry.upgradeTo(_registry.address);
+    });
+
+    it("should not be possible to upgrade UUPS proxy not by MASTER_REGISTRY_ADMIN_ROLE", async () => {
+      const _registry = await MasterContractsRegistry.new();
+      await truffleAssert.reverts(registry.upgradeTo(_registry.address, { from: USER1 }));
     });
   });
 
