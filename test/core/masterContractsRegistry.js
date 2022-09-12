@@ -7,6 +7,7 @@ const { assert } = require("chai");
 
 const MasterRoleManagement = artifacts.require("MasterRoleManagement");
 const TokenFactory = artifacts.require("TokenFactoryRequestable");
+const ConstantsRegistry = artifacts.require("ConstantsRegistry");
 const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 
@@ -20,6 +21,8 @@ describe("MasterContractsRegistry", async () => {
 
   let registry;
   let masterRoles;
+  let tokenFactory;
+  let constantsRegistry;
 
   before("setup", async () => {
     OWNER = await accounts(0);
@@ -41,7 +44,13 @@ describe("MasterContractsRegistry", async () => {
     const _tokenFactory = await TokenFactory.new();
     await registry.addProxyContract(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address);
 
+    const _constantsRegistry = await ConstantsRegistry.new();
+    await registry.addProxyContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address);
+
     tokenFactory = await TokenFactory.at(await registry.getContract(await registry.TOKEN_FACTORY_NAME()));
+    constantsRegistry = await ConstantsRegistry.at(
+      await registry.getContract(await registry.CONSTANTS_REGISTRY_NAME())
+    );
 
     await reverter.snapshot();
   });
@@ -155,6 +164,10 @@ describe("MasterContractsRegistry", async () => {
 
     it("should correctly return tokenFactory contract with getTokenFactory", async () => {
       assert.equal(await registry.getTokenFactory(), tokenFactory.address);
+    });
+
+    it("should correctly return constantsRegistry contract with getConstantsRegistry", async () => {
+      assert.equal(await registry.getConstantsRegistry(), constantsRegistry.address);
     });
   });
 });
