@@ -6,6 +6,7 @@
   "description": "",
   "scripts": {
     "compile": "npx hardhat compile --force",
+    "deploy-dev-ed": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
     "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
     "deploy-rinkeby": "npx hardhat run deploy/runners/deployer/migrations.js --network rinkeby",
     "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
