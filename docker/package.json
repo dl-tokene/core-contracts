@@ -17,7 +17,8 @@
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.6.4"
+    "hardhat": "^2.6.4",
+    "solc": "0.8.16"
   },
   "devDependencies": {
     "@metamask/eth-sig-util": "^4.0.0",
