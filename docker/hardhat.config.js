@@ -29,7 +29,7 @@ module.exports = {
       initialDate: "1970-01-01T00:00:00Z",
     },
     dev: {
-      url: "http://172.16.254.10:8545",
+      url: "http://172.17.0.1:8545",
       initialDate: "1970-01-01T00:00:00Z",
       gasMultiplier: 1.2,
     },
