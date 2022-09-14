@@ -14,4 +14,8 @@ build:
     - docker build --pull -t "$CONTAINER_RELEASE_IMAGE" -f docker/Dockerfile .
     - docker push "$CONTAINER_RELEASE_IMAGE"
   only:
-    - main
+    - tags
+  except:
+    - branches
+
+
