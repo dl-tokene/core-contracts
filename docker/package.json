@@ -1,0 +1,33 @@
+{
+  "name": "tokene",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Distributed Lab",
+  "description": "",
+  "scripts": {
+    "compile": "npx hardhat compile --force",
+    "deploy-dev-ed": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
+    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
+    "deploy-rinkeby": "npx hardhat run deploy/runners/deployer/migrations.js --network rinkeby",
+    "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
+    "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
+    "deploy-bsc-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet"
+  },
+  "dependencies": {
+    "@dlsl/dev-modules": "^1.5.0",
+    "@openzeppelin/contracts": "4.5.0",
+    "@openzeppelin/contracts-upgradeable": "4.5.0",
+    "dotenv": "^10.0.0",
+    "hardhat": "^2.6.4",
+    "solc": "0.8.16"
+  },
+  "devDependencies": {
+    "@metamask/eth-sig-util": "^4.0.0",
+    "@nomiclabs/hardhat-truffle5": "^2.0.1",
+    "@nomiclabs/hardhat-web3": "^2.0.0",
+    "@truffle/deployer": "3.2.56",
+    "@truffle/reporters": "1.1.2",
+    "bignumber.js": "^9.0.1",
+    "web3": "^1.5.2"
+  }
+}
