@@ -6,7 +6,7 @@ const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
 
-const SOLC_VERSION = "0.8.16";
+const SOLC_VERSION = "0.8.17";
 
 subtask(TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD, async (args, hre, runSuper) => {
   if (args.solcVersion === SOLC_VERSION) {
