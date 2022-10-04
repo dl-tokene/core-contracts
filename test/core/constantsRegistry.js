@@ -5,41 +5,45 @@ const { artifacts } = require("hardhat");
 const { assert } = require("chai");
 const truffleAssert = require("truffle-assertions");
 
-const MasterRoleManagement = artifacts.require("MasterRoleManagement");
+const MasterAccessManagement = artifacts.require("MasterAccessManagement");
 const ConstantsRegistry = artifacts.require("ConstantsRegistry");
 const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
 
-describe("TokenFactory", async () => {
+describe("ConstantsRegistry", () => {
   const reverter = new Reverter();
-
-  const MASTER_REGISTRY_ADMIN_ROLE = "0xbe3b6931ad58d884ac8399c59bbbed7c5fe116d99ea3833c92a2d6987cefec5d";
-  const CONSTANTS_REGISTRY_ADMIN_ROLE = "0xb70679c2bb63d69954ff974d88551a7613146cf648202f5d0bc5ecdad424d359";
 
   let OWNER;
   let USER1;
-  let USER2;
-  let USER3;
+
+  const CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
+
+  const ConstRCreateRole = "CRCreate";
+  const ConstRDeleteRole = "CRDelete";
+
+  const CREATE_PERMISSION = "CREATE";
+  const DELETE_PERMISSION = "DELETE";
+
+  const ConstRCreate = [CONSTANTS_REGISTRY_RESOURCE, [CREATE_PERMISSION]];
+
+  const ConstRDelete = [CONSTANTS_REGISTRY_RESOURCE, [DELETE_PERMISSION]];
 
   let constantsRegistry;
-  let masterRoles;
+  let masterAccess;
   let registry;
 
   before("setup", async () => {
     OWNER = await accounts(0);
     USER1 = await accounts(1);
-    USER2 = await accounts(2);
-    USER3 = await accounts(3);
 
-    const _masterRoles = await MasterRoleManagement.new();
+    const _masterAccess = await MasterAccessManagement.new();
 
     registry = await MasterContractsRegistry.new();
-    await registry.__MasterContractsRegistry_init(_masterRoles.address);
+    await registry.__MasterContractsRegistry_init(_masterAccess.address);
 
-    masterRoles = await MasterRoleManagement.at(
-      await registry.getContract(await registry.MASTER_ROLE_MANAGEMENT_NAME())
+    masterAccess = await MasterAccessManagement.at(
+      await registry.getContract(await registry.MASTER_ACCESS_MANAGEMENT_NAME())
     );
-    await masterRoles.__MasterRoleManagement_init();
-    await masterRoles.grantRole(MASTER_REGISTRY_ADMIN_ROLE, OWNER);
+    await masterAccess.__MasterAccessManagement_init(OWNER);
 
     const _constantsRegistry = await ConstantsRegistry.new();
     await registry.addProxyContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address);
@@ -49,55 +53,59 @@ describe("TokenFactory", async () => {
     );
     await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME());
 
-    await masterRoles.grantRole(CONSTANTS_REGISTRY_ADMIN_ROLE, USER2);
-
     await reverter.snapshot();
   });
 
   afterEach("revert", reverter.revert);
 
-  describe("addConstant", async () => {
-    it("should be possible to addContant from the CONSTANTS_REGISTRY_ADMIN_ROLE address", async () => {
+  describe("addConstant", () => {
+    it("should be possible to addConstant with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(ConstRCreateRole, [ConstRCreate], true);
+      await masterAccess.grantRoles(USER1, [ConstRCreateRole]);
+
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
-      await constantsRegistry.addConstant(key, randomBytes, { from: USER2 });
+      await constantsRegistry.addConstant(key, randomBytes, { from: USER1 });
 
       assert.equal(await constantsRegistry.constants(key), randomBytes);
     });
 
-    it("should not be possible to addContant not from the CONSTANTS_REGISTRY_ADMIN_ROLE role", async () => {
+    it("should not be possible to addConstant without Create permission", async () => {
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
       await truffleAssert.reverts(
         constantsRegistry.addConstant(key, randomBytes, { from: USER1 }),
-        "ConstantsRegistry: not a CONSTANTS_REGISTRY_ADMIN"
+        "ConstantsRegistry: access denied"
       );
     });
   });
 
-  describe("removeConstant", async () => {
-    it("should be possible to removeConstant from the CONSTANTS_REGISTRY_ADMIN_ROLE address", async () => {
+  describe("removeConstant", () => {
+    it("should be possible to removeConstant with Delete permission", async () => {
+      await masterAccess.addPermissionsToRole(ConstRDeleteRole, [ConstRDelete], true);
+      await masterAccess.grantRoles(USER1, [ConstRDeleteRole]);
+
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
 
-      await constantsRegistry.addConstant(key, randomBytes, { from: USER2 });
+      await constantsRegistry.addConstant(key, randomBytes);
       assert.equal(await constantsRegistry.constants(key), randomBytes);
 
-      await constantsRegistry.removeConstant(key, { from: USER2 });
+      await constantsRegistry.removeConstant(key, { from: USER1 });
 
       assert.equal(await constantsRegistry.constants(key), null);
     });
 
-    it("should not be possible to removeConstant not from the CONSTANTS_REGISTRY_ADMIN_ROLE role", async () => {
+    it("should not be possible to removeConstant without Delete permission", async () => {
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
 
-      await constantsRegistry.addConstant(key, randomBytes, { from: USER2 });
+      await constantsRegistry.addConstant(key, randomBytes);
       assert.equal(await constantsRegistry.constants(key), randomBytes);
 
       await truffleAssert.reverts(
         constantsRegistry.removeConstant(key, { from: USER1 }),
-        "ConstantsRegistry: not a CONSTANTS_REGISTRY_ADMIN"
+        "ConstantsRegistry: access denied"
       );
 
       assert.equal(await constantsRegistry.constants(key), randomBytes);

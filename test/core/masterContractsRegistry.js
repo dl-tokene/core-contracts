@@ -3,10 +3,9 @@ const { accounts } = require("../../scripts/helpers/utils");
 const Reverter = require("../helpers/reverter");
 const { artifacts } = require("hardhat");
 const truffleAssert = require("truffle-assertions");
-const { assert } = require("chai");
+const { assert, use } = require("chai");
 
-const MasterRoleManagement = artifacts.require("MasterRoleManagement");
-const TokenFactory = artifacts.require("TokenFactoryRequestable");
+const MasterAccessManagement = artifacts.require("MasterAccessManagement");
 const ConstantsRegistry = artifacts.require("ConstantsRegistry");
 const MasterContractsRegistry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
@@ -14,40 +13,48 @@ const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 describe("MasterContractsRegistry", async () => {
   const reverter = new Reverter();
 
-  const MASTER_REGISTRY_ADMIN_ROLE = "0xbe3b6931ad58d884ac8399c59bbbed7c5fe116d99ea3833c92a2d6987cefec5d";
-
   let OWNER;
   let USER1;
 
   let registry;
-  let masterRoles;
-  let tokenFactory;
+  let masterAccess;
   let constantsRegistry;
+
+  const MASTER_REGISTRY_RESOURCE = "MASTER_REGISTRY_RESOURCE";
+
+  const CREATE_PERMISSION = "CREATE";
+  const UPDATE_PERMISSION = "UPDATE";
+  const DELETE_PERMISSION = "DELETE";
+
+  const MCRCreateRole = "MCRCreate";
+  const MCRUpdateRole = "MCRUpdate";
+  const MCRDeleteRole = "MCRDelete";
+
+  const MCRCreate = [MASTER_REGISTRY_RESOURCE, [CREATE_PERMISSION]];
+
+  const MCRUpdate = [MASTER_REGISTRY_RESOURCE, [UPDATE_PERMISSION]];
+
+  const MCRDelete = [MASTER_REGISTRY_RESOURCE, [DELETE_PERMISSION]];
 
   before("setup", async () => {
     OWNER = await accounts(0);
     USER1 = await accounts(1);
 
-    const _masterRoles = await MasterRoleManagement.new();
+    const _masterAccess = await MasterAccessManagement.new();
 
     registry = await MasterContractsRegistry.new();
     const registryProxy = await ERC1967Proxy.new(registry.address, []);
     registry = await MasterContractsRegistry.at(registryProxy.address);
-    await registry.__MasterContractsRegistry_init(_masterRoles.address);
+    await registry.__MasterContractsRegistry_init(_masterAccess.address);
 
-    masterRoles = await MasterRoleManagement.at(
-      await registry.getContract(await registry.MASTER_ROLE_MANAGEMENT_NAME())
+    masterAccess = await MasterAccessManagement.at(
+      await registry.getContract(await registry.MASTER_ACCESS_MANAGEMENT_NAME())
     );
-    await masterRoles.__MasterRoleManagement_init();
-    await masterRoles.grantRole(MASTER_REGISTRY_ADMIN_ROLE, OWNER);
-
-    const _tokenFactory = await TokenFactory.new();
-    await registry.addProxyContract(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address);
+    await masterAccess.__MasterAccessManagement_init(OWNER);
 
     const _constantsRegistry = await ConstantsRegistry.new();
     await registry.addProxyContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address);
 
-    tokenFactory = await TokenFactory.at(await registry.getContract(await registry.TOKEN_FACTORY_NAME()));
     constantsRegistry = await ConstantsRegistry.at(
       await registry.getContract(await registry.CONSTANTS_REGISTRY_NAME())
     );
@@ -57,113 +64,147 @@ describe("MasterContractsRegistry", async () => {
 
   afterEach("revert", reverter.revert);
 
-  describe("test access to all functions by the role", async () => {
-    it("should be possible to call injectDependencies by the admin", async () => {
-      await registry.injectDependencies(await registry.TOKEN_FACTORY_NAME());
+  describe("test access to all basic functions", () => {
+    it("should be possible to call injectDependencies with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+      await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
+      await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME(), { from: USER1 });
     });
-    it("should not be possible to call injectDependencies not by the admin", async () => {
+    it("should not be possible to call injectDependencies without Create permission", async () => {
       await truffleAssert.reverts(
-        registry.injectDependencies(await registry.TOKEN_FACTORY_NAME(), { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME(), { from: USER1 }),
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call upgradeContract by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.upgradeContract(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address);
+    it("should be possible to call upgradeContract with Update permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRUpdateRole, [MCRUpdate], true);
+      await masterAccess.grantRoles(USER1, [MCRUpdateRole]);
+
+      await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME({ from: OWNER }));
+
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, {
+        from: USER1,
+      });
     });
-    it("should not be possible to call upgradeContract not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
+    it("should not be possible to call upgradeContract without Update permission", async () => {
+      await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME({ from: OWNER }));
+
+      const _constantsRegistry = await ConstantsRegistry.new();
       await truffleAssert.reverts(
-        registry.upgradeContract(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address, { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        registry.upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, { from: USER1 }),
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call upgradeContractAndCall by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.upgradeContractAndCall(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address, "0x");
+    it("should be possible to call upgradeContractAndCall with Update permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRUpdateRole, [MCRUpdate], true);
+      await masterAccess.grantRoles(USER1, [MCRUpdateRole]);
+
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.upgradeContractAndCall(
+        await registry.CONSTANTS_REGISTRY_NAME(),
+        _constantsRegistry.address,
+        "0x",
+        { from: USER1 }
+      );
     });
-    it("should not be possible to call upgradeContractAndCall not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
+    it("should not be possible to call upgradeContractAndCall without Update permission", async () => {
+      const _constantsRegistry = await ConstantsRegistry.new();
       await truffleAssert.reverts(
-        registry.upgradeContractAndCall(await registry.TOKEN_FACTORY_NAME(), _tokenFactory.address, "0x", {
+        registry.upgradeContractAndCall(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, "0x", {
           from: USER1,
         }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call addContract by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.addContract("TEST", _tokenFactory.address);
+    it("should be possible to call addContract with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+      await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.addContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
-    it("should not be possible to call addContract not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
+    it("should not be possible to call addContract without Create permission", async () => {
+      const _constantsRegistry = await ConstantsRegistry.new();
       await truffleAssert.reverts(
-        registry.addContract("TEST", _tokenFactory.address, { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        registry.addContract("TEST", _constantsRegistry.address, { from: USER1 }),
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call addProxyContract by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.addProxyContract("TEST", _tokenFactory.address);
+    it("should be possible to call addProxyContract with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+      await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.addProxyContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
-    it("should not be possible to call addProxyContract not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
+    it("should not be possible to call addProxyContract without Create permission", async () => {
+      const _constantsRegistry = await ConstantsRegistry.new();
       await truffleAssert.reverts(
-        registry.addProxyContract("TEST", _tokenFactory.address, { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        registry.addProxyContract("TEST", _constantsRegistry.address, { from: USER1 }),
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call justAddProxyContract by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.justAddProxyContract("TEST", _tokenFactory.address);
+    it("should be possible to call justAddProxyContract with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+      await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.justAddProxyContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
-    it("should not be possible to call justAddProxyContract not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
+    it("should not be possible to call justAddProxyContract without Create permission", async () => {
+      const _constantsRegistry = await ConstantsRegistry.new();
       await truffleAssert.reverts(
-        registry.justAddProxyContract("TEST", _tokenFactory.address, { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        registry.justAddProxyContract("TEST", _constantsRegistry.address, { from: USER1 }),
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to call removeContract by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.justAddProxyContract("TEST", _tokenFactory.address);
+    it("should be possible to call removeContract with Delete permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRDeleteRole, [MCRDelete], true);
+      await masterAccess.grantRoles(USER1, [MCRDeleteRole]);
 
-      await registry.removeContract("TEST");
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
+
+      await registry.removeContract("TEST", { from: USER1 });
     });
-    it("should not be possible to call removeContract not by the admin", async () => {
-      const _tokenFactory = await TokenFactory.new();
-      await registry.justAddProxyContract("TEST", _tokenFactory.address);
+    it("should not be possible to call removeContract without Delete permission", async () => {
+      const _constantsRegistry = await ConstantsRegistry.new();
+      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
 
       await truffleAssert.reverts(
         registry.removeContract("TEST", { from: USER1 }),
-        "RoleManagedRegistry: not a MASTER_ROLE_MANAGEMENT role"
+        "RoleManagedRegistry: access denied"
       );
     });
 
-    it("should be possible to upgrade UUPS proxy by MASTER_REGISTRY_ADMIN_ROLE", async () => {
+    it("should be possible to upgrade UUPS proxy with Create permission", async () => {
+      await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+      await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
       const _registry = await MasterContractsRegistry.new();
-      await registry.upgradeTo(_registry.address);
+      await registry.upgradeTo(_registry.address, { from: USER1 });
     });
 
-    it("should not be possible to upgrade UUPS proxy not by MASTER_REGISTRY_ADMIN_ROLE", async () => {
+    it("should not be possible to upgrade UUPS proxy without Create permission", async () => {
       const _registry = await MasterContractsRegistry.new();
-      await truffleAssert.reverts(registry.upgradeTo(_registry.address, { from: USER1 }));
+      await truffleAssert.reverts(
+        registry.upgradeTo(_registry.address, { from: USER1 }),
+        "RoleManagedRegistry: access denied"
+      );
     });
   });
 
-  describe("getters", async () => {
-    it("should correctly return masterRoles contract with getMasterRoleManagement", async () => {
-      assert.equal(await registry.getMasterRoleManagement(), masterRoles.address);
-    });
-
-    it("should correctly return tokenFactory contract with getTokenFactory", async () => {
-      assert.equal(await registry.getTokenFactory(), tokenFactory.address);
+  describe("getters", () => {
+    it("should correctly return masterAccess contract with getMasterAccessManagement", async () => {
+      assert.equal(await registry.getMasterAccessManagement(), masterAccess.address);
     });
 
     it("should correctly return constantsRegistry contract with getConstantsRegistry", async () => {
