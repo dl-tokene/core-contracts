@@ -1,6 +1,6 @@
-const { accounts } = require("../../scripts/helpers/utils");
+const { accounts } = require("../scripts/helpers/utils");
 
-const Reverter = require("../helpers/reverter");
+const Reverter = require("./helpers/reverter");
 const { artifacts } = require("hardhat");
 const truffleAssert = require("truffle-assertions");
 const { assert, use } = require("chai");

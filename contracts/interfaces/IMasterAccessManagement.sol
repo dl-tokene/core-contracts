@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@openzeppelin/contracts-upgradeable/access/IAccessControlEnumerableUpgradeable.sol";
-
 interface IMasterAccessManagement {
     function hasMasterContractsRegistryCreatePermission(address account_)
         external
