@@ -5,6 +5,7 @@ import "@dlsl/dev-modules/access-control/RBAC.sol";
 
 contract MasterAccessManagement is RBAC {
     using ArrayHelper for string;
+
     string public constant MASTER_REGISTRY_RESOURCE = "MASTER_REGISTRY_RESOURCE";
     string public constant CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
 

@@ -3,9 +3,7 @@ pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts-upgradeable/access/IAccessControlEnumerableUpgradeable.sol";
 
-interface IMasterAccessManagement is IAccessControlEnumerableUpgradeable {
-    function __MasterAccessManagement_init() external;
-
+interface IMasterAccessManagement {
     function hasMasterContractsRegistryCreatePermission(address account_)
         external
         view
