@@ -1,0 +1,3 @@
+Resources
+MASTER_REGISTRY_RESOURCE - Resource for MasterContractsRegistry contract role
+CONSTANTS_REGISTRY_RESOURCE - Resource for ConstantsRegistry contract role

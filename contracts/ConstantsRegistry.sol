@@ -2,33 +2,34 @@
 pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
-import "./interfaces/IMasterRoleManagement.sol";
+import "./interfaces/IMasterAccessManagement.sol";
 import "./interfaces/IMasterContractsRegistry.sol";
 import "./interfaces/IConstantsRegistry.sol";
 
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
-    IMasterRoleManagement masterRoles;
+    IMasterAccessManagement masterAccess;
 
     mapping(string => bytes) public constants;
 
     function setDependencies(address registryAddress_) external override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
-        masterRoles = IMasterRoleManagement(registry_.getMasterRoleManagement());
+        masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }
 
-    modifier onlyAuthorizedRole() {
+    function addConstant(string calldata key_, bytes calldata value_) external {
         require(
-            masterRoles.hasConstantsRegistryAdminRole(msg.sender),
-            "ConstantsRegistry: not a CONSTANTS_REGISTRY_ADMIN"
+            masterAccess.hasConstantsRegistryCreatePermission(msg.sender),
+            "ConstantsRegistry: access denied"
         );
-        _;
-    }
 
-    function addConstant(string calldata key_, bytes calldata value_) external onlyAuthorizedRole {
         constants[key_] = value_;
     }
 
-    function removeConstant(string calldata key_) external onlyAuthorizedRole {
+    function removeConstant(string calldata key_) external {
+        require(
+            masterAccess.hasConstantsRegistryDeletePermission(msg.sender),
+            "ConstantsRegistry: access denied"
+        );
         delete constants[key_];
     }
 }
