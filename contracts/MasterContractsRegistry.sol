@@ -2,7 +2,7 @@
 pragma solidity 0.8.17;
 
 import "./interfaces/IMasterContractsRegistry.sol";
-import "./RoleManagedRegistry.sol";
+import "./registry/RoleManagedRegistry.sol";
 
 contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistry {
     string public constant CONSTANTS_REGISTRY_NAME = "CONSTANTS_REGISTRY";
