@@ -2,39 +2,51 @@
 pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
+
 import "./interfaces/IMasterAccessManagement.sol";
 import "./interfaces/IMasterContractsRegistry.sol";
 import "./interfaces/IConstantsRegistry.sol";
 
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
-    IMasterAccessManagement masterAccess;
+    IMasterAccessManagement internal _masterAccess;
 
     mapping(string => bytes) public constants;
 
     event AddedConstant(string name, bytes value);
     event RemovedConstant(string name);
 
-    function setDependencies(address registryAddress_) external override dependant {
-        IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
-        masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
-    }
-
-    function addConstant(string calldata key_, bytes calldata value_) external {
+    modifier onlyCreatePermission() {
         require(
-            masterAccess.hasConstantsRegistryCreatePermission(msg.sender),
+            _masterAccess.hasConstantsRegistryCreatePermission(msg.sender),
             "ConstantsRegistry: access denied"
         );
+        _;
+    }
 
+    modifier onlyDeletePermission() {
+        require(
+            _masterAccess.hasConstantsRegistryDeletePermission(msg.sender),
+            "ConstantsRegistry: access denied"
+        );
+        _;
+    }
+
+    function setDependencies(address registryAddress_) external override dependant {
+        IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
+        _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
+    }
+
+    function addConstant(string calldata key_, bytes calldata value_)
+        external
+        override
+        onlyCreatePermission
+    {
         constants[key_] = value_;
 
         emit AddedConstant(key_, value_);
     }
 
-    function removeConstant(string calldata key_) external {
-        require(
-            masterAccess.hasConstantsRegistryDeletePermission(msg.sender),
-            "ConstantsRegistry: access denied"
-        );
+    function removeConstant(string calldata key_) external override onlyDeletePermission {
         delete constants[key_];
 
         emit RemovedConstant(key_);

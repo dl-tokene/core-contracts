@@ -50,36 +50,51 @@ describe("MasterAccessManagement", async () => {
   describe("getters", () => {
     it("should correctly check access for hasMasterContractsRegistryCreatePermission", async () => {
       await masterAccess.addPermissionsToRole(MCRCreateRole, [MCRCreate], true);
+
       await assert.isFalse(await masterAccess.hasMasterContractsRegistryCreatePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [MCRCreateRole]);
+
       await assert.isTrue(await masterAccess.hasMasterContractsRegistryCreatePermission(USER1));
     });
 
     it("should correctly check access for hasMasterContractsRegistryUpdatePermission", async () => {
       await masterAccess.addPermissionsToRole(MCRUpdateRole, [MCRUpdate], true);
+
       await assert.isFalse(await masterAccess.hasMasterContractsRegistryUpdatePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [MCRUpdateRole]);
+
       await assert.isTrue(await masterAccess.hasMasterContractsRegistryUpdatePermission(USER1));
     });
 
     it("should correctly check access for hasMasterContractsRegistryDeletePermission", async () => {
       await masterAccess.addPermissionsToRole(MCRDeleteRole, [MCRDelete], true);
+
       await assert.isFalse(await masterAccess.hasMasterContractsRegistryDeletePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [MCRDeleteRole]);
+
       await assert.isTrue(await masterAccess.hasMasterContractsRegistryDeletePermission(USER1));
     });
 
     it("should correctly check access for hasConstantsRegistryCreatePermission", async () => {
       await masterAccess.addPermissionsToRole(ConstRCreateRole, [ConstRCreate], true);
+
       await assert.isFalse(await masterAccess.hasConstantsRegistryCreatePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [ConstRCreateRole]);
+
       await assert.isTrue(await masterAccess.hasConstantsRegistryCreatePermission(USER1));
     });
 
     it("should correctly check access for hasConstantsRegistryDeletePermission", async () => {
       await masterAccess.addPermissionsToRole(ConstRDeleteRole, [ConstRDelete], true);
+
       await assert.isFalse(await masterAccess.hasConstantsRegistryDeletePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [ConstRDeleteRole]);
+
       await assert.isTrue(await masterAccess.hasConstantsRegistryDeletePermission(USER1));
     });
   });

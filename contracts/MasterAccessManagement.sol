@@ -9,9 +9,9 @@ contract MasterAccessManagement is RBAC {
     string public constant MASTER_REGISTRY_RESOURCE = "MASTER_REGISTRY_RESOURCE";
     string public constant CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
 
-    function __MasterAccessManagement_init(address RBACMaster_) external initializer {
+    function __MasterAccessManagement_init(address master_) external initializer {
         __RBAC_init();
-        _grantRoles(RBACMaster_, MASTER_ROLE.asArray());
+        _grantRoles(master_, MASTER_ROLE.asArray());
     }
 
     function hasMasterContractsRegistryCreatePermission(address account_)

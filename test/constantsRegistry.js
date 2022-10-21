@@ -63,6 +63,7 @@ describe("ConstantsRegistry", () => {
 
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
+
       await constantsRegistry.addConstant(key, randomBytes, { from: USER1 });
 
       assert.equal(await constantsRegistry.constants(key), randomBytes);
@@ -88,6 +89,7 @@ describe("ConstantsRegistry", () => {
       const randomBytes = "0xab56545242342000aa";
 
       await constantsRegistry.addConstant(key, randomBytes);
+
       assert.equal(await constantsRegistry.constants(key), randomBytes);
 
       await constantsRegistry.removeConstant(key, { from: USER1 });
@@ -100,6 +102,7 @@ describe("ConstantsRegistry", () => {
       const randomBytes = "0xab56545242342000aa";
 
       await constantsRegistry.addConstant(key, randomBytes);
+
       assert.equal(await constantsRegistry.constants(key), randomBytes);
 
       await truffleAssert.reverts(

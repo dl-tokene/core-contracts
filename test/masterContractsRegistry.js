@@ -72,7 +72,7 @@ describe("MasterContractsRegistry", async () => {
     it("should not be possible to call injectDependencies without Create permission", async () => {
       await truffleAssert.reverts(
         registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME(), { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -83,6 +83,7 @@ describe("MasterContractsRegistry", async () => {
       await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME({ from: OWNER }));
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await registry.upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, {
         from: USER1,
       });
@@ -91,9 +92,10 @@ describe("MasterContractsRegistry", async () => {
       await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME({ from: OWNER }));
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await truffleAssert.reverts(
         registry.upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -102,6 +104,7 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRUpdateRole]);
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await registry.upgradeContractAndCall(
         await registry.CONSTANTS_REGISTRY_NAME(),
         _constantsRegistry.address,
@@ -111,11 +114,12 @@ describe("MasterContractsRegistry", async () => {
     });
     it("should not be possible to call upgradeContractAndCall without Update permission", async () => {
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await truffleAssert.reverts(
         registry.upgradeContractAndCall(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address, "0x", {
           from: USER1,
         }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -124,13 +128,15 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRCreateRole]);
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await registry.addContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
     it("should not be possible to call addContract without Create permission", async () => {
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await truffleAssert.reverts(
         registry.addContract("TEST", _constantsRegistry.address, { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -139,13 +145,15 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRCreateRole]);
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await registry.addProxyContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
     it("should not be possible to call addProxyContract without Create permission", async () => {
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await truffleAssert.reverts(
         registry.addProxyContract("TEST", _constantsRegistry.address, { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -154,13 +162,15 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRCreateRole]);
 
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await registry.justAddProxyContract("TEST", _constantsRegistry.address, { from: USER1 });
     });
     it("should not be possible to call justAddProxyContract without Create permission", async () => {
       const _constantsRegistry = await ConstantsRegistry.new();
+
       await truffleAssert.reverts(
         registry.justAddProxyContract("TEST", _constantsRegistry.address, { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -169,17 +179,17 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRDeleteRole]);
 
       const _constantsRegistry = await ConstantsRegistry.new();
-      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
 
+      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
       await registry.removeContract("TEST", { from: USER1 });
     });
     it("should not be possible to call removeContract without Delete permission", async () => {
       const _constantsRegistry = await ConstantsRegistry.new();
-      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
 
+      await registry.justAddProxyContract("TEST", _constantsRegistry.address);
       await truffleAssert.reverts(
         registry.removeContract("TEST", { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
 
@@ -188,14 +198,16 @@ describe("MasterContractsRegistry", async () => {
       await masterAccess.grantRoles(USER1, [MCRCreateRole]);
 
       const _registry = await MasterContractsRegistry.new();
+
       await registry.upgradeTo(_registry.address, { from: USER1 });
     });
 
     it("should not be possible to upgrade UUPS proxy without Create permission", async () => {
       const _registry = await MasterContractsRegistry.new();
+
       await truffleAssert.reverts(
         registry.upgradeTo(_registry.address, { from: USER1 }),
-        "RoleManagedRegistry: access denied"
+        "MasterContractsRegistry: access denied"
       );
     });
   });
