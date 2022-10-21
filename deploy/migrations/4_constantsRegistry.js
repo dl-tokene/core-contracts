@@ -1,4 +1,3 @@
-const { artifacts } = require("hardhat");
 const { logTransaction } = require("../runners/logger/logger");
 
 const Registry = artifacts.require("MasterContractsRegistry");

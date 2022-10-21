@@ -1,8 +1,6 @@
-const { accounts } = require("../scripts/helpers/utils");
+const { accounts } = require("../scripts/utils/utils");
 
 const Reverter = require("./helpers/reverter");
-const { artifacts } = require("hardhat");
-const { assert } = require("chai");
 
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
 

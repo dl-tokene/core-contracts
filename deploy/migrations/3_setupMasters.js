@@ -1,5 +1,4 @@
-const { artifacts } = require("hardhat");
-const { accounts } = require("../../scripts/helpers/utils");
+const { accounts } = require("../../scripts/utils/utils");
 const { logTransaction } = require("../runners/logger/logger");
 
 const Registry = artifacts.require("MasterContractsRegistry");
@@ -10,6 +9,10 @@ module.exports = async () => {
   const OWNER = await accounts(0);
 
   const registry = await Registry.at((await ERC1967Proxy.deployed()).address);
+  const masterAccessImpl = (await MasterAccessManagement.deployed()).address;
+
+  logTransaction(await registry.__MasterContractsRegistry_init(masterAccessImpl), "Init ContractsRegistry");
+
   const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
 
   logTransaction(await masterAccess.__MasterAccessManagement_init(OWNER), "Init MasterAccessManagement");

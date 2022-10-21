@@ -1,8 +1,6 @@
-const { accounts } = require("../scripts/helpers/utils");
+const { accounts } = require("../scripts/utils/utils");
 
 const Reverter = require("./helpers/reverter");
-const { artifacts } = require("hardhat");
-const { assert } = require("chai");
 const truffleAssert = require("truffle-assertions");
 
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
@@ -73,6 +71,7 @@ describe("ConstantsRegistry", () => {
     it("should not be possible to addConstant without Create permission", async () => {
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
+
       await truffleAssert.reverts(
         constantsRegistry.addConstant(key, randomBytes, { from: USER1 }),
         "ConstantsRegistry: access denied"

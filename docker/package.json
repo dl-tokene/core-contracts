@@ -8,7 +8,7 @@
     "compile": "npx hardhat compile --force",
     "deploy-dev-ed": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
     "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
-    "deploy-rinkeby": "npx hardhat run deploy/runners/deployer/migrations.js --network rinkeby",
+    "deploy-goerli": "npx hardhat run deploy/runners/deployer/migrations.js --network goerli",
     "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
     "deploy-bsc-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet"
