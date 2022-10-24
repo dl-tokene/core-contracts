@@ -9,6 +9,10 @@ require("solidity-coverage");
 const dotenv = require("dotenv");
 dotenv.config();
 
+function privateKey() {
+  return process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [];
+}
+
 function typechainTarget() {
   const target = process.env.TYPECHAIN_TARGET;
 
@@ -26,23 +30,23 @@ module.exports = {
     },
     goerli: {
       url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: privateKey(),
       gasMultiplier: 1.2,
     },
     chapel: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: privateKey(),
       gasMultiplier: 1.2,
       timeout: 60000,
     },
     bsc_mainnet: {
       url: "https://bsc-dataseed.binance.org/",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: privateKey(),
       gasMultiplier: 1.2,
     },
     eth_mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: privateKey(),
       gasMultiplier: 1.2,
     },
   },
