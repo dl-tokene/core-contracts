@@ -62,7 +62,7 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         uint256 requestId_ = nextRequestId++;
 
         requests[requestId_] = Request({
-            status: RequestStatus.IN_PROGRESS,
+            status: RequestStatus.PENDING,
             executor: executor_,
             acceptData: acceptData_,
             rejectData: rejectData_
@@ -78,45 +78,25 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         bytes calldata rejectData_,
         string calldata description_
     ) external override onlyUpdatePermission {
-        dropRequest(requestId_);
+        Request storage request_ = _getPendingRequest(requestId_);
 
-        uint256 newRequestId_ = nextRequestId++;
-
-        Request storage request_ = requests[requestId_];
-        Request storage newRequest_ = requests[newRequestId_];
-
-        newRequest_.status = RequestStatus.IN_PROGRESS;
-        newRequest_.executor = executor_ == address(0) ? request_.executor : executor_;
-
-        if (acceptData_.length == 0) {
-            newRequest_.acceptData = request_.acceptData;
-        } else {
-            newRequest_.acceptData = acceptData_;
+        if (executor_ != address(0)) {
+            request_.executor = executor_;
         }
 
-        if (rejectData_.length == 0) {
-            newRequest_.rejectData = request_.rejectData;
-        } else {
-            newRequest_.rejectData = rejectData_;
+        if (acceptData_.length != 0) {
+            request_.acceptData = acceptData_;
         }
 
-        emit RequestUpdated(
-            requestId_,
-            newRequestId_,
-            executor_,
-            acceptData_,
-            rejectData_,
-            description_
-        );
+        if (rejectData_.length != 0) {
+            request_.rejectData = rejectData_;
+        }
+
+        emit RequestUpdated(requestId_, executor_, acceptData_, rejectData_, description_);
     }
 
     function acceptRequest(uint256 requestId_) external override onlyExecutePermission {
-        Request storage request_ = requests[requestId_];
-
-        require(
-            request_.status == RequestStatus.IN_PROGRESS,
-            "ReviewableRequests: invalid request status"
-        );
+        Request storage request_ = _getPendingRequest(requestId_);
 
         request_.status = RequestStatus.ACCEPTED;
 
@@ -127,12 +107,7 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
     }
 
     function rejectRequest(uint256 requestId_) external override onlyExecutePermission {
-        Request storage request_ = requests[requestId_];
-
-        require(
-            request_.status == RequestStatus.IN_PROGRESS,
-            "ReviewableRequests: invalid request status"
-        );
+        Request storage request_ = _getPendingRequest(requestId_);
 
         request_.status = RequestStatus.REJECTED;
 
@@ -142,16 +117,24 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         emit RequestRejected(requestId_);
     }
 
-    function dropRequest(uint256 requestId_) public override onlyDeletePermission {
-        Request storage request_ = requests[requestId_];
-
-        require(
-            request_.status == RequestStatus.IN_PROGRESS,
-            "ReviewableRequests: invalid request status"
-        );
+    function dropRequest(uint256 requestId_) external override onlyDeletePermission {
+        Request storage request_ = _getPendingRequest(requestId_);
 
         request_.status = RequestStatus.DROPPED;
 
         emit RequestDropped(requestId_);
+    }
+
+    function _getPendingRequest(uint256 requestId_)
+        internal
+        view
+        returns (Request storage request_)
+    {
+        request_ = requests[requestId_];
+
+        require(
+            request_.status == RequestStatus.PENDING,
+            "ReviewableRequests: invalid request status"
+        );
     }
 }

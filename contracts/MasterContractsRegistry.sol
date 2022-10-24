@@ -7,6 +7,7 @@ import "./registry/RoleManagedRegistry.sol";
 
 contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistry {
     string public constant CONSTANTS_REGISTRY_NAME = "CONSTANTS_REGISTRY";
+    string public constant REVIEWABLE_REQUESTS_NAME = "REVIEWABLE_REQUESTS";
 
     function __MasterContractsRegistry_init(address masterAccess_) external initializer {
         __RoleManagedRegistry_init(masterAccess_);
@@ -45,5 +46,9 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
 
     function getConstantsRegistry() external view override returns (address) {
         return getContract(CONSTANTS_REGISTRY_NAME);
+    }
+
+    function getReviewableRequests() external view override returns (address) {
+        return getContract(REVIEWABLE_REQUESTS_NAME);
     }
 }

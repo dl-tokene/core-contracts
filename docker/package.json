@@ -6,8 +6,8 @@
   "description": "",
   "scripts": {
     "compile": "npx hardhat compile --force",
-    "deploy-dev-ed": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
-    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
+    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
+    "deploy-localhost": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
     "deploy-goerli": "npx hardhat run deploy/runners/deployer/migrations.js --network goerli",
     "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
@@ -22,7 +22,6 @@
     "solc": "0.8.17"
   },
   "devDependencies": {
-    "@metamask/eth-sig-util": "^4.0.0",
     "@nomiclabs/hardhat-truffle5": "^2.0.1",
     "@nomiclabs/hardhat-web3": "^2.0.0",
     "@truffle/deployer": "3.2.56",

@@ -4,7 +4,7 @@ pragma solidity 0.8.17;
 interface IReviewableRequests {
     enum RequestStatus {
         NONE,
-        IN_PROGRESS,
+        PENDING,
         ACCEPTED,
         REJECTED,
         DROPPED
@@ -26,7 +26,6 @@ interface IReviewableRequests {
     );
     event RequestUpdated(
         uint256 requestId,
-        uint256 newRequestId,
         address executor,
         bytes acceptData,
         bytes rejectData,

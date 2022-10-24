@@ -1,4 +1,5 @@
 const { accounts } = require("../scripts/utils/utils");
+const { CREATE_PERMISSION, DELETE_PERMISSION, CONSTANTS_REGISTRY_RESOURCE } = require("./utils/constants");
 
 const Reverter = require("./helpers/reverter");
 const truffleAssert = require("truffle-assertions");
@@ -13,17 +14,10 @@ describe("ConstantsRegistry", () => {
   let OWNER;
   let USER1;
 
-  const CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
+  const ConstantsRegistryRole = "CR";
 
-  const ConstRCreateRole = "CRCreate";
-  const ConstRDeleteRole = "CRDelete";
-
-  const CREATE_PERMISSION = "CREATE";
-  const DELETE_PERMISSION = "DELETE";
-
-  const ConstRCreate = [CONSTANTS_REGISTRY_RESOURCE, [CREATE_PERMISSION]];
-
-  const ConstRDelete = [CONSTANTS_REGISTRY_RESOURCE, [DELETE_PERMISSION]];
+  const ConstantsRegistryCreate = [CONSTANTS_REGISTRY_RESOURCE, [CREATE_PERMISSION]];
+  const ConstantsRegistryDelete = [CONSTANTS_REGISTRY_RESOURCE, [DELETE_PERMISSION]];
 
   let constantsRegistry;
   let masterAccess;
@@ -33,22 +27,19 @@ describe("ConstantsRegistry", () => {
     OWNER = await accounts(0);
     USER1 = await accounts(1);
 
-    const _masterAccess = await MasterAccessManagement.new();
-
     registry = await MasterContractsRegistry.new();
+    const _masterAccess = await MasterAccessManagement.new();
+    const _constantsRegistry = await ConstantsRegistry.new();
+
     await registry.__MasterContractsRegistry_init(_masterAccess.address);
 
-    masterAccess = await MasterAccessManagement.at(
-      await registry.getContract(await registry.MASTER_ACCESS_MANAGEMENT_NAME())
-    );
+    masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
     await masterAccess.__MasterAccessManagement_init(OWNER);
 
-    const _constantsRegistry = await ConstantsRegistry.new();
     await registry.addProxyContract(await registry.CONSTANTS_REGISTRY_NAME(), _constantsRegistry.address);
 
-    constantsRegistry = await ConstantsRegistry.at(
-      await registry.getContract(await registry.CONSTANTS_REGISTRY_NAME())
-    );
+    constantsRegistry = await ConstantsRegistry.at(await registry.getConstantsRegistry());
+
     await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME());
 
     await reverter.snapshot();
@@ -56,10 +47,16 @@ describe("ConstantsRegistry", () => {
 
   afterEach("revert", reverter.revert);
 
+  describe("basic access", () => {
+    it("should not set dependencies from non dependant", async () => {
+      await truffleAssert.reverts(constantsRegistry.setDependencies(OWNER), "Dependant: Not an injector");
+    });
+  });
+
   describe("addConstant", () => {
     it("should be possible to addConstant with Create permission", async () => {
-      await masterAccess.addPermissionsToRole(ConstRCreateRole, [ConstRCreate], true);
-      await masterAccess.grantRoles(USER1, [ConstRCreateRole]);
+      await masterAccess.addPermissionsToRole(ConstantsRegistryRole, [ConstantsRegistryCreate], true);
+      await masterAccess.grantRoles(USER1, [ConstantsRegistryRole]);
 
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
@@ -82,8 +79,8 @@ describe("ConstantsRegistry", () => {
 
   describe("removeConstant", () => {
     it("should be possible to removeConstant with Delete permission", async () => {
-      await masterAccess.addPermissionsToRole(ConstRDeleteRole, [ConstRDelete], true);
-      await masterAccess.grantRoles(USER1, [ConstRDeleteRole]);
+      await masterAccess.addPermissionsToRole(ConstantsRegistryRole, [ConstantsRegistryDelete], true);
+      await masterAccess.grantRoles(USER1, [ConstantsRegistryRole]);
 
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";

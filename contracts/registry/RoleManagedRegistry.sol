@@ -15,11 +15,17 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradea
         _addProxyContract(MASTER_ACCESS_MANAGEMENT_NAME, masterAccess_);
     }
 
-    modifier onlyCreatePermission() virtual;
+    modifier onlyCreatePermission() virtual {
+        _;
+    }
 
-    modifier onlyUpdatePermission() virtual;
+    modifier onlyUpdatePermission() virtual {
+        _;
+    }
 
-    modifier onlyDeletePermission() virtual;
+    modifier onlyDeletePermission() virtual {
+        _;
+    }
 
     function injectDependencies(string calldata name_) external onlyCreatePermission {
         _injectDependencies(name_);
