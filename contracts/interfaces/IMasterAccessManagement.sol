@@ -23,8 +23,6 @@ interface IMasterAccessManagement {
 
     function hasReviewableRequestsCreatePermission(address account_) external view returns (bool);
 
-    function hasReviewableRequestsUpdatePermission(address account_) external view returns (bool);
-
     function hasReviewableRequestsExecutePermission(address account_) external view returns (bool);
 
     function hasReviewableRequestsDeletePermission(address account_) external view returns (bool);

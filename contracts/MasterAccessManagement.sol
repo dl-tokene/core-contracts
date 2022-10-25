@@ -73,15 +73,6 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         return hasPermission(account_, REVIEWABLE_REQUESTS_RESOURCE, CREATE_PERMISSION);
     }
 
-    function hasReviewableRequestsUpdatePermission(address account_)
-        external
-        view
-        override
-        returns (bool)
-    {
-        return hasPermission(account_, REVIEWABLE_REQUESTS_RESOURCE, UPDATE_PERMISSION);
-    }
-
     function hasReviewableRequestsExecutePermission(address account_)
         external
         view

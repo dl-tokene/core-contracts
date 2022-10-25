@@ -22,14 +22,6 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         _;
     }
 
-    modifier onlyUpdatePermission() {
-        require(
-            _masterAccess.hasReviewableRequestsUpdatePermission(msg.sender),
-            "ReviewableRequests: access denied"
-        );
-        _;
-    }
-
     modifier onlyExecutePermission() {
         require(
             _masterAccess.hasReviewableRequestsExecutePermission(msg.sender),
@@ -63,12 +55,20 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
 
         requests[requestId_] = Request({
             status: RequestStatus.PENDING,
+            creator: msg.sender,
             executor: executor_,
             acceptData: acceptData_,
             rejectData: rejectData_
         });
 
-        emit RequestCreated(requestId_, executor_, acceptData_, rejectData_, description_);
+        emit RequestCreated(
+            requestId_,
+            msg.sender,
+            executor_,
+            acceptData_,
+            rejectData_,
+            description_
+        );
     }
 
     function updateRequest(
@@ -77,22 +77,49 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         bytes calldata acceptData_,
         bytes calldata rejectData_,
         string calldata description_
-    ) external override onlyUpdatePermission {
+    ) external override onlyCreatePermission onlyDeletePermission {
+        dropRequest(requestId_);
+
+        uint256 newRequestId_ = nextRequestId++;
+
+        Request storage request_ = requests[requestId_];
+        Request storage newRequest_ = requests[newRequestId_];
+
+        newRequest_.status = RequestStatus.PENDING;
+        newRequest_.creator = msg.sender;
+
+        newRequest_.executor = executor_ == address(0) ? request_.executor : executor_;
+
+        if (acceptData_.length == 0) {
+            newRequest_.acceptData = request_.acceptData;
+        } else {
+            newRequest_.acceptData = acceptData_;
+        }
+
+        if (rejectData_.length == 0) {
+            newRequest_.rejectData = request_.rejectData;
+        } else {
+            newRequest_.rejectData = rejectData_;
+        }
+
+        emit RequestUpdated(
+            requestId_,
+            newRequestId_,
+            executor_,
+            acceptData_,
+            rejectData_,
+            description_
+        );
+    }
+
+    function dropRequest(uint256 requestId_) public override onlyDeletePermission {
         Request storage request_ = _getPendingRequest(requestId_);
 
-        if (executor_ != address(0)) {
-            request_.executor = executor_;
-        }
+        require(request_.creator == msg.sender, "ReviewableRequests: not a request creator");
 
-        if (acceptData_.length != 0) {
-            request_.acceptData = acceptData_;
-        }
+        request_.status = RequestStatus.DROPPED;
 
-        if (rejectData_.length != 0) {
-            request_.rejectData = rejectData_;
-        }
-
-        emit RequestUpdated(requestId_, executor_, acceptData_, rejectData_, description_);
+        emit RequestDropped(requestId_);
     }
 
     function acceptRequest(uint256 requestId_) external override onlyExecutePermission {
@@ -115,14 +142,6 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         require(success_, "ReviewableRequests: failed to reject request");
 
         emit RequestRejected(requestId_);
-    }
-
-    function dropRequest(uint256 requestId_) external override onlyDeletePermission {
-        Request storage request_ = _getPendingRequest(requestId_);
-
-        request_.status = RequestStatus.DROPPED;
-
-        emit RequestDropped(requestId_);
     }
 
     function _getPendingRequest(uint256 requestId_)

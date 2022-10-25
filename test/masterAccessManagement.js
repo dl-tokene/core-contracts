@@ -126,16 +126,6 @@ describe("MasterAccessManagement", async () => {
         await assert.isTrue(await masterAccess.hasReviewableRequestsCreatePermission(USER1));
       });
 
-      it("should correctly check access for hasReviewableRequestsUpdatePermission", async () => {
-        await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsUpdate], true);
-
-        await assert.isFalse(await masterAccess.hasReviewableRequestsUpdatePermission(USER1));
-
-        await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-
-        await assert.isTrue(await masterAccess.hasReviewableRequestsUpdatePermission(USER1));
-      });
-
       it("should correctly check access for hasReviewableRequestsExecutePermission", async () => {
         await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsExecute], true);
 
