@@ -11,6 +11,9 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
 
     mapping(string => bytes) public constants;
 
+    event AddedConstant(string name, bytes value);
+    event RemovedConstant(string name);
+
     function setDependencies(address registryAddress_) external override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
         masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
@@ -23,6 +26,8 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         );
 
         constants[key_] = value_;
+
+        emit AddedConstant(key_, value_);
     }
 
     function removeConstant(string calldata key_) external {
@@ -31,5 +36,7 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
             "ConstantsRegistry: access denied"
         );
         delete constants[key_];
+
+        emit RemovedConstant(key_);
     }
 }
