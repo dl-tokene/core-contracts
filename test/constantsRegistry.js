@@ -66,6 +66,18 @@ describe("ConstantsRegistry", () => {
       assert.equal(await constantsRegistry.constants(key), randomBytes);
     });
 
+    it("should not add an empty constant", async () => {
+      await masterAccess.addPermissionsToRole(ConstantsRegistryRole, [ConstantsRegistryCreate], true);
+      await masterAccess.grantRoles(USER1, [ConstantsRegistryRole]);
+
+      const key = "Test";
+
+      await truffleAssert.reverts(
+        constantsRegistry.addConstant(key, "0x", { from: USER1 }),
+        "ConstantsRegistry: empty value"
+      );
+    });
+
     it("should not be possible to addConstant without Create permission", async () => {
       const key = "Test";
       const randomBytes = "0xab56545242342000aa";
@@ -92,6 +104,18 @@ describe("ConstantsRegistry", () => {
       await constantsRegistry.removeConstant(key, { from: USER1 });
 
       assert.equal(await constantsRegistry.constants(key), null);
+    });
+
+    it("should not remove nonexisting constant", async () => {
+      await masterAccess.addPermissionsToRole(ConstantsRegistryRole, [ConstantsRegistryDelete], true);
+      await masterAccess.grantRoles(USER1, [ConstantsRegistryRole]);
+
+      const key = "Test";
+
+      await truffleAssert.reverts(
+        constantsRegistry.removeConstant(key, { from: USER1 }),
+        "ConstantsRegistry: constant does not exist"
+      );
     });
 
     it("should not be possible to removeConstant without Delete permission", async () => {

@@ -41,12 +41,16 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         override
         onlyCreatePermission
     {
+        require(value_.length > 0, "ConstantsRegistry: empty value");
+
         constants[key_] = value_;
 
         emit AddedConstant(key_, value_);
     }
 
     function removeConstant(string calldata key_) external override onlyDeletePermission {
+        require(constants[key_].length > 0, "ConstantsRegistry: constant does not exist");
+
         delete constants[key_];
 
         emit RemovedConstant(key_);
