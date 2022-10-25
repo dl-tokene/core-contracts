@@ -12,7 +12,7 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     mapping(string => bytes) public constants;
 
     event AddedConstant(string name, bytes value);
-    event RemovedConstans(string name);
+    event RemovedConstant(string name);
 
     function setDependencies(address registryAddress_) external override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
@@ -37,6 +37,6 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         );
         delete constants[key_];
 
-        emit RemovedConstans(key_);
+        emit RemovedConstant(key_);
     }
 }
