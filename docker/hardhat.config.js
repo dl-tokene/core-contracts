@@ -38,8 +38,8 @@ module.exports = {
       initialDate: "1970-01-01T00:00:00Z",
       gasMultiplier: 1.2,
     },
-    rinkeby: {
-      url: `https://rinkeby.infura.io/v3/${process.env.INFURA_KEY}`,
+    goerli: {
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
       accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
       gasMultiplier: 1.2,
     },

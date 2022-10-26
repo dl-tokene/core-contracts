@@ -1,4 +1,3 @@
-const { artifacts } = require("hardhat");
 const { logTransaction } = require("../runners/logger/logger");
 
 const Registry = artifacts.require("MasterContractsRegistry");
@@ -10,5 +9,9 @@ module.exports = async () => {
   logTransaction(
     await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME()),
     "Set dependencies at ConstantsRegistry"
+  );
+  logTransaction(
+    await registry.injectDependencies(await registry.REVIEWABLE_REQUESTS_NAME()),
+    "Set dependencies at ReviewableRequests"
   );
 };

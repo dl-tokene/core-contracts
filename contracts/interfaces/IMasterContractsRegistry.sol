@@ -5,4 +5,6 @@ interface IMasterContractsRegistry {
     function getMasterAccessManagement() external view returns (address);
 
     function getConstantsRegistry() external view returns (address);
+
+    function getReviewableRequests() external view returns (address);
 }

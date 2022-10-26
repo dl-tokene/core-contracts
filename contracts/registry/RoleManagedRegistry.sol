@@ -2,41 +2,28 @@
 pragma solidity 0.8.17;
 
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+
 import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
+
 import "../interfaces/IMasterAccessManagement.sol";
 
 abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradeable {
     string public constant MASTER_ACCESS_MANAGEMENT_NAME = "MASTER_ACCESS_MANAGEMENT";
 
-    function __RoleManagedRegistry_init(address masterAccess_) public onlyInitializing {
+    function __RoleManagedRegistry_init(address masterAccess_) internal onlyInitializing {
         __ContractsRegistry_init();
         _addProxyContract(MASTER_ACCESS_MANAGEMENT_NAME, masterAccess_);
     }
 
-    modifier onlyCreatePermission() {
-        require(
-            IMasterAccessManagement(getContract(MASTER_ACCESS_MANAGEMENT_NAME))
-                .hasMasterContractsRegistryCreatePermission(msg.sender),
-            "RoleManagedRegistry: access denied"
-        );
+    modifier onlyCreatePermission() virtual {
         _;
     }
 
-    modifier onlyUpdatePermission() {
-        require(
-            IMasterAccessManagement(getContract(MASTER_ACCESS_MANAGEMENT_NAME))
-                .hasMasterContractsRegistryUpdatePermission(msg.sender),
-            "RoleManagedRegistry: access denied"
-        );
+    modifier onlyUpdatePermission() virtual {
         _;
     }
 
-    modifier onlyDeletePermission() {
-        require(
-            IMasterAccessManagement(getContract(MASTER_ACCESS_MANAGEMENT_NAME))
-                .hasMasterContractsRegistryDeletePermission(msg.sender),
-            "RoleManagedRegistry: access denied"
-        );
+    modifier onlyDeletePermission() virtual {
         _;
     }
 

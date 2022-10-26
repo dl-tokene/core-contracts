@@ -20,4 +20,10 @@ interface IMasterAccessManagement {
     function hasConstantsRegistryCreatePermission(address account_) external view returns (bool);
 
     function hasConstantsRegistryDeletePermission(address account_) external view returns (bool);
+
+    function hasReviewableRequestsCreatePermission(address account_) external view returns (bool);
+
+    function hasReviewableRequestsExecutePermission(address account_) external view returns (bool);
+
+    function hasReviewableRequestsDeletePermission(address account_) external view returns (bool);
 }
