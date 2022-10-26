@@ -12,7 +12,7 @@
     "test-all": "npm run deploy-dev && npm run test",
     "private-network": "npx hardhat node",
     "private-network-fork": "npx hardhat node --fork https://mainnet.infura.io/v3/$(grep INFURA_KEY .env | cut -d '\"' -f2)",
-    "deploy-localhost": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
+    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
     "deploy-goerli": "CONFIRMATIONS=4 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network goerli",
     "deploy-chapel": "CONFIRMATIONS=1 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-eth-mainnet": "CONFIRMATIONS=4 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
