@@ -109,133 +109,6 @@ describe("ReviewableRequests", () => {
     });
   });
 
-  describe("updateRequest", () => {
-    it("should update a reviewable request (1)", async () => {
-      await masterAccess.addPermissionsToRole(
-        ReviewableRequestsRole,
-        [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true
-      );
-      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
-      const tx = await reviewableRequests.updateRequest(0, OWNER, "0x1111", "0x2222", "Updated request", {
-        from: USER1,
-      });
-
-      assert.equal(tx.receipt.logs[0].event, "RequestDropped");
-      assert.equal(tx.receipt.logs[0].args.requestId, "0");
-
-      assert.equal(tx.receipt.logs[1].event, "RequestUpdated");
-      assert.equal(tx.receipt.logs[1].args.requestId, "0");
-      assert.equal(tx.receipt.logs[1].args.newRequestId, "1");
-      assert.equal(tx.receipt.logs[1].args.executor, OWNER);
-      assert.equal(tx.receipt.logs[1].args.acceptData, "0x1111");
-      assert.equal(tx.receipt.logs[1].args.rejectData, "0x2222");
-      assert.equal(tx.receipt.logs[1].args.description, "Updated request");
-
-      const request = await reviewableRequests.requests(0);
-      const newRequest = await reviewableRequests.requests(1);
-
-      assert.equal(request.status, RequestStatus.DROPPED);
-
-      assert.equal(newRequest.status, RequestStatus.PENDING);
-      assert.equal(newRequest.creator, USER1);
-      assert.equal(newRequest.executor, OWNER);
-      assert.equal(newRequest.acceptData, "0x1111");
-      assert.equal(newRequest.rejectData, "0x2222");
-
-      assert.equal(await reviewableRequests.nextRequestId(), "2");
-    });
-
-    it("should update a reviewable request (2)", async () => {
-      await masterAccess.addPermissionsToRole(
-        ReviewableRequestsRole,
-        [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true
-      );
-      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
-      const tx = await reviewableRequests.updateRequest(0, ZERO_ADDR, "0x", "0x", "Left request untouched", {
-        from: USER1,
-      });
-
-      assert.equal(tx.receipt.logs[0].event, "RequestDropped");
-      assert.equal(tx.receipt.logs[0].args.requestId, "0");
-
-      assert.equal(tx.receipt.logs[1].event, "RequestUpdated");
-      assert.equal(tx.receipt.logs[1].args.requestId, "0");
-      assert.equal(tx.receipt.logs[1].args.newRequestId, "1");
-      assert.equal(tx.receipt.logs[1].args.executor, ZERO_ADDR);
-      assert.equal(tx.receipt.logs[1].args.acceptData, null);
-      assert.equal(tx.receipt.logs[1].args.rejectData, null);
-      assert.equal(tx.receipt.logs[1].args.description, "Left request untouched");
-
-      const request = await reviewableRequests.requests(0);
-      const newRequest = await reviewableRequests.requests(1);
-
-      assert.equal(request.status, RequestStatus.DROPPED);
-
-      assert.equal(newRequest.status, RequestStatus.PENDING);
-      assert.equal(newRequest.creator, USER1);
-      assert.equal(newRequest.executor, OWNER);
-      assert.equal(newRequest.acceptData, "0x00");
-      assert.equal(newRequest.rejectData, "0x11");
-
-      assert.equal(await reviewableRequests.nextRequestId(), "2");
-    });
-
-    it("should not update nonexisting request", async () => {
-      await masterAccess.addPermissionsToRole(
-        ReviewableRequestsRole,
-        [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true
-      );
-      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-
-      await truffleAssert.reverts(
-        reviewableRequests.updateRequest(123, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
-        "ReviewableRequests: invalid request status"
-      );
-    });
-
-    it("only creator should be able to update the request", async () => {
-      await masterAccess.addPermissionsToRole(
-        ReviewableRequestsRole,
-        [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true
-      );
-      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-      await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
-
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
-
-      await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, ZERO_ADDR, "0x", "0x", "Left request untouched", {
-          from: USER2,
-        }),
-        "ReviewableRequests: not a request creator"
-      );
-    });
-
-    it("should not update reviewable request without permissions", async () => {
-      await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsCreate], true);
-
-      await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
-        "ReviewableRequests: access denied"
-      );
-
-      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
-
-      await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
-        "ReviewableRequests: access denied"
-      );
-    });
-  });
-
   describe("dropRequest", () => {
     it("should drop the reviewable request", async () => {
       await masterAccess.addPermissionsToRole(
@@ -292,6 +165,127 @@ describe("ReviewableRequests", () => {
     it("should not drop reviewable request without permission", async () => {
       await truffleAssert.reverts(
         reviewableRequests.dropRequest(0, { from: USER1 }),
+        "ReviewableRequests: access denied"
+      );
+    });
+  });
+
+  describe("updateRequest", () => {
+    it("should update a reviewable request (1)", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsDelete],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+      const tx = await reviewableRequests.updateRequest(0, OWNER, "0x1111", "0x2222", "Updated request", {
+        from: USER1,
+      });
+
+      assert.equal(tx.receipt.logs[0].event, "RequestUpdated");
+      assert.equal(tx.receipt.logs[0].args.requestId, "0");
+      assert.equal(tx.receipt.logs[0].args.newRequestId, "1");
+      assert.equal(tx.receipt.logs[0].args.executor, OWNER);
+      assert.equal(tx.receipt.logs[0].args.acceptData, "0x1111");
+      assert.equal(tx.receipt.logs[0].args.rejectData, "0x2222");
+      assert.equal(tx.receipt.logs[0].args.description, "Updated request");
+
+      const request = await reviewableRequests.requests(0);
+      const newRequest = await reviewableRequests.requests(1);
+
+      assert.equal(request.status, RequestStatus.DROPPED);
+
+      assert.equal(newRequest.status, RequestStatus.PENDING);
+      assert.equal(newRequest.creator, USER1);
+      assert.equal(newRequest.executor, OWNER);
+      assert.equal(newRequest.acceptData, "0x1111");
+      assert.equal(newRequest.rejectData, "0x2222");
+
+      assert.equal(await reviewableRequests.nextRequestId(), "2");
+    });
+
+    it("should update a reviewable request (2)", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsDelete],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+      const tx = await reviewableRequests.updateRequest(0, USER2, "0x", "0x", "Updated request", {
+        from: USER1,
+      });
+
+      assert.equal(tx.receipt.logs[0].event, "RequestUpdated");
+      assert.equal(tx.receipt.logs[0].args.requestId, "0");
+      assert.equal(tx.receipt.logs[0].args.newRequestId, "1");
+      assert.equal(tx.receipt.logs[0].args.executor, USER2);
+      assert.equal(tx.receipt.logs[0].args.acceptData, null);
+      assert.equal(tx.receipt.logs[0].args.rejectData, null);
+      assert.equal(tx.receipt.logs[0].args.description, "Updated request");
+
+      const request = await reviewableRequests.requests(0);
+      const newRequest = await reviewableRequests.requests(1);
+
+      assert.equal(request.status, RequestStatus.DROPPED);
+
+      assert.equal(newRequest.status, RequestStatus.PENDING);
+      assert.equal(newRequest.creator, USER1);
+      assert.equal(newRequest.executor, USER2);
+      assert.equal(newRequest.acceptData, null);
+      assert.equal(newRequest.rejectData, null);
+
+      assert.equal(await reviewableRequests.nextRequestId(), "2");
+    });
+
+    it("should not update nonexisting request", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsDelete],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await truffleAssert.reverts(
+        reviewableRequests.updateRequest(123, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        "ReviewableRequests: invalid request status"
+      );
+    });
+
+    it("only creator should be able to update the request", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsDelete],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+      await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
+
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+
+      await truffleAssert.reverts(
+        reviewableRequests.updateRequest(0, ZERO_ADDR, "0x", "0x", "Left request untouched", {
+          from: USER2,
+        }),
+        "ReviewableRequests: not a request creator"
+      );
+    });
+
+    it("should not update reviewable request without permissions", async () => {
+      await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsCreate], true);
+
+      await truffleAssert.reverts(
+        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        "ReviewableRequests: access denied"
+      );
+
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await truffleAssert.reverts(
+        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
         "ReviewableRequests: access denied"
       );
     });

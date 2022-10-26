@@ -45,6 +45,8 @@ interface IReviewableRequests {
         string calldata description_
     ) external;
 
+    function dropRequest(uint256 requestId_) external;
+
     function updateRequest(
         uint256 requestId_,
         address executor_,
@@ -52,8 +54,6 @@ interface IReviewableRequests {
         bytes calldata rejectData_,
         string calldata description_
     ) external;
-
-    function dropRequest(uint256 requestId_) external;
 
     function acceptRequest(uint256 requestId_) external;
 
