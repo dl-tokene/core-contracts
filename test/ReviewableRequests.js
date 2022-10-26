@@ -355,6 +355,19 @@ describe("ReviewableRequests", () => {
       );
     });
 
+    it("should accept the request with empty data", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsExecute],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await reviewableRequests.createRequest(executor.address, "0x", "0x11", "Simple request", { from: USER1 });
+
+      await truffleAssert.passes(reviewableRequests.acceptRequest(0, { from: USER1 }), "pass");
+    });
+
     it("should not accept the request twice", async () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
@@ -444,6 +457,19 @@ describe("ReviewableRequests", () => {
         reviewableRequests.rejectRequest(0, { from: USER1 }),
         "ReviewableRequests: failed to reject request"
       );
+    });
+
+    it("should reject the request with empty data", async () => {
+      await masterAccess.addPermissionsToRole(
+        ReviewableRequestsRole,
+        [ReviewableRequestsCreate, ReviewableRequestsExecute],
+        true
+      );
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await reviewableRequests.createRequest(executor.address, "0x11", "0x", "Simple request", { from: USER1 });
+
+      await truffleAssert.passes(reviewableRequests.rejectRequest(0, { from: USER1 }), "pass");
     });
 
     it("should not reject the request twice", async () => {

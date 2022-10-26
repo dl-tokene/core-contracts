@@ -127,8 +127,10 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
 
         request_.status = RequestStatus.ACCEPTED;
 
-        (bool success_, ) = request_.executor.call(request_.acceptData);
-        require(success_, "ReviewableRequests: failed to accept request");
+        if (request_.acceptData.length > 0) {
+            (bool success_, ) = request_.executor.call(request_.acceptData);
+            require(success_, "ReviewableRequests: failed to accept request");
+        }
 
         emit RequestAccepted(requestId_);
     }
@@ -138,8 +140,10 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
 
         request_.status = RequestStatus.REJECTED;
 
-        (bool success_, ) = request_.executor.call(request_.rejectData);
-        require(success_, "ReviewableRequests: failed to reject request");
+        if (request_.rejectData.length > 0) {
+            (bool success_, ) = request_.executor.call(request_.rejectData);
+            require(success_, "ReviewableRequests: failed to reject request");
+        }
 
         emit RequestRejected(requestId_);
     }
