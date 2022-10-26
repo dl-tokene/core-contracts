@@ -87,5 +87,6 @@ module.exports = {
     target: typechainTarget(),
     alwaysGenerateOverloads: true,
     discriminateTypes: true,
+    dontOverrideCompile: true,
   },
 };
