@@ -16,8 +16,10 @@ module.exports = async () => {
     const address = addresses[i];
     const roles = addressesConfig[address];
 
-    if (roles.length > 0) {
-      logTransaction(await masterAccess.grantRoles(address, roles), `Granted roles to ${address}`);
+    if (roles.length == 0) {
+      throw new Error(`Empty roles list for address ${address}`);
     }
+
+    logTransaction(await masterAccess.grantRoles(address, roles), `Granted roles to ${address}`);
   }
 };

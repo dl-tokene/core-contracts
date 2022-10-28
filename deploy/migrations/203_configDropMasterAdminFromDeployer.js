@@ -1,3 +1,4 @@
+const { accounts } = require("../../scripts/utils/utils");
 const { logTransaction } = require("../runners/logger/logger");
 
 const Registry = artifacts.require("MasterContractsRegistry");
@@ -9,7 +10,10 @@ module.exports = async () => {
   const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
 
   const masterRole = await masterAccess.MASTER_ROLE();
-  const deployer = await accounts(0);
+  const deployerAccount = await accounts(0);
 
-  logTransaction(await masterAccess.revokeRoles(deployer, [masterRole]), `Revoked MASTER role from deployer`);
+  logTransaction(
+    await masterAccess.revokeRoles(deployerAccount, [masterRole]),
+    `Revoked MASTER role from deployer account`
+  );
 };

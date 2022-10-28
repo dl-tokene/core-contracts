@@ -10,7 +10,7 @@
           "permissions": ["RESOURCE_PERMISSION_NAME"]
         }
       ],
-      "reject": [
+      "disallow": [
         {
           "resource": "OTHER_RESOURCE_NAME",
           "permissions": ["OTHER_RESOURCE_PERMISSION_NAME"]
@@ -31,4 +31,4 @@
 }
 ```
 
-Please note that the `MASTER` role has to be specified explicitly.
+Please note that the `MASTER` role assignment has to be specified explicitly, else you will not have a master admin in your system.

@@ -15,19 +15,27 @@ module.exports = async () => {
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
     const allowPermissions = rolesConfig[role].allow;
-    const rejectPermissions = rolesConfig[role].reject;
+    const disallowPermissions = rolesConfig[role].disallow;
 
-    if (allowPermissions != undefined && allowPermissions.length > 0) {
+    if (allowPermissions != undefined) {
+      if (allowPermissions.length == 0) {
+        throw new Error(`Empty allow permissions list for role ${role}`);
+      }
+
       logTransaction(
         await masterAccess.addPermissionsToRole(role, allowPermissions, true),
         `Added allow permissions to role ${role}`
       );
     }
 
-    if (rejectPermissions != undefined && rejectPermissions.length > 0) {
+    if (disallowPermissions != undefined) {
+      if (disallowPermissions.length == 0) {
+        throw new Error(`Empty disallow permissions list for role ${role}`);
+      }
+
       logTransaction(
-        await masterAccess.addPermissionsToRole(role, rejectPermissions, false),
-        `Added reject permissions to role ${role}`
+        await masterAccess.addPermissionsToRole(role, disallowPermissions, false),
+        `Added disallow permissions to role ${role}`
       );
     }
   }

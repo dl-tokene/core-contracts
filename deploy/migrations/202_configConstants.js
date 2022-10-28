@@ -17,15 +17,19 @@ module.exports = async () => {
     const constantType = constantsConfig[constant].type;
     const constantValue = constantsConfig[constant].value;
 
-    if (constantValue != undefined && constantType != undefined) {
-      const constantEncodedValue = web3.eth.abi.encodeParameters([constantType], [constantValue]);
-
-      if (constantEncodedValue != "0x") {
-        logTransaction(
-          await constantsRegistry.addConstant(constant, constantEncodedValue),
-          `Added constant ${constant} with value ${constantEncodedValue}`
-        );
-      }
+    if (constantValue == undefined || constantType == undefined) {
+      throw new Error(`Constant ${constant} is incorrectly specified`);
     }
+
+    const constantEncodedValue = web3.eth.abi.encodeParameters([constantType], [constantValue]);
+
+    if (constantEncodedValue == "0x") {
+      throw new Error(`Consant ${constant} value is empty`);
+    }
+
+    logTransaction(
+      await constantsRegistry.addConstant(constant, constantEncodedValue),
+      `Added constant ${constant} with value ${constantEncodedValue}`
+    );
   }
 };
