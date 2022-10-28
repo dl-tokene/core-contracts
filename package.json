@@ -17,18 +17,18 @@
     "deploy-chapel": "CONFIRMATIONS=1 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-eth-mainnet": "CONFIRMATIONS=4 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
     "deploy-bsc-mainnet": "CONFIRMATIONS=2 VERIFY=true npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet",
-    "generate-types": "npx hardhat typechain",
+    "generate-types": "TYPECHAIN_FORCE=true npx hardhat typechain",
     "lint-fix": "npm run lint-sol-fix && npm run lint-js-fix && npm run lint-json-fix",
     "lint-json-fix": "prettier --write \"./[a-zA-Z0-9.]+(?!-lock).json\"",
     "lint-js-fix": "prettier --write \"./**/*.js\"",
     "lint-sol-fix": "prettier --write \"contracts/**/*.sol\""
   },
   "dependencies": {
-    "@dlsl/dev-modules": "^1.7.0",
+    "@dlsl/dev-modules": "^1.7.3",
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.11.0",
+    "hardhat": "^2.12.0",
     "typechain": "^8.1.0"
   },
   "devDependencies": {
