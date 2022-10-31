@@ -10,3 +10,6 @@ coverage
 
 # Docker files
 docker/.env
+
+# Typechain generated files
+generated-types

@@ -7,7 +7,6 @@
   "scripts": {
     "compile": "npx hardhat compile --force",
     "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
-    "deploy-localhost": "npx hardhat run deploy/runners/deployer/migrations.js --network localhost",
     "deploy-goerli": "npx hardhat run deploy/runners/deployer/migrations.js --network goerli",
     "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
     "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
@@ -18,7 +17,7 @@
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.6.4",
+    "hardhat": "^2.11.0",
     "solc": "0.8.17"
   },
   "devDependencies": {
@@ -27,6 +26,6 @@
     "@truffle/deployer": "3.2.56",
     "@truffle/reporters": "1.1.2",
     "bignumber.js": "^9.0.1",
-    "web3": "^1.5.2"
+    "web3": "^1.7.5"
   }
 }
