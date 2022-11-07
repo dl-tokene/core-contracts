@@ -3,9 +3,9 @@ pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 
-import "../interfaces/IMasterAccessManagement.sol";
-import "../interfaces/IMasterContractsRegistry.sol";
-import "../interfaces/IConstantsRegistry.sol";
+import "../interfaces/core/IMasterAccessManagement.sol";
+import "../interfaces/core/IMasterContractsRegistry.sol";
+import "../interfaces/core/IConstantsRegistry.sol";
 
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;

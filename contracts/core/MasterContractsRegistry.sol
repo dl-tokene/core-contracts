@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "../interfaces/IMasterContractsRegistry.sol";
+import "../interfaces/core/IMasterContractsRegistry.sol";
 
 import "./registry/RoleManagedRegistry.sol";
 

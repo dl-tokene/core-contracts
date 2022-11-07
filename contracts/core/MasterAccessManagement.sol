@@ -3,7 +3,7 @@ pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/access-control/RBAC.sol";
 
-import "../interfaces/IMasterAccessManagement.sol";
+import "../interfaces/core/IMasterAccessManagement.sol";
 
 contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     using ArrayHelper for string;
