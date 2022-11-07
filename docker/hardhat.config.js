@@ -31,26 +31,6 @@ module.exports = {
   networks: {
     dev: {
       url: `${process.env.DEV_RPC_ENDPOINT}`,
-      gasMultiplier: 1.2,
-    },
-    goerli: {
-      url: `https://goerli.infura.io/v3/${process.env.INFURA_KEY}`,
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    chapel: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-      timeout: 60000,
-    },
-    bsc_mainnet: {
-      url: "https://bsc-dataseed.binance.org/",
-      accounts: privateKey(),
-      gasMultiplier: 1.2,
-    },
-    eth_mainnet: {
-      url: `https://mainnet.infura.io/v3/${process.env.INFURA_KEY}`,
       accounts: privateKey(),
       gasMultiplier: 1.2,
     },

@@ -30,6 +30,7 @@ module.exports = {
     },
     dev: {
       url: `${process.env.DEV_RPC_ENDPOINT}`,
+      accounts: privateKey(),
       gasMultiplier: 1.2,
     },
     goerli: {

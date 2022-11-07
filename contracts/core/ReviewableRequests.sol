@@ -3,9 +3,9 @@ pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 
-import "./interfaces/IMasterAccessManagement.sol";
-import "./interfaces/IMasterContractsRegistry.sol";
-import "./interfaces/IReviewableRequests.sol";
+import "../interfaces/IMasterAccessManagement.sol";
+import "../interfaces/IMasterContractsRegistry.sol";
+import "../interfaces/IReviewableRequests.sol";
 
 contract ReviewableRequests is IReviewableRequests, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;
@@ -113,11 +113,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         emit RequestRejected(requestId_);
     }
 
-    function _getPendingRequest(uint256 requestId_)
-        internal
-        view
-        returns (Request storage request_)
-    {
+    function _getPendingRequest(
+        uint256 requestId_
+    ) internal view returns (Request storage request_) {
         request_ = requests[requestId_];
 
         require(

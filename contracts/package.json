@@ -1,0 +1,27 @@
+{
+  "name": "@tokene/core-contracts",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Distributed Lab",
+  "description": "The TokenE operating system on top of EVM by Distributed Lab",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/tokene/core-contracts"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smartcontracts",
+    "tokene",
+    "distributedlab"
+  ],
+  "files": [
+    "**/*.sol",
+    "!mock/**/*"
+  ],
+  "dependencies": {
+    "@dlsl/dev-modules": "1.7.4",
+    "@openzeppelin/contracts": "4.5.0",
+    "@openzeppelin/contracts-upgradeable": "4.5.0"
+  }
+}

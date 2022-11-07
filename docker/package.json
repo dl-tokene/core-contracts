@@ -3,21 +3,28 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "Distributed Lab",
-  "description": "",
+  "description": "The TokenE operating system on top of EVM by Distributed Lab",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/tokene/core-contracts"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smartcontracts",
+    "tokene",
+    "distributedlab"
+  ],
   "scripts": {
     "compile": "npx hardhat compile --force",
-    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev",
-    "deploy-goerli": "npx hardhat run deploy/runners/deployer/migrations.js --network goerli",
-    "deploy-chapel": "npx hardhat run deploy/runners/deployer/migrations.js --network chapel",
-    "deploy-eth-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network eth_mainnet",
-    "deploy-bsc-mainnet": "npx hardhat run deploy/runners/deployer/migrations.js --network bsc_mainnet"
+    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "^1.7.0",
+    "@dlsl/dev-modules": "1.7.4",
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
-    "hardhat": "^2.11.0",
+    "hardhat": "^2.12.0",
     "solc": "0.8.17"
   },
   "devDependencies": {
