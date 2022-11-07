@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
 
-import "../../interfaces/IMasterAccessManagement.sol";
+import "../../interfaces/core/IMasterAccessManagement.sol";
 
 abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradeable {
     string public constant MASTER_ACCESS_MANAGEMENT_NAME = "MASTER_ACCESS_MANAGEMENT";
