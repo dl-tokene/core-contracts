@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
 
-import "../interfaces/IMasterAccessManagement.sol";
+import "../../interfaces/IMasterAccessManagement.sol";
 
 abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradeable {
     string public constant MASTER_ACCESS_MANAGEMENT_NAME = "MASTER_ACCESS_MANAGEMENT";
@@ -31,10 +31,10 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradea
         _injectDependencies(name_);
     }
 
-    function upgradeContract(string calldata name_, address newImplementation_)
-        external
-        onlyUpdatePermission
-    {
+    function upgradeContract(
+        string calldata name_,
+        address newImplementation_
+    ) external onlyUpdatePermission {
         _upgradeContract(name_, newImplementation_);
     }
 
@@ -46,24 +46,24 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradea
         _upgradeContractAndCall(name_, newImplementation_, data_);
     }
 
-    function addContract(string calldata name_, address contractAddress_)
-        external
-        onlyCreatePermission
-    {
+    function addContract(
+        string calldata name_,
+        address contractAddress_
+    ) external onlyCreatePermission {
         _addContract(name_, contractAddress_);
     }
 
-    function addProxyContract(string calldata name_, address contractAddress_)
-        external
-        onlyCreatePermission
-    {
+    function addProxyContract(
+        string calldata name_,
+        address contractAddress_
+    ) external onlyCreatePermission {
         _addProxyContract(name_, contractAddress_);
     }
 
-    function justAddProxyContract(string calldata name_, address contractAddress_)
-        external
-        onlyCreatePermission
-    {
+    function justAddProxyContract(
+        string calldata name_,
+        address contractAddress_
+    ) external onlyCreatePermission {
         _justAddProxyContract(name_, contractAddress_);
     }
 
@@ -71,10 +71,7 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradea
         _removeContract(name_);
     }
 
-    function _authorizeUpgrade(address newImplementation_)
-        internal
-        virtual
-        override
-        onlyCreatePermission
-    {}
+    function _authorizeUpgrade(
+        address newImplementation_
+    ) internal virtual override onlyCreatePermission {}
 }

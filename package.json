@@ -3,7 +3,18 @@
   "version": "1.0.0",
   "license": "MIT",
   "author": "Distributed Lab",
-  "description": "",
+  "description": "The TokenE operating system on top of EVM by Distributed Lab",
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.com/tokene/core-contracts"
+  },
+  "keywords": [
+    "solidity",
+    "ethereum",
+    "smartcontracts",
+    "tokene",
+    "distributedlab"
+  ],
   "scripts": {
     "install": "npx husky install",
     "compile": "npx hardhat compile --force",
@@ -21,10 +32,11 @@
     "lint-fix": "npm run lint-sol-fix && npm run lint-js-fix && npm run lint-json-fix",
     "lint-json-fix": "prettier --write \"./[a-zA-Z0-9.]+(?!-lock).json\"",
     "lint-js-fix": "prettier --write \"./**/*.js\"",
-    "lint-sol-fix": "prettier --write \"contracts/**/*.sol\""
+    "lint-sol-fix": "prettier --write \"contracts/**/*.sol\"",
+    "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "^1.7.3",
+    "@dlsl/dev-modules": "1.7.4",
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
@@ -49,7 +61,7 @@
     "husky": "^7.0.2",
     "mocha": "^9.1.1",
     "prettier": "^2.7.1",
-    "prettier-plugin-solidity": "^1.0.0-dev.23",
+    "prettier-plugin-solidity": "^1.0.0-rc.1",
     "solhint": "^3.3.7",
     "solhint-plugin-prettier": "^0.0.5",
     "solidity-coverage": "^0.8.2",

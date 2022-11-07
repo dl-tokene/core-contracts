@@ -3,9 +3,9 @@ pragma solidity 0.8.17;
 
 import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
 
-import "./interfaces/IMasterAccessManagement.sol";
-import "./interfaces/IMasterContractsRegistry.sol";
-import "./interfaces/IConstantsRegistry.sol";
+import "../interfaces/IMasterAccessManagement.sol";
+import "../interfaces/IMasterContractsRegistry.sol";
+import "../interfaces/IConstantsRegistry.sol";
 
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;
@@ -36,11 +36,10 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }
 
-    function addConstant(string calldata key_, bytes calldata value_)
-        external
-        override
-        onlyCreatePermission
-    {
+    function addConstant(
+        string calldata key_,
+        bytes calldata value_
+    ) external override onlyCreatePermission {
         require(value_.length > 0, "ConstantsRegistry: empty value");
 
         constants[key_] = value_;
