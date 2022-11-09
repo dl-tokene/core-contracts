@@ -1,4 +1,4 @@
-const { accounts } = require("../scripts/utils/utils");
+const { accounts } = require("../../scripts/utils/utils");
 const {
   CREATE_PERMISSION,
   UPDATE_PERMISSION,
@@ -7,9 +7,9 @@ const {
   MASTER_REGISTRY_RESOURCE,
   CONSTANTS_REGISTRY_RESOURCE,
   REVIEWABLE_REQUESTS_RESOURCE,
-} = require("./utils/constants");
+} = require("../utils/constants");
 
-const Reverter = require("./helpers/reverter");
+const Reverter = require("../helpers/reverter");
 const truffleAssert = require("truffle-assertions");
 
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
@@ -34,7 +34,6 @@ describe("MasterAccessManagement", async () => {
   const ConstantsRegistryDelete = [CONSTANTS_REGISTRY_RESOURCE, [DELETE_PERMISSION]];
 
   const ReviewableRequestsCreate = [REVIEWABLE_REQUESTS_RESOURCE, [CREATE_PERMISSION]];
-  const ReviewableRequestsUpdate = [REVIEWABLE_REQUESTS_RESOURCE, [UPDATE_PERMISSION]];
   const ReviewableRequestsExecute = [REVIEWABLE_REQUESTS_RESOURCE, [EXECUTE_PERMISSION]];
   const ReviewableRequestsDelete = [REVIEWABLE_REQUESTS_RESOURCE, [DELETE_PERMISSION]];
 

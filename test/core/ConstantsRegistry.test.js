@@ -1,7 +1,7 @@
-const { accounts } = require("../scripts/utils/utils");
-const { CREATE_PERMISSION, DELETE_PERMISSION, CONSTANTS_REGISTRY_RESOURCE } = require("./utils/constants");
+const { accounts } = require("../../scripts/utils/utils");
+const { CREATE_PERMISSION, DELETE_PERMISSION, CONSTANTS_REGISTRY_RESOURCE } = require("../utils/constants");
 
-const Reverter = require("./helpers/reverter");
+const Reverter = require("../helpers/reverter");
 const truffleAssert = require("truffle-assertions");
 
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
