@@ -1,14 +1,14 @@
-const { accounts } = require("../scripts/utils/utils");
-const { ZERO_ADDR } = require("../scripts/utils/constants");
+const { accounts } = require("../../scripts/utils/utils");
+const { ZERO_ADDR } = require("../../scripts/utils/constants");
 const {
   CREATE_PERMISSION,
   EXECUTE_PERMISSION,
   DELETE_PERMISSION,
   REVIEWABLE_REQUESTS_RESOURCE,
   RequestStatus,
-} = require("./utils/constants");
+} = require("../utils/constants");
 
-const Reverter = require("./helpers/reverter");
+const Reverter = require("../helpers/reverter");
 const truffleAssert = require("truffle-assertions");
 
 const RequestExecutorMock = artifacts.require("RequestExecutorMock");
