@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "compile": "npx hardhat compile --force",
-    "deploy-dev": "npx hardhat run deploy/runners/deployer/migrations.js --network dev"
+    "deploy-dev": "npm run compile && npx hardhat run deploy/runners/deployer/migrations.js --network dev"
   },
   "dependencies": {
     "@dlsl/dev-modules": "1.7.4",
