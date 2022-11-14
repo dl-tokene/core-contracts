@@ -41,6 +41,7 @@
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
     "hardhat": "^2.12.0",
+    "node-vault": "^0.9.22",
     "typechain": "^8.1.0"
   },
   "devDependencies": {
