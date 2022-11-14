@@ -6,27 +6,27 @@ const vault = require("node-vault")({
 
 const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
-const ConstantsRegistry = artifacts.require("ConstantsRegistry");
-const MasterAccessManagement = artifacts.require("MasterAccessManagement");
-const ReviewableRequests = artifacts.require("ReviewableRequests");
-const RoleManagedRegistry = artifacts.require("RoleManagedRegistry");
 
-module.exports = async () => {
+module.exports = async (deployer) => {
   const registry = await Registry.at((await ERC1967Proxy.deployed()).address);
-  const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
-  const constantsRegistry = await ConstantsRegistry.at(await registry.getConstantsRegistry());
-  const reviewableRequests = await ReviewableRequests.at(await registry.getReviewableRequests());
-  const roleManagedRegistry = await RoleManagedRegistry.at(await registry.getRoleManagedRegistry());
+  const masterAccessAddress = await registry.getMasterAccessManagement();
+  const constantsRegistryAddress = await registry.getConstantsRegistry();
+  const reviewableRequestsAddress = await registry.getReviewableRequests();
+  const roleManagedRegistryAddress = await registry.getRoleManagedRegistry();
 
+  const projectName = getConfigJson().projectName;
+  if (!projectName) {
+    throw new Error("uploadToVault: projectName is undefined");
+  }
   const config = {
-    projectName: getConfigJson().projectName,
+    projectName: projectName,
     address: {
-      ConstantsRegistry: constantsRegistry.address,
-      RoleManagedRegistry: roleManagedRegistry.address,
-      MasterAccessManagement: masterAccess.address,
-      ReviewableRequests: reviewableRequests.address,
+      ConstantsRegistry: constantsRegistryAddress,
+      RoleManagedRegistry: roleManagedRegistryAddress,
+      MasterAccessManagement: masterAccessAddress,
+      ReviewableRequests: reviewableRequestsAddress,
     },
-    startBlock: await web3.eth.getBlockNumber(),
+    startBlock: deployer.startMigrationsBlock,
   };
 
   await vault.write(process.env.VAULT_CONFIG_PATH, { data: config });
