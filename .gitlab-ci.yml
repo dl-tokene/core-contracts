@@ -4,9 +4,9 @@ variables:
   CONTAINER_RELEASE_IMAGE: $IMAGE_DOCKER:$CI_COMMIT_TAG
 
 build:
-  image: docker:20.10.16
+  image: docker:18
   services:
-    - docker:20.10.16-dind
+    - docker:18-dind
   stage: build
   script:
     - docker login -u "${USER_DOCKER}" -p "${PASSWORD_DOCKER}"
