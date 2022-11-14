@@ -23,7 +23,7 @@ module.exports = async (deployer) => {
 
   const config = {
     projectName: projectName,
-    address: {
+    addresses: {
       ConstantsRegistry: constantsRegistryAddress,
       RoleManagedRegistry: registry.address,
       MasterAccessManagement: masterAccessAddress,
