@@ -2,6 +2,7 @@
 
 ```
 {
+  "projectName": "PROJECT_NAME",
   "roles": {
     "SOME_ROLE1": {
       "allow": [
