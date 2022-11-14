@@ -10,6 +10,11 @@ module.exports = async () => {
   const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
 
   const rolesConfig = getConfigJson().roles;
+
+  if (rolesConfig == undefined) {
+    return;
+  }
+
   const roles = Object.keys(rolesConfig);
 
   for (let i = 0; i < roles.length; i++) {

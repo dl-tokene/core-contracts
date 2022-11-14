@@ -10,6 +10,11 @@ module.exports = async () => {
   const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
 
   const addressesConfig = getConfigJson().addresses;
+
+  if (addressesConfig == undefined) {
+    return;
+  }
+
   const addresses = Object.keys(addressesConfig);
 
   for (let i = 0; i < addresses.length; i++) {

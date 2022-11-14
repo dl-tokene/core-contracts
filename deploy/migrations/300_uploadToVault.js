@@ -1,3 +1,5 @@
+const { getConfigJson } = require("../config/config-parser");
+
 const vault = require("node-vault")({
   apiVersion: "v1",
   endpoint: process.env.VAULT_ENDPOINT,
@@ -12,17 +14,18 @@ module.exports = async (deployer) => {
   const masterAccessAddress = await registry.getMasterAccessManagement();
   const constantsRegistryAddress = await registry.getConstantsRegistry();
   const reviewableRequestsAddress = await registry.getReviewableRequests();
-  const roleManagedRegistryAddress = await registry.getRoleManagedRegistry();
 
   const projectName = getConfigJson().projectName;
-  if (!projectName) {
+
+  if (projectName == undefined) {
     throw new Error("uploadToVault: projectName is undefined");
   }
+
   const config = {
     projectName: projectName,
     address: {
       ConstantsRegistry: constantsRegistryAddress,
-      RoleManagedRegistry: roleManagedRegistryAddress,
+      RoleManagedRegistry: registry.address,
       MasterAccessManagement: masterAccessAddress,
       ReviewableRequests: reviewableRequestsAddress,
     },

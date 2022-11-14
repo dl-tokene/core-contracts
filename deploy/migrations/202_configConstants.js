@@ -10,6 +10,11 @@ module.exports = async () => {
   const constantsRegistry = await ConstantsRegistry.at(await registry.getConstantsRegistry());
 
   const constantsConfig = getConfigJson().constants;
+
+  if (constantsConfig == undefined) {
+    return;
+  }
+
   const constants = Object.keys(constantsConfig);
 
   for (let i = 0; i < constants.length; i++) {
