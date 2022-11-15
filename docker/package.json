@@ -1,6 +1,6 @@
 {
   "name": "tokene",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "license": "MIT",
   "author": "Distributed Lab",
   "description": "The TokenE operating system on top of EVM by Distributed Lab",
