@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
+import "@dlsl/dev-modules/interfaces/access-control/IRBAC.sol";
+
 interface IMasterAccessManagement {
     function hasMasterContractsRegistryCreatePermission(
         address account_
@@ -23,4 +25,11 @@ interface IMasterAccessManagement {
     function hasReviewableRequestsExecutePermission(address account_) external view returns (bool);
 
     function hasReviewableRequestsDeletePermission(address account_) external view returns (bool);
+
+    function addPermissionsToRoleWithDesctription(
+        string memory role,
+        IRBAC.ResourceWithPermissions[] memory permissionsToAdd,
+        bool allowed,
+        string calldata description
+    ) external;
 }

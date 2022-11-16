@@ -14,6 +14,8 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     string public constant CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
     string public constant REVIEWABLE_REQUESTS_RESOURCE = "REVIEWABLE_REQUESTS_RESOURCE";
 
+    event AddedRoleWithDescription(string role, string description);
+
     function __MasterAccessManagement_init(address master_) external initializer {
         __RBAC_init();
         _grantRoles(master_, MASTER_ROLE.asArray());
@@ -65,5 +67,16 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         address account_
     ) external view override returns (bool) {
         return hasPermission(account_, REVIEWABLE_REQUESTS_RESOURCE, DELETE_PERMISSION);
+    }
+
+    function addPermissionsToRoleWithDesctription(
+        string memory role,
+        ResourceWithPermissions[] memory permissionsToAdd,
+        bool allowed,
+        string calldata description
+    ) external override {
+        addPermissionsToRole(role, permissionsToAdd, allowed);
+
+        emit AddedRoleWithDescription(role, description);
     }
 }
