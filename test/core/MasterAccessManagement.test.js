@@ -151,6 +151,7 @@ describe("MasterAccessManagement", async () => {
   describe("addPermissionsToRoleWithDescription", () => {
     it("should throw AddedRoleWithDescription event", async () => {
       const description = "Allows dropping requests";
+
       let tx = await masterAccess.addPermissionsToRoleWithDescription(
         ReviewableRequestsRole,
         description,
@@ -164,7 +165,9 @@ describe("MasterAccessManagement", async () => {
       assert.equal(tx.logs[1].args.description, description);
 
       await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
       await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
     });
   });

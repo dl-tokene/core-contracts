@@ -25,7 +25,7 @@ module.exports = async (deployer) => {
     projectName: projectName,
     addresses: {
       ConstantsRegistry: constantsRegistryAddress,
-      RoleManagedRegistry: registry.address,
+      MasterContractsRegistry: registry.address,
       MasterAccessManagement: masterAccessAddress,
       ReviewableRequests: reviewableRequestsAddress,
     },
