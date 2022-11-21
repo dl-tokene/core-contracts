@@ -11,6 +11,7 @@ const {
 
 const Reverter = require("../helpers/reverter");
 const truffleAssert = require("truffle-assertions");
+const { assert } = require("chai");
 
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
 
@@ -144,6 +145,27 @@ describe("MasterAccessManagement", async () => {
 
         await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
       });
+    });
+  });
+
+  describe("addPermissionsToRoleWithDescription", () => {
+    it("should throw AddedRoleWithDescription event", async () => {
+      const description = "Allows dropping requests";
+      let tx = await masterAccess.addPermissionsToRoleWithDescription(
+        ReviewableRequestsRole,
+        description,
+        [ReviewableRequestsDelete],
+        true
+      );
+
+      assert.equal(tx.logs[0].event, "AddedPermissions");
+      assert.equal(tx.logs[1].event, "AddedRoleWithDescription");
+      assert.equal(tx.logs[1].args.role, ReviewableRequestsRole);
+      assert.equal(tx.logs[1].args.description, description);
+
+      await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+      await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
     });
   });
 });

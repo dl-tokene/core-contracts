@@ -14,9 +14,22 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     string public constant CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
     string public constant REVIEWABLE_REQUESTS_RESOURCE = "REVIEWABLE_REQUESTS_RESOURCE";
 
+    event AddedRoleWithDescription(string role, string description);
+
     function __MasterAccessManagement_init(address master_) external initializer {
         __RBAC_init();
         _grantRoles(master_, MASTER_ROLE.asArray());
+    }
+
+    function addPermissionsToRoleWithDescription(
+        string memory role,
+        string calldata description,
+        ResourceWithPermissions[] memory permissionsToAdd,
+        bool allowed
+    ) external override {
+        addPermissionsToRole(role, permissionsToAdd, allowed);
+
+        emit AddedRoleWithDescription(role, description);
     }
 
     function hasMasterContractsRegistryCreatePermission(
