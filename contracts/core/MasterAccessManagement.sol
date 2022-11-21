@@ -21,6 +21,17 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         _grantRoles(master_, MASTER_ROLE.asArray());
     }
 
+    function addPermissionsToRoleWithDesctription(
+        string memory role,
+        string calldata description,
+        ResourceWithPermissions[] memory permissionsToAdd,
+        bool allowed
+    ) external override {
+        addPermissionsToRole(role, permissionsToAdd, allowed);
+
+        emit AddedRoleWithDescription(role, description);
+    }
+
     function hasMasterContractsRegistryCreatePermission(
         address account_
     ) external view override returns (bool) {
@@ -67,16 +78,5 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         address account_
     ) external view override returns (bool) {
         return hasPermission(account_, REVIEWABLE_REQUESTS_RESOURCE, DELETE_PERMISSION);
-    }
-
-    function addPermissionsToRoleWithDesctription(
-        string memory role,
-        ResourceWithPermissions[] memory permissionsToAdd,
-        bool allowed,
-        string calldata description
-    ) external override {
-        addPermissionsToRole(role, permissionsToAdd, allowed);
-
-        emit AddedRoleWithDescription(role, description);
     }
 }

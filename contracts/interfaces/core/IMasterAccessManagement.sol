@@ -4,6 +4,13 @@ pragma solidity 0.8.17;
 import "@dlsl/dev-modules/interfaces/access-control/IRBAC.sol";
 
 interface IMasterAccessManagement {
+    function addPermissionsToRoleWithDesctription(
+        string memory role,
+        string calldata description,
+        IRBAC.ResourceWithPermissions[] memory permissionsToAdd,
+        bool allowed
+    ) external;
+
     function hasMasterContractsRegistryCreatePermission(
         address account_
     ) external view returns (bool);
@@ -25,11 +32,4 @@ interface IMasterAccessManagement {
     function hasReviewableRequestsExecutePermission(address account_) external view returns (bool);
 
     function hasReviewableRequestsDeletePermission(address account_) external view returns (bool);
-
-    function addPermissionsToRoleWithDesctription(
-        string memory role,
-        IRBAC.ResourceWithPermissions[] memory permissionsToAdd,
-        bool allowed,
-        string calldata description
-    ) external;
 }
