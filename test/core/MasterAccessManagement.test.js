@@ -148,10 +148,10 @@ describe("MasterAccessManagement", async () => {
     });
   });
 
-  describe("addPermissionsToRoleWithDesctription", () => {
+  describe("addPermissionsToRoleWithDescription", () => {
     it("should throw AddedRoleWithDescription event", async () => {
       const description = "Allows dropping requests";
-      let tx = await masterAccess.addPermissionsToRoleWithDesctription(
+      let tx = await masterAccess.addPermissionsToRoleWithDescription(
         ReviewableRequestsRole,
         description,
         [ReviewableRequestsDelete],

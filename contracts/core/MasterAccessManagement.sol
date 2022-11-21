@@ -21,7 +21,7 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         _grantRoles(master_, MASTER_ROLE.asArray());
     }
 
-    function addPermissionsToRoleWithDesctription(
+    function addPermissionsToRoleWithDescription(
         string memory role,
         string calldata description,
         ResourceWithPermissions[] memory permissionsToAdd,

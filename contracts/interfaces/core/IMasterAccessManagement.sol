@@ -4,7 +4,7 @@ pragma solidity 0.8.17;
 import "@dlsl/dev-modules/interfaces/access-control/IRBAC.sol";
 
 interface IMasterAccessManagement {
-    function addPermissionsToRoleWithDesctription(
+    function addPermissionsToRoleWithDescription(
         string memory role,
         string calldata description,
         IRBAC.ResourceWithPermissions[] memory permissionsToAdd,
