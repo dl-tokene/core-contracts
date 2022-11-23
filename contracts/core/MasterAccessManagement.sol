@@ -22,14 +22,15 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     }
 
     function addPermissionsToRoleWithDescription(
-        string memory role,
-        string calldata description,
-        ResourceWithPermissions[] memory permissionsToAdd,
-        bool allowed
+        string memory role_,
+        string calldata description_,
+        ResourceWithPermissions[] memory allowedPermissions_,
+        ResourceWithPermissions[] memory disallowedPermissions_
     ) external override {
-        addPermissionsToRole(role, permissionsToAdd, allowed);
+        addPermissionsToRole(role_, allowedPermissions_, true);
+        addPermissionsToRole(role_, disallowedPermissions_, false);
 
-        emit AddedRoleWithDescription(role, description);
+        emit AddedRoleWithDescription(role_, description_);
     }
 
     function hasMasterContractsRegistryCreatePermission(
