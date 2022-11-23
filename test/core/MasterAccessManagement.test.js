@@ -149,14 +149,14 @@ describe("MasterAccessManagement", async () => {
   });
 
   describe("addPermissionsToRoleWithDescription", () => {
-    it("should throw AddedRoleWithDescription event", async () => {
+    it("should emit AddedRoleWithDescription event", async () => {
       const description = "Allows dropping requests";
 
       let tx = await masterAccess.addPermissionsToRoleWithDescription(
         ReviewableRequestsRole,
         description,
         [ReviewableRequestsDelete],
-        true
+        []
       );
 
       assert.equal(tx.logs[0].event, "AddedPermissions");
@@ -169,6 +169,29 @@ describe("MasterAccessManagement", async () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+    });
+
+    it("should add both permissions", async () => {
+      const description = "Disallows dropping requests";
+
+      let tx = await masterAccess.addPermissionsToRoleWithDescription(
+        ReviewableRequestsRole,
+        description,
+        [ReviewableRequestsDelete],
+        [ReviewableRequestsDelete]
+      );
+
+      assert.equal(tx.logs[0].event, "AddedPermissions");
+      assert.equal(tx.logs[1].event, "AddedPermissions");
+      assert.equal(tx.logs[2].event, "AddedRoleWithDescription");
+      assert.equal(tx.logs[2].args.role, ReviewableRequestsRole);
+      assert.equal(tx.logs[2].args.description, description);
+
+      await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
     });
   });
 });
