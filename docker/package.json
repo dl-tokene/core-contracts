@@ -6,7 +6,7 @@
   "description": "The TokenE operating system on top of EVM by Distributed Lab",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.com/tokene/core-contracts"
+    "url": "https://gitlab.com/tokene/core/core-contracts"
   },
   "keywords": [
     "solidity",
