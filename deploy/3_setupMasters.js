@@ -1,5 +1,5 @@
-const { accounts } = require("../../scripts/utils/utils");
-const { logTransaction } = require("../runners/logger/logger");
+const { logTransaction } = require("@dlsl/hardhat-migrate");
+const { accounts } = require("../scripts/utils/utils");
 
 const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");

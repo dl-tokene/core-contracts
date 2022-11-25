@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-web3");
 require("@nomiclabs/hardhat-truffle5");
+require("@dlsl/hardhat-migrate");
 const { TASK_COMPILE_SOLIDITY_GET_SOLC_BUILD } = require("hardhat/builtin-tasks/task-names");
 
 const path = require("path");
@@ -34,6 +35,9 @@ module.exports = {
       accounts: privateKey(),
       gasMultiplier: 1.2,
     },
+  },
+  migrate: {
+    pathToMigrations: "./deploy/",
   },
   solidity: {
     version: SOLC_VERSION,
