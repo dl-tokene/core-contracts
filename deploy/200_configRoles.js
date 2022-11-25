@@ -1,5 +1,5 @@
-const { logTransaction } = require("../runners/logger/logger");
-const { getConfigJson } = require("../config/config-parser");
+const { logTransaction } = require("@dlsl/hardhat-migrate");
+const { getConfigJson } = require("./config/config-parser");
 
 const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");

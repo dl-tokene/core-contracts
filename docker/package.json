@@ -11,13 +11,13 @@
   "keywords": [
     "solidity",
     "ethereum",
-    "smartcontracts",
+    "smart-contracts",
     "tokene",
     "distributedlab"
   ],
   "scripts": {
     "compile": "npx hardhat compile --force",
-    "deploy-dev": "npm run compile && npx hardhat run deploy/runners/deployer/migrations.js --network dev"
+    "deploy-dev": "npx hardhat deploy --network dev"
   },
   "dependencies": {
     "@dlsl/dev-modules": "1.7.4",
@@ -31,8 +31,7 @@
   "devDependencies": {
     "@nomiclabs/hardhat-truffle5": "^2.0.1",
     "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@truffle/deployer": "3.2.56",
-    "@truffle/reporters": "1.1.2",
+    "@dlsl/hardhat-migrate": "^1.1.2",
     "bignumber.js": "^9.0.1",
     "web3": "^1.7.5"
   }

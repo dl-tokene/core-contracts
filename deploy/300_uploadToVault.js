@@ -1,4 +1,4 @@
-const { getConfigJson } = require("../config/config-parser");
+const { getConfigJson } = require("./config/config-parser");
 
 const vault = require("node-vault")({
   apiVersion: "v1",
