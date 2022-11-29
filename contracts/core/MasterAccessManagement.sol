@@ -21,16 +21,46 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         _grantRoles(master_, MASTER_ROLE.asArray());
     }
 
-    function addPermissionsToRoleWithDescription(
+    function addCombinedPermissionsToRole(
         string memory role_,
         string calldata description_,
-        ResourceWithPermissions[] memory allowedPermissions_,
-        ResourceWithPermissions[] memory disallowedPermissions_
-    ) external override {
-        addPermissionsToRole(role_, allowedPermissions_, true);
-        addPermissionsToRole(role_, disallowedPermissions_, false);
+        ResourceWithPermissions[] memory allowed_,
+        ResourceWithPermissions[] memory disallowed_
+    ) public override {
+        addPermissionsToRole(role_, allowed_, true);
+        addPermissionsToRole(role_, disallowed_, false);
 
         emit AddedRoleWithDescription(role_, description_);
+    }
+
+    function removeCombinedPermissionsFromRole(
+        string memory role_,
+        ResourceWithPermissions[] memory allowed_,
+        ResourceWithPermissions[] memory disallowed_
+    ) public override {
+        removePermissionsFromRole(role_, allowed_, true);
+        removePermissionsFromRole(role_, disallowed_, false);
+    }
+
+    function updateRolePermissions(
+        string memory role_,
+        string calldata description_,
+        ResourceWithPermissions[] memory allowedToRemove_,
+        ResourceWithPermissions[] memory disallowedToRemove_,
+        ResourceWithPermissions[] memory allowedToAdd_,
+        ResourceWithPermissions[] memory disallowedToAdd_
+    ) external override {
+        removeCombinedPermissionsFromRole(role_, allowedToRemove_, disallowedToRemove_);
+        addCombinedPermissionsToRole(role_, description_, allowedToAdd_, disallowedToAdd_);
+    }
+
+    function updateUserRoles(
+        address user_,
+        string[] memory rolesToRevoke_,
+        string[] memory rolesToGrant_
+    ) external override {
+        revokeRoles(user_, rolesToRevoke_);
+        grantRoles(user_, rolesToGrant_);
     }
 
     function hasMasterContractsRegistryCreatePermission(
