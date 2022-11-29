@@ -4,11 +4,32 @@ pragma solidity 0.8.17;
 import "@dlsl/dev-modules/interfaces/access-control/IRBAC.sol";
 
 interface IMasterAccessManagement is IRBAC {
-    function addPermissionsToRoleWithDescription(
-        string memory role,
-        string calldata description,
-        ResourceWithPermissions[] memory allowedPermissions_,
-        ResourceWithPermissions[] memory disallowedPermissions_
+    function addCombinedPermissionsToRole(
+        string memory role_,
+        string calldata description_,
+        ResourceWithPermissions[] memory allowed_,
+        ResourceWithPermissions[] memory disallowed_
+    ) external;
+
+    function removeCombinedPermissionsFromRole(
+        string memory role_,
+        ResourceWithPermissions[] memory allowed_,
+        ResourceWithPermissions[] memory disallowed_
+    ) external;
+
+    function updateRolePermissions(
+        string memory role_,
+        string calldata description_,
+        ResourceWithPermissions[] memory allowedToRemove_,
+        ResourceWithPermissions[] memory disallowedToRemove_,
+        ResourceWithPermissions[] memory allowedToAdd_,
+        ResourceWithPermissions[] memory disallowedToAdd_
+    ) external;
+
+    function updateUserRoles(
+        address user_,
+        string[] memory rolesToRevoke_,
+        string[] memory rolesToGrant_
     ) external;
 
     function hasMasterContractsRegistryCreatePermission(

@@ -148,11 +148,11 @@ describe("MasterAccessManagement", async () => {
     });
   });
 
-  describe("addPermissionsToRoleWithDescription", () => {
+  describe("addCombinedPermissionsToRole", () => {
     it("should emit AddedRoleWithDescription event", async () => {
       const description = "Allows dropping requests";
 
-      let tx = await masterAccess.addPermissionsToRoleWithDescription(
+      let tx = await masterAccess.addCombinedPermissionsToRole(
         ReviewableRequestsRole,
         description,
         [ReviewableRequestsDelete],
@@ -174,7 +174,7 @@ describe("MasterAccessManagement", async () => {
     it("should add both permissions", async () => {
       const description = "Disallows dropping requests";
 
-      let tx = await masterAccess.addPermissionsToRoleWithDescription(
+      let tx = await masterAccess.addCombinedPermissionsToRole(
         ReviewableRequestsRole,
         description,
         [ReviewableRequestsDelete],
@@ -192,6 +192,78 @@ describe("MasterAccessManagement", async () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+    });
+  });
+
+  describe("removeCombinedPermissionsFromRole", () => {
+    it("should remove both roles", async () => {
+      await masterAccess.addCombinedPermissionsToRole(
+        ReviewableRequestsRole,
+        "Disallows dropping requests",
+        [ReviewableRequestsDelete],
+        [ReviewableRequestsDelete]
+      );
+
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+
+      await masterAccess.removeCombinedPermissionsFromRole(ReviewableRequestsRole, [], [ReviewableRequestsDelete]);
+
+      await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+
+      await masterAccess.removeCombinedPermissionsFromRole(ReviewableRequestsRole, [ReviewableRequestsDelete], []);
+
+      await assert.isFalse(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+    });
+  });
+
+  describe("updateRolePermissions", () => {
+    it("should update the role", async () => {
+      await masterAccess.addCombinedPermissionsToRole(
+        ReviewableRequestsRole,
+        "Disallows dropping requests",
+        [ReviewableRequestsDelete],
+        [ReviewableRequestsDelete]
+      );
+
+      await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
+
+      const description = "Updated description";
+
+      let tx = await masterAccess.updateRolePermissions(
+        ReviewableRequestsRole,
+        description,
+        [],
+        [ReviewableRequestsDelete],
+        [ConstantsRegistryCreate],
+        []
+      );
+
+      assert.equal(tx.logs[0].event, "RemovedPermissions");
+      assert.equal(tx.logs[1].event, "AddedPermissions");
+      assert.equal(tx.logs[2].event, "AddedRoleWithDescription");
+      assert.equal(tx.logs[2].args.role, ReviewableRequestsRole);
+      assert.equal(tx.logs[2].args.description, description);
+
+      await assert.isTrue(await masterAccess.hasReviewableRequestsDeletePermission(USER1));
+      await assert.isTrue(await masterAccess.hasConstantsRegistryCreatePermission(USER1));
+    });
+  });
+
+  describe("updateUserRoles", () => {
+    it("should update user roles", async () => {
+      await masterAccess.addPermissionsToRole(MasterContractsRegistryRole, [MasterContractsRegistryCreate], true);
+      await masterAccess.addPermissionsToRole(ConstantsRegistryRole, [ConstantsRegistryCreate], true);
+
+      await masterAccess.grantRoles(USER1, [MasterContractsRegistryRole]);
+
+      await assert.isTrue(await masterAccess.hasMasterContractsRegistryCreatePermission(USER1));
+
+      await masterAccess.updateUserRoles(USER1, [MasterContractsRegistryRole], [ConstantsRegistryRole]);
+
+      await assert.isFalse(await masterAccess.hasMasterContractsRegistryCreatePermission(USER1));
+      await assert.isTrue(await masterAccess.hasConstantsRegistryCreatePermission(USER1));
     });
   });
 });
