@@ -19,29 +19,22 @@ module.exports = async () => {
 
   for (let i = 0; i < roles.length; i++) {
     const role = roles[i];
-    const allowPermissions = rolesConfig[role].allow;
-    const disallowPermissions = rolesConfig[role].disallow;
 
-    if (allowPermissions != undefined) {
-      if (allowPermissions.length == 0) {
-        throw new Error(`Empty allow permissions list for role ${role}`);
-      }
+    let description = rolesConfig[role].description;
+    let allowPermissions = rolesConfig[role].allow;
+    let disallowPermissions = rolesConfig[role].disallow;
 
-      logTransaction(
-        await masterAccess.addPermissionsToRole(role, allowPermissions, true),
-        `Added allow permissions to role ${role}`
-      );
+    if (allowPermissions == undefined && disallowPermissions == undefined) {
+      throw new Error(`Empty permissions list for role ${role}`);
     }
 
-    if (disallowPermissions != undefined) {
-      if (disallowPermissions.length == 0) {
-        throw new Error(`Empty disallow permissions list for role ${role}`);
-      }
+    description = description == undefined ? "" : description;
+    allowPermissions = allowPermissions == undefined ? [] : allowPermissions;
+    disallowPermissions = disallowPermissions == undefined ? [] : disallowPermissions;
 
-      logTransaction(
-        await masterAccess.addPermissionsToRole(role, disallowPermissions, false),
-        `Added disallow permissions to role ${role}`
-      );
-    }
+    logTransaction(
+      await masterAccess.addCombinedPermissionsToRole(role, description, allowPermissions, disallowPermissions),
+      `Added permissions to role ${role}`
+    );
   }
 };

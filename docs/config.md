@@ -5,6 +5,7 @@
   "projectName": "PROJECT_NAME",
   "roles": {
     "SOME_ROLE1": {
+      "description": "This is an important role",
       "allow": [
         {
           "resource": "RESOURCE_NAME",
