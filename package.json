@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@dlsl/dev-modules": "1.7.4",
-    "@dlsl/hardhat-migrate": "^1.1.2",
+    "@dlsl/hardhat-migrate": "^1.2.0",
     "@openzeppelin/contracts": "4.5.0",
     "@openzeppelin/contracts-upgradeable": "4.5.0",
     "dotenv": "^10.0.0",
