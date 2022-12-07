@@ -47,9 +47,10 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         address executor_,
         bytes calldata acceptData_,
         bytes calldata rejectData_,
+        string calldata misc_,
         string calldata description_
     ) external override onlyCreatePermission {
-        _createRequest(executor_, acceptData_, rejectData_);
+        _createRequest(executor_, acceptData_, rejectData_, misc_);
 
         emit RequestCreated(
             nextRequestId - 1,
@@ -57,6 +58,7 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
             executor_,
             acceptData_,
             rejectData_,
+            misc_,
             description_
         );
     }
@@ -72,10 +74,11 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         address executor_,
         bytes calldata acceptData_,
         bytes calldata rejectData_,
+        string calldata misc_,
         string calldata description_
     ) external override onlyCreatePermission onlyDeletePermission {
         _dropRequest(requestId_);
-        _createRequest(executor_, acceptData_, rejectData_);
+        _createRequest(executor_, acceptData_, rejectData_, misc_);
 
         emit RequestUpdated(
             requestId_,
@@ -83,6 +86,7 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
             executor_,
             acceptData_,
             rejectData_,
+            misc_,
             description_
         );
     }
@@ -127,7 +131,8 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
     function _createRequest(
         address executor_,
         bytes calldata acceptData_,
-        bytes calldata rejectData_
+        bytes calldata rejectData_,
+        string calldata misc_
     ) internal {
         require(executor_ != address(0), "ReviewableRequests: zero executor");
 
@@ -136,7 +141,8 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
             creator: msg.sender,
             executor: executor_,
             acceptData: acceptData_,
-            rejectData: rejectData_
+            rejectData: rejectData_,
+            misc: misc_
         });
     }
 

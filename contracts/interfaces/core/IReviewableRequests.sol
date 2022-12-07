@@ -16,6 +16,7 @@ interface IReviewableRequests {
         address executor;
         bytes acceptData;
         bytes rejectData;
+        string misc;
     }
 
     event RequestCreated(
@@ -24,6 +25,7 @@ interface IReviewableRequests {
         address executor,
         bytes acceptData,
         bytes rejectData,
+        string misc,
         string description
     );
     event RequestUpdated(
@@ -32,6 +34,7 @@ interface IReviewableRequests {
         address executor,
         bytes acceptData,
         bytes rejectData,
+        string misc,
         string description
     );
     event RequestAccepted(uint256 requestId);
@@ -42,6 +45,7 @@ interface IReviewableRequests {
         address executor_,
         bytes calldata acceptData_,
         bytes calldata rejectData_,
+        string calldata misc_,
         string calldata description_
     ) external;
 
@@ -52,6 +56,7 @@ interface IReviewableRequests {
         address executor_,
         bytes calldata acceptData_,
         bytes calldata rejectData_,
+        string calldata misc_,
         string calldata description_
     ) external;
 

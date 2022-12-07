@@ -70,7 +70,9 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsCreate], true);
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      const tx = await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+      const tx = await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", {
+        from: USER1,
+      });
 
       assert.equal(tx.receipt.logs[0].event, "RequestCreated");
       assert.equal(tx.receipt.logs[0].args.requestId, "0");
@@ -78,6 +80,7 @@ describe("ReviewableRequests", () => {
       assert.equal(tx.receipt.logs[0].args.executor, OWNER);
       assert.equal(tx.receipt.logs[0].args.acceptData, "0x00");
       assert.equal(tx.receipt.logs[0].args.rejectData, "0x11");
+      assert.equal(tx.receipt.logs[0].args.misc, "Misc");
       assert.equal(tx.receipt.logs[0].args.description, "Simple request");
 
       const request = await reviewableRequests.requests(0);
@@ -87,6 +90,7 @@ describe("ReviewableRequests", () => {
       assert.equal(request.executor, OWNER);
       assert.equal(request.acceptData, "0x00");
       assert.equal(request.rejectData, "0x11");
+      assert.equal(request.misc, "Misc");
 
       assert.equal(await reviewableRequests.nextRequestId(), "1");
     });
@@ -96,14 +100,14 @@ describe("ReviewableRequests", () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await truffleAssert.reverts(
-        reviewableRequests.createRequest(ZERO_ADDR, "0x00", "0x11", "Simple request", { from: USER1 }),
+        reviewableRequests.createRequest(ZERO_ADDR, "0x00", "0x11", "Misc", "Simple request", { from: USER1 }),
         "ReviewableRequests: zero executor"
       );
     });
 
     it("should not create reviewable request without permissions", async () => {
       await truffleAssert.reverts(
-        reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 }),
         "ReviewableRequests: access denied"
       );
     });
@@ -118,7 +122,7 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x", "0x", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(OWNER, "0x", "0x", "Misc", "Simple request", { from: USER1 });
 
       const tx = await reviewableRequests.dropRequest(0, { from: USER1 });
 
@@ -136,7 +140,7 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x", "0x", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(OWNER, "0x", "0x", "Misc", "Simple request", { from: USER1 });
 
       await reviewableRequests.dropRequest(0, { from: USER1 });
       await truffleAssert.reverts(
@@ -154,7 +158,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 });
 
       await truffleAssert.reverts(
         reviewableRequests.dropRequest(0, { from: USER2 }),
@@ -179,8 +183,8 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
-      const tx = await reviewableRequests.updateRequest(0, OWNER, "0x1111", "0x2222", "Updated request", {
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 });
+      const tx = await reviewableRequests.updateRequest(0, OWNER, "0x1111", "0x2222", "Misc2", "Updated request", {
         from: USER1,
       });
 
@@ -190,6 +194,7 @@ describe("ReviewableRequests", () => {
       assert.equal(tx.receipt.logs[0].args.executor, OWNER);
       assert.equal(tx.receipt.logs[0].args.acceptData, "0x1111");
       assert.equal(tx.receipt.logs[0].args.rejectData, "0x2222");
+      assert.equal(tx.receipt.logs[0].args.misc, "Misc2");
       assert.equal(tx.receipt.logs[0].args.description, "Updated request");
 
       const request = await reviewableRequests.requests(0);
@@ -202,6 +207,7 @@ describe("ReviewableRequests", () => {
       assert.equal(newRequest.executor, OWNER);
       assert.equal(newRequest.acceptData, "0x1111");
       assert.equal(newRequest.rejectData, "0x2222");
+      assert.equal(newRequest.misc, "Misc2");
 
       assert.equal(await reviewableRequests.nextRequestId(), "2");
     });
@@ -214,8 +220,8 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
-      const tx = await reviewableRequests.updateRequest(0, USER2, "0x", "0x", "Updated request", {
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 });
+      const tx = await reviewableRequests.updateRequest(0, USER2, "0x", "0x", "Misc2", "Updated request", {
         from: USER1,
       });
 
@@ -225,6 +231,7 @@ describe("ReviewableRequests", () => {
       assert.equal(tx.receipt.logs[0].args.executor, USER2);
       assert.equal(tx.receipt.logs[0].args.acceptData, null);
       assert.equal(tx.receipt.logs[0].args.rejectData, null);
+      assert.equal(tx.receipt.logs[0].args.misc, "Misc2");
       assert.equal(tx.receipt.logs[0].args.description, "Updated request");
 
       const request = await reviewableRequests.requests(0);
@@ -237,6 +244,7 @@ describe("ReviewableRequests", () => {
       assert.equal(newRequest.executor, USER2);
       assert.equal(newRequest.acceptData, null);
       assert.equal(newRequest.rejectData, null);
+      assert.equal(newRequest.misc, "Misc2");
 
       assert.equal(await reviewableRequests.nextRequestId(), "2");
     });
@@ -250,7 +258,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await truffleAssert.reverts(
-        reviewableRequests.updateRequest(123, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        reviewableRequests.updateRequest(123, OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 }),
         "ReviewableRequests: invalid request status"
       );
     });
@@ -264,10 +272,10 @@ describe("ReviewableRequests", () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 });
 
       await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, ZERO_ADDR, "0x", "0x", "Left request untouched", {
+        reviewableRequests.updateRequest(0, ZERO_ADDR, "0x", "0x", "Misc2", "Left request untouched", {
           from: USER2,
         }),
         "ReviewableRequests: not a request creator"
@@ -278,14 +286,14 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsCreate], true);
 
       await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 }),
         "ReviewableRequests: access denied"
       );
 
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await truffleAssert.reverts(
-        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Simple request", { from: USER1 }),
+        reviewableRequests.updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request", { from: USER1 }),
         "ReviewableRequests: access denied"
       );
     });
@@ -312,6 +320,7 @@ describe("ReviewableRequests", () => {
           await executor.requestAccept.request()
         ).data,
         "0x",
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
@@ -339,6 +348,7 @@ describe("ReviewableRequests", () => {
           await executor.requestRevert.request()
         ).data,
         "0x",
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
@@ -357,7 +367,7 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(executor.address, "0x", "0x11", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(executor.address, "0x", "0x11", "Misc", "Simple request", { from: USER1 });
 
       await truffleAssert.passes(reviewableRequests.acceptRequest(0, { from: USER1 }), "pass");
     });
@@ -376,6 +386,7 @@ describe("ReviewableRequests", () => {
           await executor.requestAccept.request()
         ).data,
         "0x",
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
@@ -416,6 +427,7 @@ describe("ReviewableRequests", () => {
         (
           await executor.requestReject.request()
         ).data,
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
@@ -443,6 +455,7 @@ describe("ReviewableRequests", () => {
         (
           await executor.requestRevert.request()
         ).data,
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
@@ -461,7 +474,7 @@ describe("ReviewableRequests", () => {
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
-      await reviewableRequests.createRequest(executor.address, "0x11", "0x", "Simple request", { from: USER1 });
+      await reviewableRequests.createRequest(executor.address, "0x11", "0x", "Misc", "Simple request", { from: USER1 });
 
       await truffleAssert.passes(reviewableRequests.rejectRequest(0, { from: USER1 }), "pass");
     });
@@ -482,6 +495,7 @@ describe("ReviewableRequests", () => {
         (
           await executor.requestReject.request()
         ).data,
+        "Misc",
         "Simple request",
         { from: USER1 }
       );
