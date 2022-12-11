@@ -104,7 +104,10 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         emit RequestAccepted(requestId_);
     }
 
-    function rejectRequest(uint256 requestId_) external override onlyExecutePermission {
+    function rejectRequest(
+        uint256 requestId_,
+        string calldata reason_
+    ) external override onlyExecutePermission {
         Request storage request_ = _getPendingRequest(requestId_);
 
         request_.status = RequestStatus.REJECTED;
@@ -114,7 +117,7 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
             require(success_, "ReviewableRequests: failed to reject request");
         }
 
-        emit RequestRejected(requestId_);
+        emit RequestRejected(requestId_, reason_);
     }
 
     function _getPendingRequest(

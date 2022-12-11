@@ -38,7 +38,7 @@ interface IReviewableRequests {
         string description
     );
     event RequestAccepted(uint256 requestId);
-    event RequestRejected(uint256 requestId);
+    event RequestRejected(uint256 requestId, string reason);
     event RequestDropped(uint256 requestId);
 
     function createRequest(
@@ -62,5 +62,5 @@ interface IReviewableRequests {
 
     function acceptRequest(uint256 requestId_) external;
 
-    function rejectRequest(uint256 requestId_) external;
+    function rejectRequest(uint256 requestId_, string calldata reason_) external;
 }

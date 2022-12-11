@@ -432,13 +432,14 @@ describe("ReviewableRequests", () => {
         { from: USER1 }
       );
 
-      const tx = await reviewableRequests.rejectRequest(0, { from: USER1 });
+      const tx = await reviewableRequests.rejectRequest(0, "rejected", { from: USER1 });
 
       assert.equal((await reviewableRequests.requests(0)).status, RequestStatus.REJECTED);
       assert.equal(await executor.status(), "2");
 
       assert.equal(tx.receipt.logs[0].event, "RequestRejected");
       assert.equal(tx.receipt.logs[0].args.requestId, "0");
+      assert.equal(tx.receipt.logs[0].args.reason, "rejected");
     });
 
     it("should revert the reviewable request", async () => {
@@ -461,7 +462,7 @@ describe("ReviewableRequests", () => {
       );
 
       await truffleAssert.reverts(
-        reviewableRequests.rejectRequest(0, { from: USER1 }),
+        reviewableRequests.rejectRequest(0, "rejected", { from: USER1 }),
         "ReviewableRequests: failed to reject request"
       );
     });
@@ -476,7 +477,7 @@ describe("ReviewableRequests", () => {
 
       await reviewableRequests.createRequest(executor.address, "0x11", "0x", "Misc", "Simple request", { from: USER1 });
 
-      await truffleAssert.passes(reviewableRequests.rejectRequest(0, { from: USER1 }), "pass");
+      await truffleAssert.passes(reviewableRequests.rejectRequest(0, "rejected", { from: USER1 }), "pass");
     });
 
     it("should not reject the request twice", async () => {
@@ -502,14 +503,14 @@ describe("ReviewableRequests", () => {
 
       await reviewableRequests.acceptRequest(0, { from: USER1 });
       await truffleAssert.reverts(
-        reviewableRequests.rejectRequest(0, { from: USER1 }),
+        reviewableRequests.rejectRequest(0, "rejected", { from: USER1 }),
         "ReviewableRequests: invalid request status"
       );
     });
 
     it("should not accept reviewable request without permission", async () => {
       await truffleAssert.reverts(
-        reviewableRequests.rejectRequest(0, { from: USER1 }),
+        reviewableRequests.rejectRequest(0, "rejected", { from: USER1 }),
         "ReviewableRequests: access denied"
       );
     });
