@@ -11,6 +11,8 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
 
     function __MasterContractsRegistry_init(address masterAccess_) external initializer {
         __RoleManagedRegistry_init(masterAccess_);
+
+        emit Initialized();
     }
 
     modifier onlyCreatePermission() override {

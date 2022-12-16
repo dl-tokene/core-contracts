@@ -8,6 +8,7 @@ const {
 
 const Reverter = require("../helpers/reverter");
 const truffleAssert = require("truffle-assertions");
+const { assert } = require("chai");
 
 const RoleManagedRegistryMock = artifacts.require("RoleManagedRegistryMock");
 
@@ -57,6 +58,19 @@ describe("MasterContractsRegistry", async () => {
   });
 
   afterEach("revert", reverter.revert);
+
+  describe("constructor", () => {
+    it("should emit Initialized event", async () => {
+      const _registry = await MasterContractsRegistry.new();
+      const registryProxy = await ERC1967Proxy.new(_registry.address, []);
+      const newRegistry = await MasterContractsRegistry.at(registryProxy.address);
+      const _masterAccess = await MasterAccessManagement.new();
+
+      let tx = await newRegistry.__MasterContractsRegistry_init(_masterAccess.address);
+
+      assert.equal(tx.logs[3].event, "Initialized");
+    });
+  });
 
   describe("basic access", () => {
     it("should not initialize twice", async () => {
