@@ -1,6 +1,4 @@
-<div style="text-align: justify">
-
-**<p align="center"> SOFTWARE LICENSE TERMS </p>**
+**SOFTWARE LICENSE TERMS**
 
 These Software License Terms ("Terms") are between:
 
@@ -10,7 +8,7 @@ These Software License Terms ("Terms") are between:
 
 Licensor and Licensee are individually each the "Party", and collectively – the "Parties".
 
-**<p align="center"> 1. DEFINITIONS AND INTERPRETATION </p>**
+**1. DEFINITIONS AND INTERPRETATION**
 
 1.1. In these Terms, the following terms have the following meanings:
 
@@ -23,7 +21,7 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 7. "Trademarks" means: (i) the trademarks, trade names and service marks used by the relevant person, whether registered or unregistered; (ii) the respective stylistic marks and distinctive logotypes for such trademarks, trade names and service marks, and (iii) such other marks and logotypes as the relevant person may designate from time to time in writing; and
 8. "Website" means the website, located at [link](https://github.com/dl-tokene), or any replacement website. 
 
-**<p align="center">2. LIMITED LICENSE</p>**
+**2. LIMITED LICENSE**
 
 2.1. By using Software, Licensee accepts and agrees with these Terms. Licensee shall not use Software, if Licensee does not accept and agree with these Terms.
 
@@ -35,7 +33,7 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 
 2.5 Licensee acknowledges being sufficiently acquainted with Software and fully aware of Software's functionalities. Licensee is solely responsible for determining whether Software is fit for the Licensee's intended use of Software. Licensee hereby acknowledges and agrees that Licensor gives no representation or warranty that Software is fit for Licensee's or any person’s, or both, purpose, purposes or intended use. Licensee represents and warrants that it has satisfied itself that Software will be fit for every purpose and intended use.
 
-**<p align="center">3. EXTENT OF LICENSE</p>**
+**3. EXTENT OF LICENSE**
 
 3.1. Licensee has a right to use Software solely for the purposes of Non-Commercial Private Use. Any Commercial Use of Software is strictly prohibited without the prior written consent of Licensor. Licensee may obtain the consent on Commercial Use of Software by sending the relevant request to [email](mailto:legal@distributedlab.com). 
 
@@ -50,7 +48,7 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 
 3.3. Licensor retains the right to modify or withdraw Software from Website at any time. 
 
-**<p align="center">4. TERMINATION AND MODIFICATION</p>**
+**4. TERMINATION AND MODIFICATION**
 
 5.1. The License may be terminated by Licensor without cause at any time by withdrawal of Software from Website.
 
@@ -61,7 +59,7 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 5.4. Licensor may make changes to the Terms from time to time. The changes will be effective immediately upon their publication. 
 
 
-**<p align="center"> 5. WARRANTIES, INDEMNIFICATION, LIMITATION OF LIABILITY AND JURISDICTION</p>**
+**5. WARRANTIES, INDEMNIFICATION, LIMITATION OF LIABILITY AND JURISDICTION**
 
 5.1. LICENSEE ACKNOWLEDGES AND AGREES THAT SOFTWARE IS COMPLEX AND IT MAY HAVE CERTAIN DEFECTS. SOFTWARE IS EXPRESSLY PROVIDED ON AN "AS IS," "WHERE IS," AND "WITH ALL FAULTS" CONDITIONS. LICENSOR SPECIFICALLY DISCLAIMS ALL IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
 
@@ -76,7 +74,7 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 
 5.5. If any legal action, including, without limitation, an action for arbitration or injunctive relief, is brought relating to this Terms or the breach hereof, the prevailing party in any final judgement or arbitration award, or the non-dismissing party in the event of a dismissal without prejudice, shall be entitled to the full amount of all reasonable expenses, including all court costs, arbitration fees and actual attorney fees paid or incurred in good faith.
 
-**<p align="center"> 6. MISCELLANEOUS PROVISIONS</p>**
+**6. MISCELLANEOUS PROVISIONS**
 
 6.1. Licensee shall not assign its rights and obligations without prior written consent of Licensor. Licensor may assign these Terms and any of its rights or obligations hereunder to any person without prior written consent of Licensee. 
 
@@ -87,4 +85,3 @@ Licensor and Licensee are individually each the "Party", and collectively – th
 6.4. Should any term, condition, provision or part of these Terms be found to be unlawful, invalid, illegal or unenforceable, that portion shall be deemed null and void and severed from the Terms for all purposes, but such illegality, or invalidity or unenforceability shall not affect the legality, validity or enforceability of the remaining parts of these Terms, and the remainder of the Terms shall remain in full force and effect, unless such would be manifestly inequitable or would serve to deprive either Party of a material part of what it bargained for in entering into these Terms. 
 
 6.5. Neither Party shall be deemed by mere lapse of time (without giving notice or taking other action hereunder) to have waived any breach by the other Party of any of the provisions of these Terms. Further, the waiver by either Party of a particular breach of these Terms by the other Party shall not be construed as, or constitute, a continuing waiver of such breach, or of other breaches of the same or other provisions of these Terms.
-</div>
