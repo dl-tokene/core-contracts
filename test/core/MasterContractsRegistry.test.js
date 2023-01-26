@@ -102,6 +102,22 @@ describe("MasterContractsRegistry", async () => {
       });
     });
 
+    describe("injectDependenciesWithData", () => {
+      it("should be possible to call injectDependenciesWithData with Create permission", async () => {
+        await masterAccess.addPermissionsToRole(MasterContractsRegistryRole, [MasterContractsRegistryCreate], true);
+        await masterAccess.grantRoles(USER1, [MasterContractsRegistryRole]);
+
+        await registry.injectDependenciesWithData(await registry.CONSTANTS_REGISTRY_NAME(), "0x", { from: USER1 });
+      });
+
+      it("should not be possible to call injectDependenciesWithData without Create permission", async () => {
+        await truffleAssert.reverts(
+          registry.injectDependenciesWithData(await registry.CONSTANTS_REGISTRY_NAME(), "0x11", { from: USER1 }),
+          "MasterContractsRegistry: access denied"
+        );
+      });
+    });
+
     describe("upgradeContract", () => {
       it("should be possible to call upgradeContract with Update permission", async () => {
         await masterAccess.addPermissionsToRole(MasterContractsRegistryRole, [MasterContractsRegistryUpdate], true);

@@ -31,6 +31,13 @@ abstract contract RoleManagedRegistry is AbstractContractsRegistry, UUPSUpgradea
         _injectDependencies(name_);
     }
 
+    function injectDependenciesWithData(
+        string memory name_,
+        bytes memory data_
+    ) external onlyCreatePermission {
+        _injectDependenciesWithData(name_, data_);
+    }
+
     function upgradeContract(
         string calldata name_,
         address newImplementation_

@@ -1,11 +1,10 @@
-const { logTransaction } = require("@dlsl/hardhat-migrate");
 const { getConfigJson } = require("./config/config-parser");
 
 const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 const MasterAccessManagement = artifacts.require("MasterAccessManagement");
 
-module.exports = async () => {
+module.exports = async (deployer, logger) => {
   const registry = await Registry.at((await ERC1967Proxy.deployed()).address);
   const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
 
@@ -25,6 +24,6 @@ module.exports = async () => {
       throw new Error(`Empty roles list for address ${address}`);
     }
 
-    logTransaction(await masterAccess.grantRoles(address, roles), `Granted roles to ${address}`);
+    logger.logTransaction(await masterAccess.grantRoles(address, roles), `Granted roles to ${address}`);
   }
 };

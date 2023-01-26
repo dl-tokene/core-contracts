@@ -32,5 +32,5 @@ module.exports = async (deployer) => {
     startBlock: deployer.startMigrationsBlock,
   };
 
-  await vault.write(process.env.VAULT_CONFIG_PATH, { data: config });
+  await vault.write(process.env.VAULT_UPLOAD_CONFIG_PATH, { data: config });
 };

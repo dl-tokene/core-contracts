@@ -31,7 +31,10 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         _;
     }
 
-    function setDependencies(address registryAddress_) external override dependant {
+    function setDependencies(
+        address registryAddress_,
+        bytes calldata
+    ) external override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }

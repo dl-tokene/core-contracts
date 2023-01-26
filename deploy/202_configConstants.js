@@ -1,11 +1,10 @@
-const { logTransaction } = require("@dlsl/hardhat-migrate");
 const { getConfigJson } = require("./config/config-parser");
 
 const Registry = artifacts.require("MasterContractsRegistry");
 const ERC1967Proxy = artifacts.require("ERC1967Proxy");
 const ConstantsRegistry = artifacts.require("ConstantsRegistry");
 
-module.exports = async () => {
+module.exports = async (deployer, logger) => {
   const registry = await Registry.at((await ERC1967Proxy.deployed()).address);
   const constantsRegistry = await ConstantsRegistry.at(await registry.getConstantsRegistry());
 
@@ -32,7 +31,7 @@ module.exports = async () => {
       throw new Error(`Consant ${constant} value is empty`);
     }
 
-    logTransaction(
+    logger.logTransaction(
       await constantsRegistry.addConstant(constant, constantEncodedValue),
       `Added constant ${constant} with value ${constantEncodedValue}`
     );

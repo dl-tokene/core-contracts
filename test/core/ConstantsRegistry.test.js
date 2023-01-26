@@ -49,7 +49,7 @@ describe("ConstantsRegistry", () => {
 
   describe("basic access", () => {
     it("should not set dependencies from non dependant", async () => {
-      await truffleAssert.reverts(constantsRegistry.setDependencies(OWNER), "Dependant: Not an injector");
+      await truffleAssert.reverts(constantsRegistry.setDependencies(OWNER, "0x"), "Dependant: not an injector");
     });
   });
 
