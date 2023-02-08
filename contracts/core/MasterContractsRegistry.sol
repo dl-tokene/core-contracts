@@ -5,10 +5,18 @@ import "../interfaces/core/IMasterContractsRegistry.sol";
 
 import "./registry/RoleManagedRegistry.sol";
 
+/**
+ * @notice The MasterContractsRegistry contract, extends RoleManagedRegistry.
+ * Realizes EIP-6224 Contracts Dependencies Registry
+ */
 contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistry {
     string public constant CONSTANTS_REGISTRY_NAME = "CONSTANTS_REGISTRY";
     string public constant REVIEWABLE_REQUESTS_NAME = "REVIEWABLE_REQUESTS";
 
+    /**
+     * @notice The initializer function
+     * @param masterAccess_ the MasterAccessManagement contract
+     */
     function __MasterContractsRegistry_init(address masterAccess_) external initializer {
         __RoleManagedRegistry_init(masterAccess_);
 
@@ -42,14 +50,23 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
         _;
     }
 
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
     function getMasterAccessManagement() public view override returns (address) {
         return getContract(MASTER_ACCESS_MANAGEMENT_NAME);
     }
 
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
     function getConstantsRegistry() external view override returns (address) {
         return getContract(CONSTANTS_REGISTRY_NAME);
     }
 
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
     function getReviewableRequests() external view override returns (address) {
         return getContract(REVIEWABLE_REQUESTS_NAME);
     }

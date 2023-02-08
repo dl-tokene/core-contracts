@@ -7,13 +7,17 @@ import "../interfaces/core/IMasterAccessManagement.sol";
 import "../interfaces/core/IMasterContractsRegistry.sol";
 import "../interfaces/core/IConstantsRegistry.sol";
 
+/**
+ * @notice The ConstantsRegistry contract. It stores system-wide variables that
+ * smart contracts and offchain services may use.
+ *
+ * Right now the contract is built around a single bytes mapping. The future realizations will extend
+ * its ability to store more types and aggregate them into groups.
+ */
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;
 
     mapping(string => bytes) public constants;
-
-    event AddedConstant(string name, bytes value);
-    event RemovedConstant(string name);
 
     modifier onlyCreatePermission() {
         require(
@@ -31,6 +35,11 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         _;
     }
 
+    /**
+     * @notice The function to set required dependencies
+     * @dev Access: the injector address
+     * @param registryAddress_ the address of the ContractsRegistry
+     */
     function setDependencies(
         address registryAddress_,
         bytes calldata
@@ -39,6 +48,9 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }
 
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
     function addConstant(
         string calldata key_,
         bytes calldata value_
@@ -50,6 +62,9 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
         emit AddedConstant(key_, value_);
     }
 
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
     function removeConstant(string calldata key_) external override onlyDeletePermission {
         require(constants[key_].length > 0, "ConstantsRegistry: constant does not exist");
 

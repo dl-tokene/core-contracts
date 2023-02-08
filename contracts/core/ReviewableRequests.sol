@@ -7,6 +7,13 @@ import "../interfaces/core/IMasterAccessManagement.sol";
 import "../interfaces/core/IMasterContractsRegistry.sol";
 import "../interfaces/core/IReviewableRequests.sol";
 
+/**
+ * @notice The ReviewableRequests contract. Its main purpose is to forward certian user incentives to change
+ * platform settings to an admin for an approval.
+ *
+ * The TokenE modules may integrate with this contract to issue tokens, pass KYC and upload other requests that
+ * require admin attention.
+ */
 contract ReviewableRequests is IReviewableRequests, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;
 
@@ -38,6 +45,11 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         _;
     }
 
+    /**
+     * @notice The function to set the required dependencies
+     * @dev Access: the injector address
+     * @param registryAddress_ the address of the ContractsRegistry
+     */
     function setDependencies(
         address registryAddress_,
         bytes calldata
@@ -46,6 +58,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }
 
+    /**
+     * @inheritdoc IReviewableRequests
+     */
     function createRequest(
         address executor_,
         bytes calldata acceptData_,
@@ -66,6 +81,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         );
     }
 
+    /**
+     * @inheritdoc IReviewableRequests
+     */
     function dropRequest(uint256 requestId_) external override onlyDeletePermission {
         _dropRequest(requestId_);
 
@@ -94,6 +112,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         );
     }
 
+    /**
+     * @inheritdoc IReviewableRequests
+     */
     function acceptRequest(uint256 requestId_) external override onlyExecutePermission {
         Request storage request_ = _getPendingRequest(requestId_);
 
@@ -107,6 +128,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         emit RequestAccepted(requestId_);
     }
 
+    /**
+     * @inheritdoc IReviewableRequests
+     */
     function rejectRequest(
         uint256 requestId_,
         string calldata reason_
@@ -123,6 +147,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         emit RequestRejected(requestId_, reason_);
     }
 
+    /**
+     * @notice The internal function to check if the request is pending
+     */
     function _getPendingRequest(
         uint256 requestId_
     ) internal view returns (Request storage request_) {
@@ -134,6 +161,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         );
     }
 
+    /**
+     * @notice The internal function to create a request
+     */
     function _createRequest(
         address executor_,
         bytes calldata acceptData_,
@@ -152,6 +182,9 @@ contract ReviewableRequests is IReviewableRequests, AbstractDependant {
         });
     }
 
+    /**
+     * @notice The internal function to drop a request
+     */
     function _dropRequest(uint256 requestId_) internal {
         Request storage request_ = _getPendingRequest(requestId_);
 

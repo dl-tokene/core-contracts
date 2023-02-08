@@ -1,9 +1,53 @@
 # The TokenE operating system on top of EVM by Distributed Lab
 
-This module represents the smart contracts part of the operating system.
+This repository represents the core smart contracts part of the operating system.
 
-### Installation
+## What
+
+The TokenE core consists of 4 main smart contracts:
+
+1. `MasterContractsRegistry`
+1. `MasterAccessManagement`
+1. `ReviewableRequests`
+1. `ConstantRegistry`
+
+Each of these contracts serves an important role for the system:
+
+- The `MasterContractsRegistry` is an [ERC-6224](https://eips.ethereum.org/EIPS/eip-6224) compliant contract that is used throughout the core and its modules. 
+- The `MasterAccessManagement` is used to handle permissions and access, leveraging [DLSL](https://github.com/dl-solidity-library/dev-modules) RBAC smart contract.
+- The `ReviewableRequests` is a primary integration tool that is used to "speak" with admins. One can issue tokens or pass KYC requests via that contract.
+- The `ConstantRegistry` that stores the system-wide parameters. 
+
+## Installation
+
+The core contracts are available as an npm package:
 
 ```console
 $ npm install @tokene/core-contracts
 ```
+
+Or if you want to use the low-level [DLSL](https://github.com/dl-solidity-library/dev-modules):
+
+```console
+$ npm install @dlsl/dev-modules
+```
+
+## Integration
+
+Once you have installed the packages, feel free to play around with them.
+
+In order to integrate with TokenE core, please check that you are aware of these things:
+
+- Your module has to be dockerized. The smart contract, scripts, and deployments must be included in the docker image.
+- TokenE is a role based system, the external access control must integrated with `MasterAccessManagement` contract.
+- Double check that the RBAC resource does not collide with the any existing one.
+- Your smart contract must be discoverable by the system. It means that you will have to add them to the `MasterContractsRegistry` in the deployment scripts.
+- You must never create reviewable requests directly, always use the appropriate module for that. If you are writing such module, make sure it is able to handle both "accept" and "reject" request cases.
+
+## Documentation
+
+You can find an extensive documentation of the protocol [here](https://docs.tokene.io/docs/intro).
+
+## License 
+
+The TokenE core is released under the custom License. Please take a look to understand the limitations.
