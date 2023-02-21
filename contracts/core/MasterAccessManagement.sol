@@ -10,7 +10,7 @@ import "../interfaces/core/IMasterAccessManagement.sol";
  * to ease work for the FE and some function to quickly check the access for the core contracts.
  */
 contract MasterAccessManagement is IMasterAccessManagement, RBAC {
-    using ArrayHelper for string;
+    using TypeCaster for string;
 
     string public constant EXECUTE_PERMISSION = "EXECUTE";
 
@@ -24,7 +24,7 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
      */
     function __MasterAccessManagement_init(address master_) external initializer {
         __RBAC_init();
-        _grantRoles(master_, MASTER_ROLE.asArray());
+        _grantRoles(master_, MASTER_ROLE.asSingletonArray());
     }
 
     /**

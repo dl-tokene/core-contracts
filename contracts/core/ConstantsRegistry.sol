@@ -9,15 +9,16 @@ import "../interfaces/core/IConstantsRegistry.sol";
 
 /**
  * @notice The ConstantsRegistry contract. It stores system-wide variables that
- * smart contracts and offchain services may use.
+ * smart contracts and off-chain services may use.
  *
- * Right now the contract is built around a single bytes mapping. The future realizations will extend
- * its ability to store more types and aggregate them into groups.
+ * Currently, the ConstantsRegistry supports `bytes`, `string`, `uint256`, `address`, `bytes32`
+ * types for constant values. This implementation assumes the use of string keys with off-chain
+ * accepted delimiters in order to achieve the compound keys behaviour.
  */
 contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     IMasterAccessManagement internal _masterAccess;
 
-    mapping(string => bytes) public constants;
+    mapping(string => bytes) private _constants;
 
     modifier onlyCreatePermission() {
         require(
@@ -51,25 +52,116 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
     /**
      * @inheritdoc IConstantsRegistry
      */
-    function addConstant(
+    function addBytes(
         string calldata key_,
         bytes calldata value_
     ) external override onlyCreatePermission {
         require(value_.length > 0, "ConstantsRegistry: empty value");
 
-        constants[key_] = value_;
+        _constants[key_] = value_;
 
-        emit AddedConstant(key_, value_);
+        emit AddedBytes(key_, value_);
     }
 
     /**
      * @inheritdoc IConstantsRegistry
      */
-    function removeConstant(string calldata key_) external override onlyDeletePermission {
-        require(constants[key_].length > 0, "ConstantsRegistry: constant does not exist");
+    function addString(
+        string calldata key_,
+        string calldata value_
+    ) external override onlyCreatePermission {
+        bytes memory valueBytes_ = abi.encode(value_);
 
-        delete constants[key_];
+        _constants[key_] = valueBytes_;
 
-        emit RemovedConstant(key_);
+        emit AddedString(key_, valueBytes_);
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function addUint256(
+        string calldata key_,
+        uint256 value_
+    ) external override onlyCreatePermission {
+        bytes memory valueBytes_ = abi.encode(value_);
+
+        _constants[key_] = valueBytes_;
+
+        emit AddedUint256(key_, valueBytes_);
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function addAddress(
+        string calldata key_,
+        address value_
+    ) external override onlyCreatePermission {
+        bytes memory valueBytes_ = abi.encode(value_);
+
+        _constants[key_] = valueBytes_;
+
+        emit AddedAddress(key_, valueBytes_);
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function addBytes32(
+        string calldata key_,
+        bytes32 value_
+    ) external override onlyCreatePermission {
+        bytes memory valueBytes_ = abi.encode(value_);
+
+        _constants[key_] = valueBytes_;
+
+        emit AddedBytes32(key_, valueBytes_);
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function remove(string calldata key_) external override onlyDeletePermission {
+        require(_constants[key_].length > 0, "ConstantsRegistry: constant does not exist");
+
+        delete _constants[key_];
+
+        emit Removed(key_);
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function getBytes(string calldata key_) external view override returns (bytes memory) {
+        return _constants[key_];
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function getString(string calldata key_) external view override returns (string memory) {
+        return abi.decode(_constants[key_], (string));
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function getUint256(string calldata key_) external view override returns (uint256) {
+        return abi.decode(_constants[key_], (uint256));
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function getAddress(string calldata key_) external view override returns (address) {
+        return abi.decode(_constants[key_], (address));
+    }
+
+    /**
+     * @inheritdoc IConstantsRegistry
+     */
+    function getBytes32(string calldata key_) external view override returns (bytes32) {
+        return abi.decode(_constants[key_], (bytes32));
     }
 }

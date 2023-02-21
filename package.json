@@ -1,6 +1,6 @@
 {
   "name": "tokene",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "license": "MIT",
   "author": "Distributed Lab",
   "description": "The TokenE operating system on top of EVM by Distributed Lab",
@@ -37,11 +37,11 @@
     "publish-to-npm": "npm run lint-fix && bash ./scripts/publish.sh"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "2.0.2",
+    "@dlsl/dev-modules": "2.2.0",
     "@dlsl/hardhat-migrate": "^1.5.0",
     "@dlsl/hardhat-markup": "^1.0.0-rc.7",
-    "@openzeppelin/contracts": "4.5.0",
-    "@openzeppelin/contracts-upgradeable": "4.5.0",
+    "@openzeppelin/contracts": "4.8.0",
+    "@openzeppelin/contracts-upgradeable": "4.8.0",
     "dotenv": "^10.0.0",
     "hardhat": "^2.12.0",
     "node-vault": "^0.9.22",
