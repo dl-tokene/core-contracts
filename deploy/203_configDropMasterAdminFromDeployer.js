@@ -1,3 +1,4 @@
+const { getConfigJson } = require("./config/config-parser");
 const { accounts } = require("../scripts/utils/utils");
 
 const Registry = artifacts.require("MasterContractsRegistry");
@@ -10,6 +11,16 @@ module.exports = async (deployer, logger) => {
 
   const masterRole = await masterAccess.MASTER_ROLE();
   const deployerAccount = await accounts(0);
+
+  const addressesConfig = getConfigJson().addresses;
+
+  if (addressesConfig != undefined && Object.keys(addressesConfig).find((e) => e == deployerAccount) != undefined) {
+    const roles = addressesConfig[deployerAccount];
+
+    if (roles.find((e) => e == masterRole) != undefined) {
+      return;
+    }
+  }
 
   logger.logTransaction(
     await masterAccess.revokeRoles(deployerAccount, [masterRole]),
