@@ -14,6 +14,7 @@ module.exports = async (deployer) => {
   const masterAccessAddress = await registry.getMasterAccessManagement();
   const constantsRegistryAddress = await registry.getConstantsRegistry();
   const reviewableRequestsAddress = await registry.getReviewableRequests();
+  const multicallAddress = await registry.getMulticall();
 
   const projectName = getConfigJson().projectName;
 
@@ -28,6 +29,7 @@ module.exports = async (deployer) => {
       MasterContractsRegistry: registry.address,
       MasterAccessManagement: masterAccessAddress,
       ReviewableRequests: reviewableRequestsAddress,
+      Multicall: multicallAddress,
     },
     startBlock: deployer.startMigrationsBlock,
   };

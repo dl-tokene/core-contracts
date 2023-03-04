@@ -12,6 +12,7 @@ import "./registry/RoleManagedRegistry.sol";
 contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistry {
     string public constant CONSTANTS_REGISTRY_NAME = "CONSTANTS_REGISTRY";
     string public constant REVIEWABLE_REQUESTS_NAME = "REVIEWABLE_REQUESTS";
+    string public constant MULTICALL_NAME = "MULTICALL";
 
     /**
      * @notice The initializer function
@@ -69,5 +70,12 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
      */
     function getReviewableRequests() external view override returns (address) {
         return getContract(REVIEWABLE_REQUESTS_NAME);
+    }
+
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
+    function getMulticall() external view override returns (address) {
+        return getContract(MULTICALL_NAME);
     }
 }
