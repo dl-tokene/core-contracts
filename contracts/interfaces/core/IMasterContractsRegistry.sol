@@ -24,4 +24,10 @@ interface IMasterContractsRegistry {
      * @return ReviewableRequests contract address
      */
     function getReviewableRequests() external view returns (address);
+
+    /**
+     * @notice The function to get the Multicall contract
+     * @return Multicall contract address
+     */
+    function getMulticall() external view returns (address);
 }
