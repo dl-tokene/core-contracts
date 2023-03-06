@@ -4,12 +4,13 @@ This repository represents the core smart contracts part of the operating system
 
 ## What
 
-The TokenE core consists of 4 main smart contracts:
+The TokenE core consists of 5 main smart contracts:
 
 1. `MasterContractsRegistry`
 1. `MasterAccessManagement`
 1. `ReviewableRequests`
 1. `ConstantRegistry`
+1. `Multicall`
 
 Each of these contracts serves an important role for the system:
 
@@ -17,6 +18,7 @@ Each of these contracts serves an important role for the system:
 - The `MasterAccessManagement` is used to handle permissions and access, leveraging [DLSL](https://github.com/dl-solidity-library/dev-modules) RBAC smart contract.
 - The `ReviewableRequests` is a primary integration tool that is used to "speak" with admins. One can issue tokens or pass KYC requests via that contract.
 - The `ConstantRegistry` that stores the system-wide parameters. 
+- The `Multicall` is used as a utility to execute batches of transactions.
 
 ## Installation
 
