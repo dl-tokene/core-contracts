@@ -14,4 +14,4 @@ COPY scripts ./scripts
 
 RUN npm install
 
-ENTRYPOINT ["npm", "run", "deploy-hardhat"]
+ENTRYPOINT ["npm", "run"]
