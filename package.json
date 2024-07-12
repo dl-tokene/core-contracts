@@ -15,6 +15,10 @@
     "tokene",
     "distributedlab"
   ],
+  "files": [
+    "**/*.sol",
+    "!mock/**/*"
+  ],
   "scripts": {
     "compile": "npx hardhat compile --force",
     "coverage": "npx hardhat coverage --solcoverjs ./.solcover.ts",
