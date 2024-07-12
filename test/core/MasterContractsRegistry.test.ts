@@ -67,7 +67,7 @@ describe("MasterContractsRegistry", async () => {
 
     const TransparentUpgradeable = await ethers.getContractFactory("TransparentUpgradeableProxy");
     constantsRegistryProxy = TransparentUpgradeable.attach(
-      await registry.getConstantsRegistry(),
+      await registry.getConstantsRegistry()
     ) as TransparentUpgradeableProxy;
 
     await reverter.snapshot();
@@ -89,7 +89,7 @@ describe("MasterContractsRegistry", async () => {
 
       await expect(registry.__MasterContractsRegistry_init(await _masterAccess.getAddress())).to.emit(
         registry,
-        "Initialized()",
+        "Initialized()"
       );
     });
   });
@@ -100,11 +100,11 @@ describe("MasterContractsRegistry", async () => {
       const roleManagedRegistryMock = await RoleManagedRegistryMock.deploy();
 
       await expect(registry.__MasterContractsRegistry_init(OWNER)).to.be.rejectedWith(
-        "Initializable: contract is already initialized",
+        "Initializable: contract is already initialized"
       );
 
       await expect(roleManagedRegistryMock.init(OWNER)).to.be.rejectedWith(
-        "Initializable: contract is not initializing",
+        "Initializable: contract is not initializing"
       );
     });
   });
@@ -120,7 +120,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call injectDependencies without Create permission", async () => {
         await expect(
-          registry.connect(USER1).injectDependencies(await registry.CONSTANTS_REGISTRY_NAME()),
+          registry.connect(USER1).injectDependencies(await registry.CONSTANTS_REGISTRY_NAME())
         ).to.be.rejectedWith("MasterContractsRegistry: access denied");
       });
     });
@@ -135,7 +135,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call injectDependenciesWithData without Create permission", async () => {
         await expect(
-          registry.connect(USER1).injectDependenciesWithData(await registry.CONSTANTS_REGISTRY_NAME(), "0x11"),
+          registry.connect(USER1).injectDependenciesWithData(await registry.CONSTANTS_REGISTRY_NAME(), "0x11")
         ).to.be.rejectedWith("MasterContractsRegistry: access denied");
       });
     });
@@ -150,7 +150,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call upgradeContract without Update permission", async () => {
         await expect(
-          registry.connect(USER1).upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), constantsRegistry),
+          registry.connect(USER1).upgradeContract(await registry.CONSTANTS_REGISTRY_NAME(), constantsRegistry)
         ).to.be.rejectedWith("MasterContractsRegistry: access denied");
       });
     });
@@ -169,7 +169,7 @@ describe("MasterContractsRegistry", async () => {
         await expect(
           registry
             .connect(USER1)
-            .upgradeContractAndCall(await registry.CONSTANTS_REGISTRY_NAME(), constantsRegistry, "0x"),
+            .upgradeContractAndCall(await registry.CONSTANTS_REGISTRY_NAME(), constantsRegistry, "0x")
         ).to.be.rejectedWith("MasterContractsRegistry: access denied");
       });
     });
@@ -184,7 +184,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call addContract without Create permission", async () => {
         await expect(registry.connect(USER1).addContract("TEST", constantsRegistry)).to.be.rejectedWith(
-          "MasterContractsRegistry: access denied",
+          "MasterContractsRegistry: access denied"
         );
       });
     });
@@ -199,7 +199,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call addProxyContract without Create permission", async () => {
         await expect(registry.connect(USER1).addProxyContract("TEST", constantsRegistry)).to.be.rejectedWith(
-          "MasterContractsRegistry: access denied",
+          "MasterContractsRegistry: access denied"
         );
       });
     });
@@ -214,7 +214,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to call justAddProxyContract without Create permission", async () => {
         await expect(registry.connect(USER1).justAddProxyContract("TEST", constantsRegistry)).to.be.rejectedWith(
-          "MasterContractsRegistry: access denied",
+          "MasterContractsRegistry: access denied"
         );
       });
     });
@@ -231,7 +231,7 @@ describe("MasterContractsRegistry", async () => {
       it("should not be possible to call removeContract without Delete permission", async () => {
         await registry.justAddProxyContract("TEST", constantsRegistryProxy);
         await expect(registry.connect(USER1).removeContract("TEST")).to.be.rejectedWith(
-          "MasterContractsRegistry: access denied",
+          "MasterContractsRegistry: access denied"
         );
       });
     });
@@ -253,7 +253,7 @@ describe("MasterContractsRegistry", async () => {
 
       it("should not be possible to upgrade UUPS proxy without Create permission", async () => {
         await expect(registry.connect(USER1).upgradeTo(_registry)).to.be.rejectedWith(
-          "MasterContractsRegistry: access denied",
+          "MasterContractsRegistry: access denied"
         );
       });
     });
@@ -262,19 +262,19 @@ describe("MasterContractsRegistry", async () => {
   describe("getters", () => {
     it("should correctly return MasterAccess contract with getMasterAccessManagement", async () => {
       expect(await registry.getContract(await registry.MASTER_ACCESS_MANAGEMENT_NAME())).to.be.equal(
-        await registry.getMasterAccessManagement(),
+        await registry.getMasterAccessManagement()
       );
     });
 
     it("should correctly return ConstantsRegistry contract with getConstantsRegistry", async () => {
       expect(await registry.getContract(await registry.CONSTANTS_REGISTRY_NAME())).to.be.equal(
-        await registry.getConstantsRegistry(),
+        await registry.getConstantsRegistry()
       );
     });
 
     it("should correctly return ReviewableRequests contract with getReviewableRequests", async () => {
       expect(await registry.getContract(await registry.REVIEWABLE_REQUESTS_NAME())).to.be.equal(
-        await registry.getReviewableRequests(),
+        await registry.getReviewableRequests()
       );
     });
   });

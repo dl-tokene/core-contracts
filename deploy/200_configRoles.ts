@@ -9,7 +9,7 @@ export = async (deployer: Deployer) => {
 
   const masterAccess = await deployer.deployed(
     MasterAccessManagement__factory,
-    await registry.getMasterAccessManagement(),
+    await registry.getMasterAccessManagement()
   );
 
   const rolesConfig = getConfigJson().roles;

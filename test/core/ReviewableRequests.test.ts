@@ -105,13 +105,13 @@ describe("ReviewableRequests", () => {
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await expect(
-        reviewableRequests.connect(USER1).createRequest(ethers.ZeroAddress, "0x00", "0x11", "Misc", "Simple request"),
+        reviewableRequests.connect(USER1).createRequest(ethers.ZeroAddress, "0x00", "0x11", "Misc", "Simple request")
       ).to.be.rejectedWith("ReviewableRequests: zero executor");
     });
 
     it("should not create reviewable request without permissions", async () => {
       await expect(
-        reviewableRequests.connect(USER1).createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request"),
+        reviewableRequests.connect(USER1).createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request")
       ).to.be.rejectedWith("ReviewableRequests: access denied");
     });
   });
@@ -121,7 +121,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -138,7 +138,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -146,7 +146,7 @@ describe("ReviewableRequests", () => {
 
       await reviewableRequests.connect(USER1).dropRequest(0);
       await expect(reviewableRequests.connect(USER1).dropRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: invalid request status",
+        "ReviewableRequests: invalid request status"
       );
     });
 
@@ -154,7 +154,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
@@ -162,13 +162,13 @@ describe("ReviewableRequests", () => {
       await reviewableRequests.connect(USER1).createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request");
 
       await expect(reviewableRequests.connect(USER2).dropRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: not a request creator",
+        "ReviewableRequests: not a request creator"
       );
     });
 
     it("should not drop reviewable request without permission", async () => {
       await expect(reviewableRequests.connect(USER1).dropRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: access denied",
+        "ReviewableRequests: access denied"
       );
     });
   });
@@ -178,13 +178,13 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await reviewableRequests.connect(USER1).createRequest(OWNER, "0x00", "0x11", "Misc", "Simple request");
       await expect(
-        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x1111", "0x2222", "Misc2", "Updated request"),
+        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x1111", "0x2222", "Misc2", "Updated request")
       )
         .to.emit(reviewableRequests, "RequestUpdated")
         .withArgs("0", "1", OWNER, "0x1111", "0x2222", "Misc2", "Updated request");
@@ -208,7 +208,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -237,12 +237,12 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await expect(
-        reviewableRequests.connect(USER1).updateRequest(123, OWNER, "0x00", "0x11", "Misc", "Simple request"),
+        reviewableRequests.connect(USER1).updateRequest(123, OWNER, "0x00", "0x11", "Misc", "Simple request")
       ).to.be.rejectedWith("ReviewableRequests: invalid request status");
     });
 
@@ -250,7 +250,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsDelete],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       await masterAccess.grantRoles(USER2, [ReviewableRequestsRole]);
@@ -260,7 +260,7 @@ describe("ReviewableRequests", () => {
       await expect(
         reviewableRequests
           .connect(USER2)
-          .updateRequest(0, ethers.ZeroAddress, "0x", "0x", "Misc2", "Left request untouched"),
+          .updateRequest(0, ethers.ZeroAddress, "0x", "0x", "Misc2", "Left request untouched")
       ).to.be.rejectedWith("ReviewableRequests: not a request creator");
     });
 
@@ -268,13 +268,13 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(ReviewableRequestsRole, [ReviewableRequestsCreate], true);
 
       await expect(
-        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request"),
+        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request")
       ).to.be.rejectedWith("ReviewableRequests: access denied");
 
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
       await expect(
-        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request"),
+        reviewableRequests.connect(USER1).updateRequest(0, OWNER, "0x00", "0x11", "Misc", "Simple request")
       ).to.be.rejectedWith("ReviewableRequests: access denied");
     });
   });
@@ -291,7 +291,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -311,7 +311,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       const RequestExecutorMock = await ethers.getContractFactory("RequestExecutorMock");
@@ -323,11 +323,11 @@ describe("ReviewableRequests", () => {
           RequestExecutorMock.interface.encodeFunctionData("requestRevert"),
           "0x",
           "Misc",
-          "Simple request",
+          "Simple request"
         );
 
       await expect(reviewableRequests.connect(USER1).acceptRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: failed to accept request",
+        "ReviewableRequests: failed to accept request"
       );
     });
 
@@ -335,7 +335,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -348,7 +348,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -358,13 +358,13 @@ describe("ReviewableRequests", () => {
 
       await reviewableRequests.connect(USER1).acceptRequest(0);
       await expect(reviewableRequests.connect(USER1).acceptRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: invalid request status",
+        "ReviewableRequests: invalid request status"
       );
     });
 
     it("should not accept reviewable request without permission", async () => {
       await expect(reviewableRequests.connect(USER1).acceptRequest(0)).to.be.rejectedWith(
-        "ReviewableRequests: access denied",
+        "ReviewableRequests: access denied"
       );
     });
   });
@@ -380,7 +380,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -400,7 +400,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
       const RequestExecutorMock = await ethers.getContractFactory("RequestExecutorMock");
@@ -412,11 +412,11 @@ describe("ReviewableRequests", () => {
           "0x",
           RequestExecutorMock.interface.encodeFunctionData("requestRevert"),
           "Misc",
-          "Simple request",
+          "Simple request"
         );
 
       await expect(reviewableRequests.connect(USER1).rejectRequest(0, "rejected")).to.be.rejectedWith(
-        "ReviewableRequests: failed to reject request",
+        "ReviewableRequests: failed to reject request"
       );
     });
 
@@ -424,7 +424,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -437,7 +437,7 @@ describe("ReviewableRequests", () => {
       await masterAccess.addPermissionsToRole(
         ReviewableRequestsRole,
         [ReviewableRequestsCreate, ReviewableRequestsExecute],
-        true,
+        true
       );
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
@@ -445,21 +445,25 @@ describe("ReviewableRequests", () => {
         .connect(USER1)
         .createRequest(
           executor,
-          (await executor.requestAccept()).data,
-          (await executor.requestReject()).data,
+          (
+            await executor.requestAccept()
+          ).data,
+          (
+            await executor.requestReject()
+          ).data,
           "Misc",
-          "Simple request",
+          "Simple request"
         );
 
       await reviewableRequests.connect(USER1).acceptRequest(0);
       await expect(reviewableRequests.connect(USER1).rejectRequest(0, "rejected")).to.be.rejectedWith(
-        "ReviewableRequests: invalid request status",
+        "ReviewableRequests: invalid request status"
       );
     });
 
     it("should not accept reviewable request without permission", async () => {
       await expect(reviewableRequests.connect(USER1).rejectRequest(0, "rejected")).to.be.rejectedWith(
-        "ReviewableRequests: access denied",
+        "ReviewableRequests: access denied"
       );
     });
   });
