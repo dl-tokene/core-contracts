@@ -16,7 +16,6 @@
     "distributedlab"
   ],
   "scripts": {
-    "install": "npx husky init",
     "compile": "npx hardhat compile --force",
     "coverage": "npx hardhat coverage --solcoverjs ./.solcover.ts",
     "test": "npx hardhat test",
