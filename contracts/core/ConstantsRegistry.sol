@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
+import {AbstractDependant} from "@solarity/solidity-lib/contracts-registry/AbstractDependant.sol";
 
-import "../interfaces/core/IMasterAccessManagement.sol";
-import "../interfaces/core/IMasterContractsRegistry.sol";
-import "../interfaces/core/IConstantsRegistry.sol";
+import {IMasterAccessManagement} from "../interfaces/core/IMasterAccessManagement.sol";
+import {IMasterContractsRegistry} from "../interfaces/core/IMasterContractsRegistry.sol";
+import {IConstantsRegistry} from "../interfaces/core/IConstantsRegistry.sol";
 
 /**
  * @notice The ConstantsRegistry contract. It stores system-wide variables that
@@ -41,10 +41,7 @@ contract ConstantsRegistry is IConstantsRegistry, AbstractDependant {
      * @dev Access: the injector address
      * @param registryAddress_ the address of the ContractsRegistry
      */
-    function setDependencies(
-        address registryAddress_,
-        bytes calldata
-    ) external override dependant {
+    function setDependencies(address registryAddress_, bytes memory) public override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }

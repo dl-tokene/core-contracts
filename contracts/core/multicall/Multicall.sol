@@ -1,14 +1,15 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import {Initializable} from "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import {ReentrancyGuard} from "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 
-import "@dlsl/dev-modules/contracts-registry/AbstractDependant.sol";
+import {AbstractDependant} from "@solarity/solidity-lib/contracts-registry/AbstractDependant.sol";
 
-import "../../interfaces/core/IMasterAccessManagement.sol";
-import "../../interfaces/core/IMasterContractsRegistry.sol";
-import "./MulticallExecutor.sol";
+import {IMasterAccessManagement} from "../../interfaces/core/IMasterAccessManagement.sol";
+import {IMasterContractsRegistry} from "../../interfaces/core/IMasterContractsRegistry.sol";
+
+import {MulticallExecutor, IMulticall} from "./MulticallExecutor.sol";
 
 /**
  * @notice The Multicall contract. It grants `msg.sender` roles to the internal MulticallExecutor
@@ -34,10 +35,7 @@ contract Multicall is IMulticall, Initializable, AbstractDependant, ReentrancyGu
      * @dev Access: the injector address
      * @param registryAddress_ the address of the ContractsRegistry
      */
-    function setDependencies(
-        address registryAddress_,
-        bytes calldata
-    ) external override dependant {
+    function setDependencies(address registryAddress_, bytes memory) public override dependant {
         IMasterContractsRegistry registry_ = IMasterContractsRegistry(registryAddress_);
         _masterAccess = IMasterAccessManagement(registry_.getMasterAccessManagement());
     }

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "../../../core/multicall/Multicall.sol";
+import {Multicall} from "../../../core/multicall/Multicall.sol";
 
 contract MulticallMock is Multicall {
     bytes[] public latestCallOutputs;

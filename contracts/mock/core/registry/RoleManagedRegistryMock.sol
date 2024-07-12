@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "../../../core/registry/RoleManagedRegistry.sol";
+import {RoleManagedRegistry} from "../../../core/registry/RoleManagedRegistry.sol";
 
 contract RoleManagedRegistryMock is RoleManagedRegistry {
     function init(
