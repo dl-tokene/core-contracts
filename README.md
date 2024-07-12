@@ -15,7 +15,7 @@ The TokenE core consists of 5 main smart contracts:
 Each of these contracts serves an important role for the system:
 
 - The `MasterContractsRegistry` is an [ERC-6224](https://eips.ethereum.org/EIPS/eip-6224) compliant contract that is used throughout the core and its modules. 
-- The `MasterAccessManagement` is used to handle permissions and access, leveraging [DLSL](https://github.com/dl-solidity-library/dev-modules) RBAC smart contract.
+- The `MasterAccessManagement` is used to handle permissions and access, leveraging [solarity](https://github.com/dl-solarity/solidity-lib) RBAC smart contract.
 - The `ReviewableRequests` is a primary integration tool that is used to "speak" with admins. One can issue tokens or pass KYC requests via that contract.
 - The `ConstantRegistry` that stores the system-wide parameters. 
 - The `Multicall` is used as a utility to execute batches of transactions.
@@ -28,10 +28,10 @@ The core contracts are available as an npm package:
 $ npm install @tokene/core-contracts
 ```
 
-Or if you want to use the low-level [DLSL](https://github.com/dl-solidity-library/dev-modules):
+Or if you want to use the low-level [solarity](https://github.com/dl-solarity/solidity-lib):
 
 ```console
-$ npm install @dlsl/dev-modules
+$ npm install @solarity/solidity-lib
 ```
 
 ## Integration

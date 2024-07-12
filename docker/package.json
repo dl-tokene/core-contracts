@@ -17,22 +17,24 @@
   ],
   "scripts": {
     "compile": "npx hardhat compile --force",
+    "deploy-hardhat": "npx hardhat migrate --network hardhat",
     "deploy-dev": "npx hardhat migrate --network dev"
   },
   "dependencies": {
-    "@dlsl/dev-modules": "2.2.0",
-    "@openzeppelin/contracts": "4.8.0",
-    "@openzeppelin/contracts-upgradeable": "4.8.0",
-    "dotenv": "^10.0.0",
-    "hardhat": "^2.12.0",
-    "node-vault": "^0.9.22",
-    "solc": "0.8.17"
-  },
-  "devDependencies": {
-    "@nomiclabs/hardhat-truffle5": "^2.0.1",
-    "@nomiclabs/hardhat-web3": "^2.0.0",
-    "@dlsl/hardhat-migrate": "^1.5.0",
-    "bignumber.js": "^9.0.1",
-    "web3": "^1.7.5"
+    "@nomicfoundation/hardhat-ethers": "^3.0.6",
+    "@solarity/hardhat-migrate": "2.1.8",
+    "@typechain/ethers-v6": "^0.5.1",
+    "@typechain/hardhat": "^9.1.0",
+    "@solarity/solidity-lib": "2.7.10",
+    "@openzeppelin/contracts": "4.9.6",
+    "@openzeppelin/contracts-upgradeable": "4.9.6",
+    "dotenv": "^16.4.5",
+    "hardhat": "^2.22.4",
+    "node-vault": "^0.10.2",
+    "solc": "0.8.17",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typechain": "^8.3.2",
+    "typescript": "^5.4.5"
   }
 }

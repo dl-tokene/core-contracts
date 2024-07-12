@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "../interfaces/core/IMasterContractsRegistry.sol";
+import {IMasterContractsRegistry} from "../interfaces/core/IMasterContractsRegistry.sol";
 
-import "./registry/RoleManagedRegistry.sol";
+import {RoleManagedRegistry, IMasterAccessManagement} from "./registry/RoleManagedRegistry.sol";
 
 /**
  * @notice The MasterContractsRegistry contract, extends RoleManagedRegistry.

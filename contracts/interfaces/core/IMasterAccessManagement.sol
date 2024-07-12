@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@dlsl/dev-modules/interfaces/access-control/IRBAC.sol";
+import {IRBAC} from "@solarity/solidity-lib/interfaces/access/IRBAC.sol";
 
 interface IMasterAccessManagement is IRBAC {
     /**

@@ -1,12 +1,16 @@
-const { getConfigJson } = require("./config/config-parser");
+import { Deployer } from "@solarity/hardhat-migrate";
 
-const Registry = artifacts.require("MasterContractsRegistry");
-const ERC1967Proxy = artifacts.require("ERC1967Proxy");
-const MasterAccessManagement = artifacts.require("MasterAccessManagement");
+import { MasterAccessManagement__factory, MasterContractsRegistry__factory } from "@/generated-types";
 
-module.exports = async (deployer, logger) => {
-  const registry = await Registry.at((await ERC1967Proxy.deployed()).address);
-  const masterAccess = await MasterAccessManagement.at(await registry.getMasterAccessManagement());
+import { getConfigJson } from "./config/config-parser";
+
+export = async (deployer: Deployer) => {
+  const registry = await deployer.deployed(MasterContractsRegistry__factory, "MasterContractsRegistry Proxy");
+
+  const masterAccess = await deployer.deployed(
+    MasterAccessManagement__factory,
+    await registry.getMasterAccessManagement(),
+  );
 
   const rolesConfig = getConfigJson().roles;
 
@@ -31,9 +35,6 @@ module.exports = async (deployer, logger) => {
     allowPermissions = allowPermissions == undefined ? [] : allowPermissions;
     disallowPermissions = disallowPermissions == undefined ? [] : disallowPermissions;
 
-    logger.logTransaction(
-      await masterAccess.addCombinedPermissionsToRole(role, description, allowPermissions, disallowPermissions),
-      `Added permissions to role ${role}`
-    );
+    await masterAccess.addCombinedPermissionsToRole(role, description, allowPermissions, disallowPermissions);
   }
 };

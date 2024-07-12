@@ -1,9 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@dlsl/dev-modules/access-control/RBAC.sol";
+import {TypeCaster} from "@solarity/solidity-lib/libs/utils/TypeCaster.sol";
 
-import "../interfaces/core/IMasterAccessManagement.sol";
+import {RBAC} from "@solarity/solidity-lib/access/RBAC.sol";
+
+import {IMasterAccessManagement} from "../interfaces/core/IMasterAccessManagement.sol";
 
 /**
  * @notice The MasterAccessManagement contract, extends the RBAC contract. It adds several functions

@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8.17;
 
-import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
+import {UUPSUpgradeable} from "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
-import "@dlsl/dev-modules/contracts-registry/AbstractContractsRegistry.sol";
+import {AbstractContractsRegistry} from "@solarity/solidity-lib/contracts-registry/AbstractContractsRegistry.sol";
 
-import "../../interfaces/core/IMasterAccessManagement.sol";
+import {IMasterAccessManagement} from "../../interfaces/core/IMasterAccessManagement.sol";
 
 /**
  * @notice The RBAC realization of the AbstractContractsRegistry contract. It uses

@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-import "@dlsl/dev-modules/libs/utils/TypeCaster.sol";
+import {TypeCaster} from "@solarity/solidity-lib/libs/utils/TypeCaster.sol";
 
-import "../../../interfaces/core/multicall/IMulticall.sol";
-import "../../../interfaces/core/IMasterAccessManagement.sol";
+import {IMulticall} from "../../../interfaces/core/multicall/IMulticall.sol";
+import {IMasterAccessManagement} from "../../../interfaces/core/IMasterAccessManagement.sol";
 
 contract MulticalleeMock {
     using TypeCaster for *;
