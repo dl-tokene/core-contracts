@@ -30,4 +30,28 @@ interface IMasterContractsRegistry {
      * @return Multicall contract address
      */
     function getMulticall() external view returns (address);
+
+    /**
+     * @notice The function to get the NativeTokenRequestManager contract
+     * @return NativeTokenRequestManager contract address
+     */
+    function getNativeTokenRequestManager() external view returns (address);
+
+    /**
+     * @notice The function to get the ApproveContractRequests contract
+     * @return ApproveContractRequests contract address
+     */
+    function getApproveContractRequests() external view returns (address);
+
+    /**
+     * @notice The function to get the WhitelistedContractRegistry contract
+     * @return WhitelistedContractRegistry contract address
+     */
+    function getWhitelistedContractRegistry() external view returns (address);
+
+    /**
+     * @notice The function to get the DeterministicFactory contract
+     * @return DeterministicFactory contract address
+     */
+    function getDeterministicFactory() external view returns (address);
 }

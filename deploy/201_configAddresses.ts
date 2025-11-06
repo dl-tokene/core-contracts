@@ -8,7 +8,7 @@ export = async (deployer: Deployer) => {
   const registry = await deployer.deployed(MasterContractsRegistry__factory, "MasterContractsRegistry Proxy");
   const masterAccess = await deployer.deployed(
     MasterAccessManagement__factory,
-    await registry.getMasterAccessManagement()
+    await registry.getMasterAccessManagement(),
   );
 
   const addressesConfig = getConfigJson().addresses;

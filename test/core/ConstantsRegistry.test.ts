@@ -57,7 +57,7 @@ describe("ConstantsRegistry", () => {
   describe("basic access", () => {
     it("should not set dependencies from non dependant", async () => {
       await expect(constantsRegistry.setDependencies(OWNER.address, "0x")).to.be.rejectedWith(
-        "Dependant: not an injector"
+        "Dependant: not an injector",
       );
     });
   });
@@ -68,7 +68,7 @@ describe("ConstantsRegistry", () => {
 
     it("should not be possible to add a bytes constant without the Create permission", async () => {
       await expect(constantsRegistry.connect(USER1).addBytes(key, randomBytes)).to.be.rejectedWith(
-        "ConstantsRegistry: access denied"
+        "ConstantsRegistry: access denied",
       );
     });
 
@@ -81,7 +81,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a bytes constant with the Create permission", async () => {
         expect(await constantsRegistry.connect(USER1).addBytes(key, randomBytes)).to.emit(
           constantsRegistry,
-          "AddedBytes"
+          "AddedBytes",
         );
 
         expect(await constantsRegistry.getBytes(key)).to.equal(randomBytes);
@@ -89,7 +89,7 @@ describe("ConstantsRegistry", () => {
 
       it("should not add an empty bytes constant", async () => {
         await expect(constantsRegistry.connect(USER1).addBytes(key, "0x")).to.be.rejectedWith(
-          "ConstantsRegistry: empty value"
+          "ConstantsRegistry: empty value",
         );
       });
     });
@@ -101,7 +101,7 @@ describe("ConstantsRegistry", () => {
 
     it("should not be possible to add a string constant without the Create permission", async () => {
       await expect(constantsRegistry.connect(USER1).addString(key, randomString)).to.be.rejectedWith(
-        "ConstantsRegistry: access denied"
+        "ConstantsRegistry: access denied",
       );
     });
 
@@ -114,7 +114,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a random string constant", async () => {
         expect(await constantsRegistry.connect(USER1).addString(key, randomString)).to.emit(
           constantsRegistry,
-          "AddedString"
+          "AddedString",
         );
 
         expect(await constantsRegistry.getString(key)).to.be.equal(randomString);
@@ -134,7 +134,7 @@ describe("ConstantsRegistry", () => {
 
     it("should not be possible to add an integer constant without the Create permission", async () => {
       await expect(constantsRegistry.connect(USER1).addUint256(key, randomInteger)).to.be.rejectedWith(
-        "ConstantsRegistry: access denied"
+        "ConstantsRegistry: access denied",
       );
     });
 
@@ -147,7 +147,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a random integer constant", async () => {
         expect(await constantsRegistry.connect(USER1).addUint256(key, randomInteger)).to.emit(
           constantsRegistry,
-          "AddedUint256"
+          "AddedUint256",
         );
 
         expect(await constantsRegistry.getUint256(key)).to.be.equal(randomInteger);
@@ -167,7 +167,7 @@ describe("ConstantsRegistry", () => {
 
     it("should not be possible to add an address constant without the Create permission", async () => {
       await expect(constantsRegistry.connect(USER1).addAddress(key, randomAddress)).to.be.rejectedWith(
-        "ConstantsRegistry: access denied"
+        "ConstantsRegistry: access denied",
       );
     });
 
@@ -180,7 +180,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a random address constant", async () => {
         expect(await constantsRegistry.connect(USER1).addAddress(key, randomAddress)).to.emit(
           constantsRegistry,
-          "AddedAddress"
+          "AddedAddress",
         );
 
         expect(await constantsRegistry["getAddress(string)"](key)).to.be.equal(randomAddress);
@@ -189,7 +189,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a zero address constant", async () => {
         expect(await constantsRegistry.connect(USER1).addAddress(key, ethers.ZeroAddress)).to.emit(
           constantsRegistry,
-          "AddedAddress"
+          "AddedAddress",
         );
 
         expect(await constantsRegistry["getAddress(string)"](key)).to.be.equal(ethers.ZeroAddress);
@@ -203,7 +203,7 @@ describe("ConstantsRegistry", () => {
 
     it("should not be possible to add a bytes32 constant without the Create permission", async () => {
       await expect(constantsRegistry.connect(USER1).addBytes32(key, randomBytes32)).to.be.rejectedWith(
-        "ConstantsRegistry: access denied"
+        "ConstantsRegistry: access denied",
       );
     });
 
@@ -216,7 +216,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a random bytes32 constant", async () => {
         expect(await constantsRegistry.connect(USER1).addBytes32(key, randomBytes32)).to.emit(
           constantsRegistry,
-          "AddedBytes32"
+          "AddedBytes32",
         );
 
         expect(await constantsRegistry.getBytes32(key)).to.be.equal(randomBytes32);
@@ -225,7 +225,7 @@ describe("ConstantsRegistry", () => {
       it("should be possible to add a zero bytes32 address constant", async () => {
         expect(await constantsRegistry.connect(USER1).addBytes32(key, ZERO_BYTES32)).to.emit(
           constantsRegistry,
-          "AddedBytes32"
+          "AddedBytes32",
         );
 
         expect(await constantsRegistry.getBytes32(key)).to.be.equal(ZERO_BYTES32);
@@ -263,7 +263,7 @@ describe("ConstantsRegistry", () => {
 
       it("should not be possible to remove a nonexistent constant", async () => {
         await expect(constantsRegistry.connect(USER1).remove(key)).to.be.rejectedWith(
-          "ConstantsRegistry: constant does not exist"
+          "ConstantsRegistry: constant does not exist",
         );
       });
     });

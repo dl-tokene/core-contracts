@@ -80,7 +80,7 @@ describe("MasterAccessManagement", async () => {
   describe("basic access", () => {
     it("should not initialize twice", async () => {
       await expect(masterAccess.__MasterAccessManagement_init(OWNER)).to.be.rejectedWith(
-        "Initializable: contract is already initialized"
+        "Initializable: contract is already initialized",
       );
     });
   });
@@ -178,7 +178,7 @@ describe("MasterAccessManagement", async () => {
       const description = "Allows dropping requests";
 
       await expect(
-        masterAccess.addCombinedPermissionsToRole(ReviewableRequestsRole, description, [ReviewableRequestsDelete], [])
+        masterAccess.addCombinedPermissionsToRole(ReviewableRequestsRole, description, [ReviewableRequestsDelete], []),
       )
         .to.emit(masterAccess, "AddedPermissions")
         .to.emit(masterAccess, "AddedRoleWithDescription")
@@ -199,8 +199,8 @@ describe("MasterAccessManagement", async () => {
           ReviewableRequestsRole,
           description,
           [ReviewableRequestsDelete],
-          [ReviewableRequestsDelete]
-        )
+          [ReviewableRequestsDelete],
+        ),
       )
         .to.emit(masterAccess, "AddedPermissions")
         .to.emit(masterAccess, "AddedRoleWithDescription")
@@ -220,7 +220,7 @@ describe("MasterAccessManagement", async () => {
         ReviewableRequestsRole,
         "Disallows dropping requests",
         [ReviewableRequestsDelete],
-        [ReviewableRequestsDelete]
+        [ReviewableRequestsDelete],
       );
 
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
@@ -243,7 +243,7 @@ describe("MasterAccessManagement", async () => {
         ReviewableRequestsRole,
         "Disallows dropping requests",
         [ReviewableRequestsDelete],
-        [ReviewableRequestsDelete]
+        [ReviewableRequestsDelete],
       );
 
       await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
@@ -257,8 +257,8 @@ describe("MasterAccessManagement", async () => {
           [],
           [ReviewableRequestsDelete],
           [ConstantsRegistryCreate],
-          []
-        )
+          [],
+        ),
       )
         .to.emit(masterAccess, "RemovedPermissions")
         .to.emit(masterAccess, "AddedPermissions")
