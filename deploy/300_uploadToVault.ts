@@ -20,11 +20,21 @@ export = async (deployer: Deployer) => {
   const constantsRegistryAddress = await registry.getConstantsRegistry();
   const reviewableRequestsAddress = await registry.getReviewableRequests();
   const multicallAddress = await registry.getMulticall();
+  const approveContractRequestsAddress = await registry.getApproveContractRequests();
+  const whitelistedContractRegistryAddress = await registry.getWhitelistedContractRegistry();
+  const deterministicFactoryAddress = await registry.getDeterministicFactory();
+  const nativeTokenRequestManagerAddress = await registry.getNativeTokenRequestManager();
 
   const projectName = getConfigJson().projectName;
 
   if (projectName == undefined) {
     throw new Error("uploadToVault: projectName is undefined");
+  }
+
+  const startBlock = process.env.START_MIGRATIONS_BLOCK;
+
+  if (startBlock == undefined) {
+    throw new Error("uploadToVault: startBlock is undefined");
   }
 
   const config = {
@@ -35,7 +45,12 @@ export = async (deployer: Deployer) => {
       MasterAccessManagement: masterAccessAddress,
       ReviewableRequests: reviewableRequestsAddress,
       Multicall: multicallAddress,
+      ApproveContractRequests: approveContractRequestsAddress,
+      WhitelistedContractRegistry: whitelistedContractRegistryAddress,
+      DeterministicFactory: deterministicFactoryAddress,
+      NativeTokenRequestManager: nativeTokenRequestManagerAddress,
     },
+    startBlock: parseInt(startBlock, 10),
   };
 
   try {

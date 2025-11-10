@@ -15,10 +15,18 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     using TypeCaster for string;
 
     string public constant EXECUTE_PERMISSION = "EXECUTE";
+    string public constant MINT_PERMISSION = "MINT";
+    string public constant BURN_PERMISSION = "BURN";
 
     string public constant MASTER_REGISTRY_RESOURCE = "MASTER_REGISTRY_RESOURCE";
     string public constant CONSTANTS_REGISTRY_RESOURCE = "CONSTANTS_REGISTRY_RESOURCE";
     string public constant REVIEWABLE_REQUESTS_RESOURCE = "REVIEWABLE_REQUESTS_RESOURCE";
+    string public constant NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE =
+        "NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE";
+    string public constant APPROVE_CONTRACT_REQUESTS_RESOURCE =
+        "APPROVE_CONTRACT_REQUESTS_RESOURCE";
+    string public constant WHITELISTED_CONTRACT_REGISTRY_RESOURCE =
+        "WHITELISTED_CONTRACT_REGISTRY_RESOURCE";
 
     /**
      * @notice The initializer function
@@ -153,5 +161,41 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         address account_
     ) external view override returns (bool) {
         return hasPermission(account_, REVIEWABLE_REQUESTS_RESOURCE, DELETE_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasNativeTokenRequestManagerMintPermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE, MINT_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasNativeTokenRequestManagerBurnPermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE, BURN_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasApproveContractRequestsUpdatePermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, APPROVE_CONTRACT_REQUESTS_RESOURCE, UPDATE_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasWhitelistedContractRegistryUpdatePermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, WHITELISTED_CONTRACT_REGISTRY_RESOURCE, UPDATE_PERMISSION);
     }
 }

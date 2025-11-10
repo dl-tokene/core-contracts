@@ -13,6 +13,10 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
     string public constant CONSTANTS_REGISTRY_NAME = "CONSTANTS_REGISTRY";
     string public constant REVIEWABLE_REQUESTS_NAME = "REVIEWABLE_REQUESTS";
     string public constant MULTICALL_NAME = "MULTICALL";
+    string public constant NATIVE_TOKEN_REQUEST_MANAGER_NAME = "NATIVE_TOKEN_REQUEST_MANAGER";
+    string public constant APPROVE_CONTRACT_REQUESTS_NAME = "APPROVE_CONTRACT_REQUESTS";
+    string public constant WHITELISTED_CONTRACT_REGISTRY_NAME = "WHITELISTED_CONTRACT_REGISTRY";
+    string public constant DETERMINISTIC_FACTORY_NAME = "DETERMINISTIC_FACTORY";
 
     /**
      * @notice The initializer function
@@ -77,5 +81,33 @@ contract MasterContractsRegistry is IMasterContractsRegistry, RoleManagedRegistr
      */
     function getMulticall() external view override returns (address) {
         return getContract(MULTICALL_NAME);
+    }
+
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
+    function getNativeTokenRequestManager() external view override returns (address) {
+        return getContract(NATIVE_TOKEN_REQUEST_MANAGER_NAME);
+    }
+
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
+    function getApproveContractRequests() external view override returns (address) {
+        return getContract(APPROVE_CONTRACT_REQUESTS_NAME);
+    }
+
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
+    function getWhitelistedContractRegistry() external view override returns (address) {
+        return getContract(WHITELISTED_CONTRACT_REGISTRY_NAME);
+    }
+
+    /**
+     * @inheritdoc IMasterContractsRegistry
+     */
+    function getDeterministicFactory() external view override returns (address) {
+        return getContract(DETERMINISTIC_FACTORY_NAME);
     }
 }

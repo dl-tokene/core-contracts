@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:22-alpine
 RUN apk add --no-cache make gcc g++ python3
 
 WORKDIR /tokene-contracts

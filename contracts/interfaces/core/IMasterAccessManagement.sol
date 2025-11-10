@@ -133,4 +133,40 @@ interface IMasterAccessManagement is IRBAC {
      * @return true if the permission is present, false otherwise
      */
     function hasReviewableRequestsDeletePermission(address account_) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has NativeTokenRequestManager MINT permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasNativeTokenRequestManagerMintPermission(
+        address account_
+    ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has NativeTokenRequestManager BURN permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasNativeTokenRequestManagerBurnPermission(
+        address account_
+    ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has ApproveContractRequests UPDATE permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasApproveContractRequestsUpdatePermission(
+        address account_
+    ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has WhitelistedContractRegistry UPDATE permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasWhitelistedContractRegistryUpdatePermission(
+        address account_
+    ) external view returns (bool);
 }
