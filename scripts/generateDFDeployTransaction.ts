@@ -1,8 +1,6 @@
 import { ethers } from "hardhat";
 import { DeterministicFactory__factory } from "@/generated-types";
 
-const GAS_INCREASE_PERCENT = 200n;
-
 export async function generateDeterministicFactoryDeployTransaction() {
   const bytecode = DeterministicFactory__factory.bytecode;
 
@@ -60,7 +58,7 @@ async function getDeployedGas(bytecode: string): Promise<{ gasPrice: bigint; gas
     throw new Error("Gas price is not available");
   }
 
-  return { gasPrice: (gasPrice * (100n + GAS_INCREASE_PERCENT)) / 100n, gasLimit: estimatedGas };
+  return { gasPrice: gasPrice, gasLimit: estimatedGas };
 }
 
 function arrayFromNumber(value: number | bigint): Uint8Array {
