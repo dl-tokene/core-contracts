@@ -1,16 +1,16 @@
 import { ethers } from "hardhat";
 import { DeterministicFactory__factory } from "@/generated-types";
+import { wei } from "./utils/utils";
 
 export async function generateDeterministicFactoryDeployTransaction() {
-  const bytecode = DeterministicFactory__factory.bytecode;
+  const deploymentGas = 1000000; // actual gas costs last measure: 638935
 
-  const deploymentGas = await getDeployedGas(bytecode);
   const nonce = new Uint8Array(0);
-  const gasPrice = arrayFromNumber(deploymentGas.gasPrice);
-  const gasLimit = arrayFromNumber(deploymentGas.gasLimit);
+  const gasPrice = arrayFromNumber(wei(100, 9));
+  const gasLimit = arrayFromNumber(deploymentGas);
   const to = new Uint8Array(0);
   const value = new Uint8Array(0);
-  const data = arrayFromHexString(bytecode.slice(2));
+  const data = arrayFromHexString(DeterministicFactory__factory.bytecode.slice(2));
   const v = arrayFromNumber(27);
   const r = "2222222222222222222222222222222222222222222222222222222222222222";
   const s = "2222222222222222222222222222222222222222222222222222222222222222";
@@ -42,23 +42,12 @@ export async function generateDeterministicFactoryDeployTransaction() {
   const contractAddress = ethers.keccak256(ethers.encodeRlp([signerAddress, nonce])).slice(-40);
 
   return {
-    gasPrice: deploymentGas.gasPrice,
-    gasLimit: deploymentGas.gasLimit,
+    gasPrice: wei(100, 9),
+    gasLimit: BigInt(deploymentGas),
     signerAddress: signerAddress,
     transaction: signedEncodedTransaction,
     address: `0x${contractAddress}`,
   };
-}
-
-async function getDeployedGas(bytecode: string): Promise<{ gasPrice: bigint; gasLimit: bigint }> {
-  const estimatedGas = await ethers.provider.estimateGas({ data: bytecode });
-
-  const { gasPrice } = await ethers.provider.getFeeData();
-  if (!gasPrice) {
-    throw new Error("Gas price is not available");
-  }
-
-  return { gasPrice: gasPrice, gasLimit: estimatedGas };
 }
 
 function arrayFromNumber(value: number | bigint): Uint8Array {
