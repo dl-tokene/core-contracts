@@ -1,9 +1,9 @@
 import { ethers } from "hardhat";
-import { wei } from "./utils/utils";
 import { DeterministicFactory__factory } from "@/generated-types";
+import { wei } from "./utils/utils";
 
 export async function generateDeterministicFactoryDeployTransaction() {
-  const deploymentGas = 20000000; // actual gas costs last measure: 183257; // TODO: change to actual gas costs
+  const deploymentGas = 1000000; // actual gas costs last measure: 638935
 
   const nonce = new Uint8Array(0);
   const gasPrice = arrayFromNumber(wei(100, 9));
@@ -42,8 +42,8 @@ export async function generateDeterministicFactoryDeployTransaction() {
   const contractAddress = ethers.keccak256(ethers.encodeRlp([signerAddress, nonce])).slice(-40);
 
   return {
-    gasPrice: 100000000000,
-    gasLimit: deploymentGas,
+    gasPrice: wei(100, 9),
+    gasLimit: BigInt(deploymentGas),
     signerAddress: signerAddress,
     transaction: signedEncodedTransaction,
     address: `0x${contractAddress}`,
