@@ -11,6 +11,7 @@ import {
 } from "@/generated-types";
 import { ZERO_BYTES32 } from "@/scripts/utils/constants";
 import { generateDeterministicFactoryDeployTransaction } from "@/scripts/generateDFDeployTransaction";
+import { DEPLOY_PERMISSION, DETERMINISTIC_FACTORY_RESOURCE } from "../utils/constants";
 
 describe("DeterministicFactory", () => {
   let OWNER: SignerWithAddress;
@@ -19,8 +20,6 @@ describe("DeterministicFactory", () => {
 
   const DETERMINISTIC_FACTORY_DEP = "DETERMINISTIC_FACTORY";
   const DETERMINISTIC_FACTORY_ROLE = "DETERMINISTIC_FACTORY_ROLE";
-  const DETERMINISTIC_FACTORY_RESOURCE = "DETERMINISTIC_FACTORY_RESOURCE";
-  const DEPLOY_PERMISSION = "DEPLOY";
   const DETERMINISTIC_FACTORY_DEPLOY: IRBAC.ResourceWithPermissionsStruct = {
     resource: DETERMINISTIC_FACTORY_RESOURCE,
     permissions: [DEPLOY_PERMISSION],

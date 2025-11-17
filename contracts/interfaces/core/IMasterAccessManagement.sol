@@ -169,4 +169,13 @@ interface IMasterAccessManagement is IRBAC {
     function hasWhitelistedContractRegistryUpdatePermission(
         address account_
     ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has DeterministicFactory DEPLOY permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasDeterministicFactoryDeployPermission(
+        address account_
+    ) external view returns (bool);
 }
