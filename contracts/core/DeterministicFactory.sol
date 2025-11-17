@@ -14,9 +14,6 @@ import {IMasterAccessManagement} from "../interfaces/core/IMasterAccessManagemen
 contract DeterministicFactory is IDeterministicFactory, AbstractDependant, Initializable {
     IMasterAccessManagement internal _masterAccess;
 
-    string public constant DETERMINISTIC_FACTORY_RESOURCE = "DETERMINISTIC_FACTORY_RESOURCE";
-    string public constant DEPLOY_PERMISSION = "DEPLOY";
-
     function __DeterministicFactory_init() external initializer {}
 
     /**
@@ -33,11 +30,7 @@ contract DeterministicFactory is IDeterministicFactory, AbstractDependant, Initi
         bytes calldata bytecode_
     ) external returns (address deployedAddress_) {
         require(
-            _masterAccess.hasPermission(
-                msg.sender,
-                DETERMINISTIC_FACTORY_RESOURCE,
-                DEPLOY_PERMISSION
-            ),
+            _masterAccess.hasDeterministicFactoryDeployPermission(msg.sender),
             "DeterministicFactory: access denied"
         );
 

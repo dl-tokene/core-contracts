@@ -13,6 +13,13 @@ import {
   UPDATE_PERMISSION,
   REVIEWABLE_REQUESTS_RESOURCE,
   EXECUTE_PERMISSION,
+  DETERMINISTIC_FACTORY_RESOURCE,
+  DEPLOY_PERMISSION,
+  MINT_PERMISSION,
+  NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE,
+  BURN_PERMISSION,
+  APPROVE_CONTRACT_REQUESTS_RESOURCE,
+  WHITELISTED_CONTRACT_REGISTRY_RESOURCE,
 } from "../utils/constants";
 
 import { IRBAC, MasterAccessManagement } from "@ethers-v6";
@@ -28,6 +35,10 @@ describe("MasterAccessManagement", async () => {
   const MasterContractsRegistryRole = "MCR";
   const ConstantsRegistryRole = "CR";
   const ReviewableRequestsRole = "RR";
+  const NativeTokenRequestManagerRole = "NTRM";
+  const ApproveContractRequestsRole = "ACR";
+  const WhitelistedContractRegistryRole = "WCR";
+  const DeterministicFactoryRole = "DF";
 
   const MasterContractsRegistryCreate: IRBAC.ResourceWithPermissionsStruct = {
     resource: MASTER_REGISTRY_RESOURCE,
@@ -62,6 +73,30 @@ describe("MasterAccessManagement", async () => {
   const ReviewableRequestsDelete: IRBAC.ResourceWithPermissionsStruct = {
     resource: REVIEWABLE_REQUESTS_RESOURCE,
     permissions: [DELETE_PERMISSION],
+  };
+
+  const NativeTokenRequestManagerMint: IRBAC.ResourceWithPermissionsStruct = {
+    resource: NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE,
+    permissions: [MINT_PERMISSION],
+  };
+  const NativeTokenRequestManagerBurn: IRBAC.ResourceWithPermissionsStruct = {
+    resource: NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE,
+    permissions: [BURN_PERMISSION],
+  };
+
+  const ApproveContractRequestsUpdate: IRBAC.ResourceWithPermissionsStruct = {
+    resource: APPROVE_CONTRACT_REQUESTS_RESOURCE,
+    permissions: [UPDATE_PERMISSION],
+  };
+
+  const WhitelistedContractRegistryUpdate: IRBAC.ResourceWithPermissionsStruct = {
+    resource: WHITELISTED_CONTRACT_REGISTRY_RESOURCE,
+    permissions: [UPDATE_PERMISSION],
+  };
+
+  const DeterministicFactoryDeploy: IRBAC.ResourceWithPermissionsStruct = {
+    resource: DETERMINISTIC_FACTORY_RESOURCE,
+    permissions: [DEPLOY_PERMISSION],
   };
 
   before("setup", async () => {
@@ -169,6 +204,60 @@ describe("MasterAccessManagement", async () => {
         await masterAccess.grantRoles(USER1, [ReviewableRequestsRole]);
 
         expect(await masterAccess.hasReviewableRequestsDeletePermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasNativeTokenRequestManagerMintPermission", async () => {
+        await masterAccess.addPermissionsToRole(NativeTokenRequestManagerRole, [NativeTokenRequestManagerMint], true);
+
+        expect(await masterAccess.hasNativeTokenRequestManagerMintPermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [NativeTokenRequestManagerRole]);
+
+        expect(await masterAccess.hasNativeTokenRequestManagerMintPermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasNativeTokenRequestManagerBurnPermission", async () => {
+        await masterAccess.addPermissionsToRole(NativeTokenRequestManagerRole, [NativeTokenRequestManagerBurn], true);
+
+        expect(await masterAccess.hasNativeTokenRequestManagerBurnPermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [NativeTokenRequestManagerRole]);
+
+        expect(await masterAccess.hasNativeTokenRequestManagerBurnPermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasApproveContractRequestsUpdatePermission", async () => {
+        await masterAccess.addPermissionsToRole(ApproveContractRequestsRole, [ApproveContractRequestsUpdate], true);
+
+        expect(await masterAccess.hasApproveContractRequestsUpdatePermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [ApproveContractRequestsRole]);
+
+        expect(await masterAccess.hasApproveContractRequestsUpdatePermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasWhitelistedContractRegistryUpdatePermission", async () => {
+        await masterAccess.addPermissionsToRole(
+          WhitelistedContractRegistryRole,
+          [WhitelistedContractRegistryUpdate],
+          true,
+        );
+
+        expect(await masterAccess.hasWhitelistedContractRegistryUpdatePermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [WhitelistedContractRegistryRole]);
+
+        expect(await masterAccess.hasWhitelistedContractRegistryUpdatePermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasDeterministicFactoryDeployPermission", async () => {
+        await masterAccess.addPermissionsToRole(DeterministicFactoryRole, [DeterministicFactoryDeploy], true);
+
+        expect(await masterAccess.hasDeterministicFactoryDeployPermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [DeterministicFactoryRole]);
+
+        expect(await masterAccess.hasDeterministicFactoryDeployPermission(USER1)).to.be.true;
       });
     });
   });
