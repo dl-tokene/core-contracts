@@ -153,15 +153,6 @@ interface IMasterAccessManagement is IRBAC {
     ) external view returns (bool);
 
     /**
-     * @notice The function to check if account_ has ApproveContractRequests UPDATE permission
-     * @param account_ the account to check
-     * @return true if the permission is present, false otherwise
-     */
-    function hasApproveContractRequestsUpdatePermission(
-        address account_
-    ) external view returns (bool);
-
-    /**
      * @notice The function to check if account_ has WhitelistedContractRegistry UPDATE permission
      * @param account_ the account to check
      * @return true if the permission is present, false otherwise
@@ -176,6 +167,24 @@ interface IMasterAccessManagement is IRBAC {
      * @return true if the permission is present, false otherwise
      */
     function hasDeterministicFactoryDeployPermission(
+        address account_
+    ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has ExternalProjectRegistry CREATE permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasExternalProjectRegistryCreatePermission(
+        address account_
+    ) external view returns (bool);
+
+    /**
+     * @notice The function to check if account_ has ExternalProjectRegistry UPDATE permission
+     * @param account_ the account to check
+     * @return true if the permission is present, false otherwise
+     */
+    function hasExternalProjectRegistryUpdatePermission(
         address account_
     ) external view returns (bool);
 }

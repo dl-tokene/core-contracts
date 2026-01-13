@@ -7,5 +7,5 @@ export = async (deployer: Deployer) => {
 
   const multicall = await deployer.deploy(Multicall__factory);
 
-  await registry.addProxyContract(await registry.MULTICALL_NAME(), await multicall.getAddress());
+  await registry.addProxyContract(await registry.MULTICALL_NAME(), multicall.getAddress());
 };

@@ -38,12 +38,6 @@ interface IMasterContractsRegistry {
     function getNativeTokenRequestManager() external view returns (address);
 
     /**
-     * @notice The function to get the ApproveContractRequests contract
-     * @return ApproveContractRequests contract address
-     */
-    function getApproveContractRequests() external view returns (address);
-
-    /**
      * @notice The function to get the WhitelistedContractRegistry contract
      * @return WhitelistedContractRegistry contract address
      */
@@ -54,4 +48,10 @@ interface IMasterContractsRegistry {
      * @return DeterministicFactory contract address
      */
     function getDeterministicFactory() external view returns (address);
+
+    /**
+     * @notice The function to get the ExternalProjectRegistry contract
+     * @return ExternalProjectRegistry contract address
+     */
+    function getExternalProjectRegistry() external view returns (address);
 }

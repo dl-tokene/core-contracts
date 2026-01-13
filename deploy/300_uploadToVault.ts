@@ -20,7 +20,7 @@ export = async (deployer: Deployer) => {
   const constantsRegistryAddress = await registry.getConstantsRegistry();
   const reviewableRequestsAddress = await registry.getReviewableRequests();
   const multicallAddress = await registry.getMulticall();
-  const approveContractRequestsAddress = await registry.getApproveContractRequests();
+  const externalProjectRegistryAddress = await registry.getExternalProjectRegistry();
   const whitelistedContractRegistryAddress = await registry.getWhitelistedContractRegistry();
   const deterministicFactoryAddress = await registry.getDeterministicFactory();
   const nativeTokenRequestManagerAddress = await registry.getNativeTokenRequestManager();
@@ -45,7 +45,7 @@ export = async (deployer: Deployer) => {
       MasterAccessManagement: masterAccessAddress,
       ReviewableRequests: reviewableRequestsAddress,
       Multicall: multicallAddress,
-      ApproveContractRequests: approveContractRequestsAddress,
+      ExternalProjectRegistry: externalProjectRegistryAddress,
       WhitelistedContractRegistry: whitelistedContractRegistryAddress,
       DeterministicFactory: deterministicFactoryAddress,
       NativeTokenRequestManager: nativeTokenRequestManagerAddress,

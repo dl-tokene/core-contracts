@@ -8,7 +8,7 @@
 - `RBAC_RESOURCE` - The MasterAccessManagement resource
 - `CONSTANTS_REGISTRY_RESOURCE` - The ConstantsRegistry resource
 - `REVIEWABLE_REQUESTS_RESOURCE` - The ReviewableRequests resource
-- `APPROVE_CONTRACT_REQUESTS_RESOURCE` - The ApproveContractRequests resource
+- `EXTERNAL_PROJECT_REGISTRY_RESOURCE` - The ExternalProjectRegistry resource
 - `WHITELISTED_CONTRACT_REGISTRY_RESOURCE` - The WhitelistedContractRegistry resource
 - `NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE` - The NativeTokenRequestManager resource
 - `DETERMINISTIC_FACTORY_RESOURCE` - The DeterministicFactory resource
