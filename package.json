@@ -1,6 +1,6 @@
 {
   "name": "@tokene/core-contracts",
-  "version": "1.9.2",
+  "version": "1.9.3",
   "license": "MIT",
   "author": "Distributed Lab",
   "description": "The TokenE operating system on top of EVM by Distributed Lab",

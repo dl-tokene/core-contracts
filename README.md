@@ -11,7 +11,7 @@ The TokenE core consists of 9 main smart contracts:
 1. `ReviewableRequests`
 1. `ConstantRegistry`
 1. `Multicall`
-1. `ApproveContractRequests`
+1. `ExternalProjectRegistry`
 1. `WhitelistedContractRegistry`
 1. `NativeTokenRequestManager`
 1. `DeterministicFactory`
@@ -23,7 +23,7 @@ Each of these contracts serves an important role for the system:
 - The `ReviewableRequests` is a primary integration tool that is used to "speak" with admins. One can issue tokens or pass KYC requests via that contract.
 - The `ConstantRegistry` that stores the system-wide parameters.
 - The `Multicall` is used as a utility to execute batches of transactions.
-- The `ApproveContractRequests` is used to forward user incentives to add contracts to the whitelist.
+- The `ExternalProjectRegistry` is used to manage the external projects.
 - The `WhitelistedContractRegistry` is used to manage the whitelisted contracts.
 - The `NativeTokenRequestManager` is used to request minting and burning of native tokens.
 - The `DeterministicFactory` is used to deploy contracts deterministically.

@@ -17,7 +17,7 @@ export = async (deployer: Deployer) => {
   await registry.injectDependencies(await registry.CONSTANTS_REGISTRY_NAME());
   await registry.injectDependencies(await registry.REVIEWABLE_REQUESTS_NAME());
   await registry.injectDependencies(await registry.MULTICALL_NAME());
-  await registry.injectDependencies(await registry.APPROVE_CONTRACT_REQUESTS_NAME());
+  await registry.injectDependencies(await registry.EXTERNAL_PROJECT_REGISTRY_NAME());
   await registry.injectDependencies(await registry.WHITELISTED_CONTRACT_REGISTRY_NAME());
   await registry.injectDependencies(await registry.DETERMINISTIC_FACTORY_NAME());
 };

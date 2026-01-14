@@ -18,8 +18,8 @@ import {
   MINT_PERMISSION,
   NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE,
   BURN_PERMISSION,
-  APPROVE_CONTRACT_REQUESTS_RESOURCE,
   WHITELISTED_CONTRACT_REGISTRY_RESOURCE,
+  EXTERNAL_PROJECT_REGISTRY_RESOURCE,
 } from "../utils/constants";
 
 import { IRBAC, MasterAccessManagement } from "@ethers-v6";
@@ -36,7 +36,7 @@ describe("MasterAccessManagement", async () => {
   const ConstantsRegistryRole = "CR";
   const ReviewableRequestsRole = "RR";
   const NativeTokenRequestManagerRole = "NTRM";
-  const ApproveContractRequestsRole = "ACR";
+  const ExternalProjectRegistryRole = "EPR";
   const WhitelistedContractRegistryRole = "WCR";
   const DeterministicFactoryRole = "DF";
 
@@ -84,8 +84,13 @@ describe("MasterAccessManagement", async () => {
     permissions: [BURN_PERMISSION],
   };
 
-  const ApproveContractRequestsUpdate: IRBAC.ResourceWithPermissionsStruct = {
-    resource: APPROVE_CONTRACT_REQUESTS_RESOURCE,
+  const ExternalProjectRegistryCreate: IRBAC.ResourceWithPermissionsStruct = {
+    resource: EXTERNAL_PROJECT_REGISTRY_RESOURCE,
+    permissions: [CREATE_PERMISSION],
+  };
+
+  const ExternalProjectRegistryUpdate: IRBAC.ResourceWithPermissionsStruct = {
+    resource: EXTERNAL_PROJECT_REGISTRY_RESOURCE,
     permissions: [UPDATE_PERMISSION],
   };
 
@@ -226,14 +231,24 @@ describe("MasterAccessManagement", async () => {
         expect(await masterAccess.hasNativeTokenRequestManagerBurnPermission(USER1)).to.be.true;
       });
 
-      it("should correctly check access for hasApproveContractRequestsUpdatePermission", async () => {
-        await masterAccess.addPermissionsToRole(ApproveContractRequestsRole, [ApproveContractRequestsUpdate], true);
+      it("should correctly check access for hasExternalProjectRegistryCreatePermission", async () => {
+        await masterAccess.addPermissionsToRole(ExternalProjectRegistryRole, [ExternalProjectRegistryCreate], true);
 
-        expect(await masterAccess.hasApproveContractRequestsUpdatePermission(USER1)).to.be.false;
+        expect(await masterAccess.hasExternalProjectRegistryCreatePermission(USER1)).to.be.false;
 
-        await masterAccess.grantRoles(USER1, [ApproveContractRequestsRole]);
+        await masterAccess.grantRoles(USER1, [ExternalProjectRegistryRole]);
 
-        expect(await masterAccess.hasApproveContractRequestsUpdatePermission(USER1)).to.be.true;
+        expect(await masterAccess.hasExternalProjectRegistryCreatePermission(USER1)).to.be.true;
+      });
+
+      it("should correctly check access for hasExternalProjectRegistryUpdatePermission", async () => {
+        await masterAccess.addPermissionsToRole(ExternalProjectRegistryRole, [ExternalProjectRegistryUpdate], true);
+
+        expect(await masterAccess.hasExternalProjectRegistryUpdatePermission(USER1)).to.be.false;
+
+        await masterAccess.grantRoles(USER1, [ExternalProjectRegistryRole]);
+
+        expect(await masterAccess.hasExternalProjectRegistryUpdatePermission(USER1)).to.be.true;
       });
 
       it("should correctly check access for hasWhitelistedContractRegistryUpdatePermission", async () => {

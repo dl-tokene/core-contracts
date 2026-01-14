@@ -59,8 +59,8 @@ describe("MasterContractsRegistry", async () => {
     const NativeTokenRequestManagerFactory = await ethers.getContractFactory("NativeTokenRequestManager");
     const nativeTokenRequestManager = await NativeTokenRequestManagerFactory.deploy();
 
-    const ApproveContractRequestsFactory = await ethers.getContractFactory("ApproveContractRequests");
-    const approveContractRequests = await ApproveContractRequestsFactory.deploy();
+    const ExternalProjectRegistryFactory = await ethers.getContractFactory("ExternalProjectRegistry");
+    const externalProjectRegistry = await ExternalProjectRegistryFactory.deploy();
 
     const WhitelistedContractRegistryFactory = await ethers.getContractFactory("WhitelistedContractRegistry");
     const whitelistedContractRegistry = await WhitelistedContractRegistryFactory.deploy();
@@ -81,7 +81,7 @@ describe("MasterContractsRegistry", async () => {
     await registry.addProxyContract(await registry.REVIEWABLE_REQUESTS_NAME(), reviewableRequests);
     await registry.addProxyContract(await registry.MULTICALL_NAME(), multicall);
     await registry.addContract(await registry.NATIVE_TOKEN_REQUEST_MANAGER_NAME(), nativeTokenRequestManager);
-    await registry.addProxyContract(await registry.APPROVE_CONTRACT_REQUESTS_NAME(), approveContractRequests);
+    await registry.addProxyContract(await registry.EXTERNAL_PROJECT_REGISTRY_NAME(), externalProjectRegistry);
     await registry.addProxyContract(await registry.WHITELISTED_CONTRACT_REGISTRY_NAME(), whitelistedContractRegistry);
     await registry.addContract(await registry.DETERMINISTIC_FACTORY_NAME(), deterministicFactory);
 
@@ -308,9 +308,9 @@ describe("MasterContractsRegistry", async () => {
       );
     });
 
-    it("should correctly return ApproveContractRequests contract with getApproveContractRequests", async () => {
-      expect(await registry.getContract(await registry.APPROVE_CONTRACT_REQUESTS_NAME())).to.be.equal(
-        await registry.getApproveContractRequests(),
+    it("should correctly return ExternalProjectRegistry contract with getExternalProjectRegistry", async () => {
+      expect(await registry.getContract(await registry.EXTERNAL_PROJECT_REGISTRY_NAME())).to.be.equal(
+        await registry.getExternalProjectRegistry(),
       );
     });
 

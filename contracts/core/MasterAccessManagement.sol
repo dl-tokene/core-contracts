@@ -24,11 +24,11 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     string public constant REVIEWABLE_REQUESTS_RESOURCE = "REVIEWABLE_REQUESTS_RESOURCE";
     string public constant NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE =
         "NATIVE_TOKEN_REQUEST_MANAGER_RESOURCE";
-    string public constant APPROVE_CONTRACT_REQUESTS_RESOURCE =
-        "APPROVE_CONTRACT_REQUESTS_RESOURCE";
     string public constant WHITELISTED_CONTRACT_REGISTRY_RESOURCE =
         "WHITELISTED_CONTRACT_REGISTRY_RESOURCE";
     string public constant DETERMINISTIC_FACTORY_RESOURCE = "DETERMINISTIC_FACTORY_RESOURCE";
+    string public constant EXTERNAL_PROJECT_REGISTRY_RESOURCE =
+        "EXTERNAL_PROJECT_REGISTRY_RESOURCE";
 
     /**
      * @notice The initializer function
@@ -186,15 +186,6 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
     /**
      * @inheritdoc IMasterAccessManagement
      */
-    function hasApproveContractRequestsUpdatePermission(
-        address account_
-    ) external view override returns (bool) {
-        return hasPermission(account_, APPROVE_CONTRACT_REQUESTS_RESOURCE, UPDATE_PERMISSION);
-    }
-
-    /**
-     * @inheritdoc IMasterAccessManagement
-     */
     function hasWhitelistedContractRegistryUpdatePermission(
         address account_
     ) external view override returns (bool) {
@@ -208,5 +199,23 @@ contract MasterAccessManagement is IMasterAccessManagement, RBAC {
         address account_
     ) external view override returns (bool) {
         return hasPermission(account_, DETERMINISTIC_FACTORY_RESOURCE, DEPLOY_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasExternalProjectRegistryCreatePermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, EXTERNAL_PROJECT_REGISTRY_RESOURCE, CREATE_PERMISSION);
+    }
+
+    /**
+     * @inheritdoc IMasterAccessManagement
+     */
+    function hasExternalProjectRegistryUpdatePermission(
+        address account_
+    ) external view override returns (bool) {
+        return hasPermission(account_, EXTERNAL_PROJECT_REGISTRY_RESOURCE, UPDATE_PERMISSION);
     }
 }
